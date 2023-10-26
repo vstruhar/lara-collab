@@ -2,15 +2,20 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Lacodix\LaravelModelFilter\Traits\IsSearchable;
+use Lacodix\LaravelModelFilter\Traits\IsSortable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements CanResetPasswordContract
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use CanResetPassword, HasApiTokens, HasFactory, HasRoles, IsSearchable, IsSortable, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +26,22 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'job_title',
+        'avatar',
+        'phone',
+        'rate',
+    ];
+
+    protected $searchable = [
+        'name',
+        'email',
+        'job_title',
+    ];
+
+    protected $sortable = [
+        'name',
+        'email',
+        'rate',
     ];
 
     /**
