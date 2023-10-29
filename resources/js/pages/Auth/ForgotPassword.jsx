@@ -16,6 +16,7 @@ import {
 import { IconArrowLeft, IconInfoCircle } from "@tabler/icons-react";
 import classes from "./css/ForgotPassword.module.css";
 import GuestLayout from "@/layouts/GuestLayout";
+import { redirectTo } from "@/utils/route";
 
 const ForgotPassword = ({ status }) => {
   const form = useForm("post", route("auth.forgotPassword.sendLink"), {
@@ -65,7 +66,7 @@ const ForgotPassword = ({ status }) => {
               c="dimmed"
               size="sm"
               className={classes.control}
-              onClick={() => router.get(route("auth.login.form"))}
+              onClick={() => redirectTo("auth.login.form")}
             >
               <Center inline>
                 <IconArrowLeft

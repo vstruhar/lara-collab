@@ -11,14 +11,16 @@ import {
   Group,
   Divider,
   Button,
-  Alert,
 } from "@mantine/core";
-import { IconInfoCircle } from "@tabler/icons-react";
 import classes from "./css/Login.module.css";
 import GuestLayout from "@/layouts/GuestLayout";
 import GoogleIcon from "@/icons/GoogleIcon";
+import { useState } from "react";
+import LoginNotification from "./LoginNotification";
 
 const Login = ({ notify }) => {
+  const [socialLoginPending, setSocialLoginPending] = useState(false);
+
   const form = useForm("post", route("auth.login.attempt"), {
     email: "",
     password: "",
@@ -43,21 +45,20 @@ const Login = ({ notify }) => {
         You may login to your account below
       </Text>
 
+      <LoginNotification notify={notify} />
+
       <form onSubmit={submit}>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          {notify === "password-reset" && (
-            <Alert
-              radius="md"
-              title="Password was reset"
-              icon={<IconInfoCircle />}
-              mb={16}
-            >
-              Your password was successfully updated, you may use it to login.
-            </Alert>
-          )}
-
           <Group grow mb="md" mt="md">
-            <Button leftSection={<GoogleIcon />} variant="default" radius="xl">
+            <Button
+              leftSection={<GoogleIcon />}
+              variant="default"
+              radius="xl"
+              component="a"
+              href={route("auth.login.social.google")}
+              loading={socialLoginPending}
+              onClick={() => setSocialLoginPending(true)}
+            >
               Google
             </Button>
           </Group>

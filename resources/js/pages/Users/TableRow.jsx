@@ -1,18 +1,18 @@
-import React from "react";
-import { rem } from "@mantine/core";
-import { money } from "@/utils/formatCurrency";
-import { IconPencil, IconDots, IconTrash } from "@tabler/icons-react";
-import {
-  Avatar,
-  Badge,
-  Table,
-  Group,
-  Text,
-  ActionIcon,
-  Menu,
-} from "@mantine/core";
-import UserService from "@/services/UserService";
 import RoleBadge from "@/components/RoleBadge";
+import UserService from "@/services/UserService";
+import { money } from "@/utils/formatCurrency";
+import { redirectTo } from "@/utils/route";
+import {
+  ActionIcon,
+  Avatar,
+  Flex,
+  Group,
+  Menu,
+  Table,
+  Text,
+  rem,
+} from "@mantine/core";
+import { IconDots, IconPencil, IconTrash } from "@tabler/icons-react";
 
 export default function TableRow({ user }) {
   const service = new UserService(user);
@@ -40,10 +40,12 @@ export default function TableRow({ user }) {
           </div>
         </Group>
       </Table.Td>
-      <Table.Td>
-        {user.roles.map((role) => (
-          <RoleBadge role={role.name} key={role.id} />
-        ))}
+      <Table.Td maw={200}>
+        <Flex gap="sm" align="center" direction="row" wrap="wrap">
+          {user.roles.map((role) => (
+            <RoleBadge role={role.name} key={role.id} />
+          ))}
+        </Flex>
       </Table.Td>
       <Table.Td>
         <Text fz="sm">{user.email}</Text>
@@ -59,7 +61,11 @@ export default function TableRow({ user }) {
       </Table.Td>
       <Table.Td>
         <Group gap={0} justify="flex-end">
-          <ActionIcon variant="subtle" color="blue">
+          <ActionIcon
+            variant="subtle"
+            color="blue"
+            onClick={redirectTo("users.edit", user.id)}
+          >
             <IconPencil
               style={{
                 width: rem(16),

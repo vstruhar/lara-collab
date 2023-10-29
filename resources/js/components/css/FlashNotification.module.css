@@ -1,0 +1,30 @@
+.container {
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    min-width: 400px;
+    max-width: 500px;
+}
+
+.icon {
+    margin-top: 0;
+    align-items: normal;
+    width: calc(2.5rem * var(--mantine-scale));
+    height: calc(2.5rem * var(--mantine-scale));
+}
+
+.title {
+    margin-bottom: 2px;
+}
+
+.label {
+    font-size: var(--mantine-font-size-md);
+    user-select: none;
+}
+
+.message {
+    font-size: var(--mantine-font-size-xs);
+    user-select: none;
+}

@@ -9,10 +9,14 @@ export default class UserService {
 
     getInitials(): string {
         if (!this.user.name.includes(" ")) {
-            return this.user.name.slice(0, 2);
+            return this.user.name.slice(0, 2).toUpperCase();
         }
         const [firstname, lastname] = this.user.name.split(" ");
 
-        return firstname[0] + lastname[0];
+        if (!lastname) {
+            return firstname.slice(0, 2).toUpperCase();
+        }
+
+        return (firstname[0] + lastname[0]).toUpperCase();
     }
 }

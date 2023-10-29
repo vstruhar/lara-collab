@@ -1,9 +1,9 @@
 import { TextInput, rem } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
 import { useDebouncedValue } from "@mantine/hooks";
-import { useState, useEffect } from "react";
+import { IconSearch } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 
-export function SearchButton({ search, ...props }) {
+export default function SearchInput({ search, ...props }) {
   const [value, setValue] = useState("");
   const [debounced] = useDebouncedValue(value, 250);
 

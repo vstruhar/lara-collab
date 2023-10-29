@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -11,6 +14,7 @@
         "lacodix/laravel-model-filter": "^1.9",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
+        "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
         "spatie/laravel-permission": "^6.0",
         "tightenco/ziggy": "^1.8"
@@ -19,7 +23,6 @@
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.11",
         "laravel/sail": "^1.23",
-        "laravel/telescope": "^4.16",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "pestphp/pest": "^2.0",
@@ -55,9 +58,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-                "laravel/telescope"
-            ]
+            "dont-discover": []
         }
     },
     "config": {

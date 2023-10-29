@@ -1,12 +1,12 @@
-import Layout from "@/layouts/MainLayout";
-import { usePage } from "@inertiajs/react";
-import { Table, Button, Grid } from "@mantine/core";
 import Pagination from "@/components/Pagination";
-import TableRow from "./TableRow";
-import { IconPlus } from "@tabler/icons-react";
-import { SearchButton } from "@/components/SearchButton";
-import { redirectWithQuery } from "@/utils/route";
+import SearchInput from "@/components/SearchInput";
 import TableHead from "@/components/TableHead";
+import Layout from "@/layouts/MainLayout";
+import { redirectTo, reloadWithQuery } from "@/utils/route";
+import { usePage } from "@inertiajs/react";
+import { Button, Grid, Table } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
+import TableRow from "./TableRow";
 
 const UsersIndex = () => {
   const { users } = usePage().props;
@@ -20,18 +20,21 @@ const UsersIndex = () => {
   ];
 
   const rows = users.data.map((user) => <TableRow user={user} key={user.id} />);
-
-  const searchUsers = (search) => redirectWithQuery({ search });
-  const sortUsers = (sort) => redirectWithQuery(sort);
+  const searchUsers = (search) => reloadWithQuery({ search });
+  const sortUsers = (sort) => reloadWithQuery(sort);
 
   return (
     <>
       <Grid justify="space-between" align="center">
         <Grid.Col span="content">
-          <SearchButton placeholder="Search users" search={searchUsers} />
+          <SearchInput placeholder="Search users" search={searchUsers} />
         </Grid.Col>
         <Grid.Col span="content">
-          <Button leftSection={<IconPlus size={14} />} radius="xl">
+          <Button
+            leftSection={<IconPlus size={14} />}
+            radius="xl"
+            onClick={redirectTo("users.create")}
+          >
             Create
           </Button>
         </Grid.Col>
@@ -44,7 +47,10 @@ const UsersIndex = () => {
         </Table>
       </Table.ScrollContainer>
 
-      <Pagination current={users.current_page} pages={users.last_page} />
+      <Pagination
+        current={users.meta.current_page}
+        pages={users.meta.last_page}
+      />
     </>
   );
 };

@@ -1,10 +1,12 @@
 import { usePage } from '@inertiajs/react';
+import {upperFirst} from 'lodash';
 
 class RoleService {
+  roles = [];
   roleColors = {};
 
   constructor() {
-    const roles = usePage().props.roles;
+    this.roles = usePage().props.roles;
 
     const colors = [
       'grape',
@@ -17,11 +19,15 @@ class RoleService {
       'pink',
     ];
 
-    roles.forEach((role, index) => this.roleColors[role.name] = colors[index]);
+    this.roles.forEach((role, index) => this.roleColors[role.name] = colors[index]);
   }
 
   getColor(role) {
     return this.roleColors[role];
+  }
+
+  getSelectValues() {
+    return this.roles.map(role => ({value: role.name, label: upperFirst(role.name)}));
   }
 }
 

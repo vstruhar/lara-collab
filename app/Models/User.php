@@ -30,6 +30,7 @@ class User extends Authenticatable implements CanResetPasswordContract
         'avatar',
         'phone',
         'rate',
+        'google_id',
     ];
 
     protected $searchable = [

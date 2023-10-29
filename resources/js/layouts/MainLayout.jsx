@@ -1,6 +1,7 @@
+import FlashNotification from "@/components/FlashNotification";
+import NavBarNested from "@/layouts/NavBarNested";
 import { Head } from "@inertiajs/react";
 import { AppShell } from "@mantine/core";
-import NavBarNested from "@/layouts/NavBarNested";
 
 export default function MainLayout({ children, title }) {
   return (
@@ -14,7 +15,10 @@ export default function MainLayout({ children, title }) {
         <NavBarNested></NavBarNested>
       </AppShell.Navbar>
 
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main>
+        <FlashNotification />
+        {children}
+      </AppShell.Main>
     </AppShell>
   );
 }

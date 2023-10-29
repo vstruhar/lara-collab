@@ -1,21 +1,22 @@
-import { UnstyledButton, Group, Avatar, Text, Menu, rem } from "@mantine/core";
+import UserService from "@/services/UserService";
+import { redirectTo } from "@/utils/route";
+import { router, usePage } from "@inertiajs/react";
+import { Avatar, Group, Menu, Text, UnstyledButton, rem } from "@mantine/core";
 import {
+  IconBell,
   IconChevronRight,
   IconLogout,
   IconUser,
-  IconBell,
 } from "@tabler/icons-react";
 import classes from "./css/UserButton.module.css";
-import { usePage, router } from "@inertiajs/react";
-import UserService from "@/services/UserService";
 
 export default function UserButton() {
-  const { user } = usePage().props;
+  const { user } = usePage().props.auth;
   const service = new UserService(user);
 
   const logout = () => {
     router.delete(route("logout"), {
-      onSuccess: () => router.get(route("auth.login.form")),
+      onSuccess: redirectTo("auth.login.form"),
     });
   };
 
