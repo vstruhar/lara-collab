@@ -83,7 +83,7 @@ const UsersEdit = () => {
             <Grid.Col span="content">
               <Avatar
                 src={
-                  user.avatar !== null && form.data.avatar === null
+                  form.data.avatar === null
                     ? user.avatar
                     : URL.createObjectURL(form.data.avatar)
                 }

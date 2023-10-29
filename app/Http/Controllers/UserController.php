@@ -66,10 +66,15 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Archive the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        if (auth()->id() === $user->id) {
+            return redirect()->route('users.index')->warning('Action stopped', 'You cannot archive the user with whom you are currently logged in.');
+        }
+        $user->archive();
+
+        return redirect()->route('users.index')->success('User archived', 'User was archived successfully.');
     }
 }

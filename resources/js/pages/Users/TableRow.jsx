@@ -12,10 +12,12 @@ import {
   Text,
   rem,
 } from "@mantine/core";
-import { IconDots, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconArchive, IconDots, IconPencil } from "@tabler/icons-react";
+import { useForm } from "laravel-precognition-react-inertia";
 
 export default function TableRow({ user }) {
   const service = new UserService(user);
+  const archiveUser = useForm("delete", route("users.destroy", user.id));
 
   return (
     <Table.Tr key={user.id}>
@@ -96,7 +98,7 @@ export default function TableRow({ user }) {
             <Menu.Dropdown>
               <Menu.Item
                 leftSection={
-                  <IconTrash
+                  <IconArchive
                     style={{
                       width: rem(16),
                       height: rem(16),
@@ -105,8 +107,9 @@ export default function TableRow({ user }) {
                   />
                 }
                 color="red"
+                onClick={() => archiveUser.submit()}
               >
-                Delete
+                Archive
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>

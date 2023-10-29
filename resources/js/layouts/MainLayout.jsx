@@ -11,14 +11,13 @@ export default function MainLayout({ children, title }) {
     >
       <Head title={title} />
 
+      <FlashNotification />
+
       <AppShell.Navbar>
         <NavBarNested></NavBarNested>
       </AppShell.Navbar>
 
-      <AppShell.Main>
-        <FlashNotification />
-        {children}
-      </AppShell.Main>
+      <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
 }

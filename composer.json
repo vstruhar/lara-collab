@@ -11,6 +11,7 @@
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.9",
+        "joelbutcher/laravel-archivable": "^1.10",
         "lacodix/laravel-model-filter": "^1.9",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",

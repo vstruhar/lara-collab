@@ -1,22 +1,22 @@
-import { router } from "@inertiajs/react";
-import { useForm } from "laravel-precognition-react-inertia";
-import {
-  TextInput,
-  PasswordInput,
-  Checkbox,
-  Anchor,
-  Paper,
-  Title,
-  Text,
-  Group,
-  Divider,
-  Button,
-} from "@mantine/core";
-import classes from "./css/Login.module.css";
-import GuestLayout from "@/layouts/GuestLayout";
 import GoogleIcon from "@/icons/GoogleIcon";
+import GuestLayout from "@/layouts/GuestLayout";
+import { router } from "@inertiajs/react";
+import {
+  Anchor,
+  Button,
+  Checkbox,
+  Divider,
+  Group,
+  Paper,
+  PasswordInput,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import { useForm } from "laravel-precognition-react-inertia";
 import { useState } from "react";
 import LoginNotification from "./LoginNotification";
+import classes from "./css/Login.module.css";
 
 const Login = ({ notify }) => {
   const [socialLoginPending, setSocialLoginPending] = useState(false);
@@ -30,10 +30,7 @@ const Login = ({ notify }) => {
   const submit = (e) => {
     e.preventDefault();
 
-    form.submit({
-      preserveScroll: true,
-      onSuccess: () => form.reset(),
-    });
+    form.submit({ preserveScroll: true });
   };
 
   return (

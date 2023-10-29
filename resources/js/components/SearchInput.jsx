@@ -7,7 +7,9 @@ export default function SearchInput({ search, ...props }) {
   const [value, setValue] = useState("");
   const [debounced] = useDebouncedValue(value, 250);
 
-  useEffect(() => search(debounced), [debounced]);
+  useEffect(() => {
+    debounced.length && search(debounced);
+  }, [debounced]);
 
   return (
     <TextInput

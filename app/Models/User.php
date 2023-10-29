@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use Lacodix\LaravelModelFilter\Traits\IsSortable;
 use Laravel\Sanctum\HasApiTokens;
+use LaravelArchivable\Archivable;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements CanResetPasswordContract
 {
-    use CanResetPassword, HasApiTokens, HasFactory, HasRoles, IsSearchable, IsSortable, Notifiable, SoftDeletes;
+    use Archivable, CanResetPassword, HasApiTokens, HasFactory, HasRoles, IsSearchable, IsSortable, Notifiable;
 
     /**
      * The attributes that are mass assignable.

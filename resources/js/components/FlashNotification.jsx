@@ -1,63 +1,62 @@
 import { usePage } from "@inertiajs/react";
 import { Alert, Box, Transition, rem } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconAlertCircle,
   IconCircleCheck,
   IconCircleX,
   IconInfoCircle,
 } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import classes from "./css/FlashNotification.module.css";
+
+const iconProps = { style: { width: rem(50), height: rem(50) }, stroke: 2 };
 
 const types = {
   info: {
     color: "blue",
     timeout: 10000,
-    icon: (
-      <IconInfoCircle style={{ width: rem(50), height: rem(50) }} stroke={2} />
-    ),
+    icon: <IconInfoCircle {...iconProps} />,
   },
   success: {
     color: "green",
     timeout: 5000,
-    icon: (
-      <IconCircleCheck style={{ width: rem(50), height: rem(50) }} stroke={2} />
-    ),
+    icon: <IconCircleCheck {...iconProps} />,
   },
   warning: {
     color: "yellow",
     timeout: 10000,
-    icon: (
-      <IconAlertCircle style={{ width: rem(50), height: rem(50) }} stroke={2} />
-    ),
+    icon: <IconAlertCircle {...iconProps} />,
   },
   error: {
     color: "red",
     timeout: 10000,
-    icon: (
-      <IconCircleX style={{ width: rem(50), height: rem(50) }} stroke={2} />
-    ),
+    icon: <IconCircleX {...iconProps} />,
   },
 };
 
 export default function FlashNotification() {
-  const [visible, setVisible] = useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
   const { flash } = usePage().props;
 
   useEffect(() => {
-    setVisible(true);
+    open();
 
-    const timeoutId = setTimeout(
-      () => setVisible(false),
-      types[flash?.type]?.timeout,
-    );
+    const timeoutId = setTimeout(() => close(), types[flash?.type]?.timeout);
     return () => clearTimeout(timeoutId);
   }, [flash]);
 
+  const customSlideDown = {
+    in: { opacity: 1, transform: "translate(-50%, 0)" },
+    out: { opacity: 0, transform: "translate(-50%, -100%)" },
+    common: { transformOrigin: "top" },
+    transitionProperty: "transform, opacity",
+  };
+
   return (
     <Transition
-      mounted={visible}
-      transition="slide-down"
+      mounted={opened}
+      transition={customSlideDown}
       duration={300}
       exitDuration={600}
       timingFunction="easeOut"
@@ -78,7 +77,7 @@ export default function FlashNotification() {
               }}
               radius="md"
               withCloseButton
-              onClose={() => setVisible(false)}
+              onClose={close}
             >
               {flash.message}
             </Alert>

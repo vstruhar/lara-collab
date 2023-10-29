@@ -2,7 +2,6 @@
     position: fixed;
     top: 15px;
     left: 50%;
-    transform: translateX(-50%);
     z-index: 99999;
     min-width: 400px;
     max-width: 500px;
