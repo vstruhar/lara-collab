@@ -1,11 +1,11 @@
-import RoleService from "@/services/RoleService";
+import useRoles from "@/hooks/useRoles";
 import { Badge } from "@mantine/core";
 
 export default function RoleBadge({ role }) {
-  const color = new RoleService().getColor(role);
+  const { getColor } = useRoles();
 
   return (
-    <Badge color={color} variant="light">
+    <Badge color={getColor(role)} variant="light">
       {role}
     </Badge>
   );

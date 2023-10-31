@@ -1,10 +1,10 @@
 import ActionButton from "@/components/ActionButton";
 import BackButton from "@/components/BackButton";
 import useForm from "@/hooks/useForm";
+import useRoles from "@/hooks/useRoles";
+import useUser from "@/hooks/useUser";
 import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
-import RoleService from "@/services/RoleService";
-import UserService from "@/services/UserService";
 import { redirectTo } from "@/utils/route";
 import {
   Anchor,
@@ -23,7 +23,7 @@ import {
 } from "@mantine/core";
 
 const UsersCreate = () => {
-  const roleService = new RoleService();
+  const { getSelectValues } = useRoles();
 
   const [form, submit, updateValue] = useForm("post", route("users.store"), {
     avatar: null,
@@ -65,7 +65,7 @@ const UsersCreate = () => {
                 }
                 size={120}
               >
-                {new UserService(form.data).getInitials()}
+                {useUser(form.data).getInitials()}
               </Avatar>
             </Grid.Col>
             <Grid.Col span="auto">
@@ -118,7 +118,7 @@ const UsersCreate = () => {
             mt="md"
             value={form.data.roles}
             onChange={(values) => updateValue("roles", values)}
-            data={roleService.getSelectValues()}
+            data={getSelectValues()}
             error={form.errors.roles}
           />
 

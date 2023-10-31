@@ -39,12 +39,14 @@ class Handler extends ExceptionHandler
         /** @var \Symfony\Component\HttpFoundation\Response */
         $response = parent::render($request, $e);
 
-        if (! app()->environment(['local', 'testing']) && in_array($response->status(), [500, 503, 404, 403])) {
+        if (! app()->environment(['local', 'testing']) && in_array($response->status(), [500, 503, 404])) {
             return Inertia::render('Error', ['status' => $response->status()])
                 ->toResponse($request)
                 ->setStatusCode($response->status());
         } elseif ($response->status() === 419) {
             return back()->error('The page has expired', 'Please refresh your page and try again.');
+        } elseif ($response->status() === 403) {
+            return back()->error('Unauthorized', 'You do not have the necessary permissions to perform this action.');
         }
 
         return $response;

@@ -49,10 +49,14 @@ class HandleInertiaRequests extends Middleware
                         'email' => $user->email,
                         'avatar' => $user->avatar,
                         'job_title' => $user->job_title,
+                        'roles' => $user->getRoleNames(),
+                        'permissions' => $user->getAllPermissions()->pluck('name'),
                     ];
                 },
             ],
-            'roles' => fn () => Role::orderBy('name')->get(['id', 'name'])->toArray(),
+            'shared' => [
+                'roles' => fn () => Role::orderBy('name')->get(['id', 'name'])->toArray(),
+            ],
             'flash' => session()->get('flash'),
         ]);
     }

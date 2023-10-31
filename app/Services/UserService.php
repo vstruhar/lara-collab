@@ -23,15 +23,19 @@ class UserService
         } else {
             $filepath = storage_path("app/public/avatars/{$user->id}.jpg");
 
-            $response = Http::timeout(20)
-                ->sink($filepath)
-                ->get("https://unavatar.io/{$user->email}?fallback=false");
+            try {
+                $response = Http::timeout(20)
+                    ->sink($filepath)
+                    ->get("https://unavatar.io/{$user->email}?fallback=false");
 
-            if ($response->successful()) {
-                return "/storage/avatars/{$user->id}.jpg";
-            } else {
-                File::delete($filepath);
+                if ($response->successful()) {
+                    return "/storage/avatars/{$user->id}.jpg";
+                } else {
+                    File::delete($filepath);
 
+                    return null;
+                }
+            } catch (\Exception $e) {
                 return null;
             }
         }

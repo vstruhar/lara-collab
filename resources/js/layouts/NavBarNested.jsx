@@ -1,16 +1,17 @@
-import { Group, Code, ScrollArea, rem } from "@mantine/core";
+import { Code, Group, ScrollArea, rem } from "@mantine/core";
 import {
+  IconFileDollar,
   IconGauge,
   IconLayoutList,
-  IconUsers,
-  IconFileDollar,
+  IconListDetails,
   IconReportAnalytics,
   IconSettings,
-  IconListDetails,
+  IconUsers,
 } from "@tabler/icons-react";
-import UserButton from "./UserButton";
-import NavbarLinksGroup from "./NavbarLinksGroup";
+import remove from "lodash/remove";
 import Logo from "../components/Logo";
+import NavbarLinksGroup from "./NavbarLinksGroup";
+import UserButton from "./UserButton";
 import classes from "./css/NavbarNested.module.css";
 
 export default function Sidebar() {
@@ -85,6 +86,8 @@ export default function Sidebar() {
       ],
     },
   ];
+
+  if (!can("view users")) remove(items, (i) => i.label === "Users");
 
   const links = items.map((item) => (
     <NavbarLinksGroup {...item} key={item.label} />

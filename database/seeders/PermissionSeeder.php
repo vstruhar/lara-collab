@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class PermissionSeeder extends Seeder
 {
     protected $permissionsByRole = [
-        'admin' => [],
+        'admin' => ['view users', 'view user rate', 'create user', 'edit user', 'archive user', 'restore users'],
         'manager' => ['view users'],
         'developer' => [],
         'designer' => [],
@@ -26,13 +26,17 @@ class PermissionSeeder extends Seeder
 
         $insertPermissions = fn ($role) => collect($this->permissionsByRole[$role])
             ->map(function ($name) {
-                return DB::table('permissions')
-                    ->insertGetId([
-                        'name' => $name,
-                        'guard_name' => 'web',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
+                $permission = DB::table('permissions')->where('name', $name)->first();
+
+                return $permission
+                    ? $permission->id
+                    : DB::table('permissions')
+                        ->insertGetId([
+                            'name' => $name,
+                            'guard_name' => 'web',
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
             })
             ->toArray();
 

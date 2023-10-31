@@ -16,6 +16,14 @@ use Inertia\Response;
 class UserController extends Controller
 {
     /**
+     * Create the controller instance.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request): Response
@@ -85,7 +93,11 @@ class UserController extends Controller
      */
     public function restore(int $user)
     {
-        User::withArchived()->find($user)->unArchive();
+        $user = User::withArchived()->find($user);
+
+        $this->authorize('restore', $user);
+
+        $user->unArchive();
 
         return redirect()->back()->success('User restored', 'The restoring of the user was completed successfully.');
     }

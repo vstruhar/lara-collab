@@ -1,6 +1,6 @@
 import { openConfirmModal } from "@/components/ConfirmModal";
 import RoleBadge from "@/components/RoleBadge";
-import UserService from "@/services/UserService";
+import useUser from "@/hooks/useUser";
 import { money } from "@/utils/formatCurrency";
 import { redirectTo } from "@/utils/route";
 import {
@@ -22,7 +22,7 @@ import {
 import { useForm } from "laravel-precognition-react-inertia";
 
 export default function TableRow({ user }) {
-  const service = new UserService(user);
+  const { getInitials } = useUser(user);
   const archiveUser = useForm("delete", route("users.destroy", user.id));
   const unArchiveUser = useForm("post", route("users.restore", user.id));
 
@@ -59,7 +59,7 @@ export default function TableRow({ user }) {
             color="blue"
             alt={user.name}
           >
-            {service.getInitials()}
+            {getInitials()}
           </Avatar>
           <div>
             <Text fz="sm" fw={500}>
@@ -84,72 +84,78 @@ export default function TableRow({ user }) {
           Email
         </Text>
       </Table.Td>
-      <Table.Td>
-        <Text fz="sm">{money(user.rate)} / hr</Text>
-        <Text fz="xs" c="dimmed">
-          Rate
-        </Text>
-      </Table.Td>
-      <Table.Td>
-        <Group gap={0} justify="flex-end">
-          {!route().params.archived && (
-            <ActionIcon
-              variant="subtle"
-              color="blue"
-              onClick={redirectTo("users.edit", user.id)}
-            >
-              <IconPencil
-                style={{ width: rem(16), height: rem(16) }}
-                stroke={1.5}
-              />
-            </ActionIcon>
-          )}
-          <Menu
-            transitionProps={{ transition: "pop" }}
-            withArrow
-            position="bottom-end"
-            withinPortal
-          >
-            <Menu.Target>
-              <ActionIcon variant="subtle" color="gray">
-                <IconDots
+      {can("view user rate") && (
+        <Table.Td>
+          <Text fz="sm">{money(user.rate)} / hr</Text>
+          <Text fz="xs" c="dimmed">
+            Rate
+          </Text>
+        </Table.Td>
+      )}
+      {(can("edit user") || can("archive user")) && (
+        <Table.Td>
+          <Group gap={0} justify="flex-end">
+            {(!route().params.archived || !can("edit user")) && (
+              <ActionIcon
+                variant="subtle"
+                color="blue"
+                onClick={redirectTo("users.edit", user.id)}
+              >
+                <IconPencil
                   style={{ width: rem(16), height: rem(16) }}
                   stroke={1.5}
                 />
               </ActionIcon>
-            </Menu.Target>
-            <Menu.Dropdown>
-              {route().params.archived ? (
-                <Menu.Item
-                  leftSection={
-                    <IconArchiveOff
+            )}
+            {can("archive user") && (
+              <Menu
+                transitionProps={{ transition: "pop" }}
+                withArrow
+                position="bottom-end"
+                withinPortal
+              >
+                <Menu.Target>
+                  <ActionIcon variant="subtle" color="gray">
+                    <IconDots
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
-                  }
-                  color="blue"
-                  onClick={openUnArchiveModal}
-                >
-                  Restore
-                </Menu.Item>
-              ) : (
-                <Menu.Item
-                  leftSection={
-                    <IconArchive
-                      style={{ width: rem(16), height: rem(16) }}
-                      stroke={1.5}
-                    />
-                  }
-                  color="red"
-                  onClick={openArchiveModal}
-                >
-                  Archive
-                </Menu.Item>
-              )}
-            </Menu.Dropdown>
-          </Menu>
-        </Group>
-      </Table.Td>
+                  </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  {route().params.archived ? (
+                    <Menu.Item
+                      leftSection={
+                        <IconArchiveOff
+                          style={{ width: rem(16), height: rem(16) }}
+                          stroke={1.5}
+                        />
+                      }
+                      color="blue"
+                      onClick={openUnArchiveModal}
+                    >
+                      Restore
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item
+                      leftSection={
+                        <IconArchive
+                          style={{ width: rem(16), height: rem(16) }}
+                          stroke={1.5}
+                        />
+                      }
+                      color="red"
+                      onClick={openArchiveModal}
+                    >
+                      Archive
+                    </Menu.Item>
+                  )}
+                </Menu.Dropdown>
+              </Menu>
+            )}
+          </Group>
+        </Table.Td>
+      )}
     </Table.Tr>
   );
 }

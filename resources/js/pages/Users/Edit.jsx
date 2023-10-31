@@ -1,10 +1,10 @@
 import ActionButton from "@/components/ActionButton";
 import BackButton from "@/components/BackButton";
 import useForm from "@/hooks/useForm";
+import useRoles from "@/hooks/useRoles";
+import useUser from "@/hooks/useUser";
 import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
-import RoleService from "@/services/RoleService";
-import UserService from "@/services/UserService";
 import { redirectTo } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import {
@@ -25,7 +25,7 @@ import {
 
 const UsersEdit = () => {
   const { user } = usePage().props;
-  const roleService = new RoleService();
+  const { getSelectValues } = useRoles();
 
   const [form, submit, updateValue] = useForm(
     "post",
@@ -72,7 +72,7 @@ const UsersEdit = () => {
                 }
                 size={120}
               >
-                {new UserService(form.data).getInitials()}
+                {useUser(form.data).getInitials()}
               </Avatar>
             </Grid.Col>
             <Grid.Col span="auto">
@@ -125,7 +125,7 @@ const UsersEdit = () => {
             mt="md"
             value={form.data.roles}
             onChange={(values) => updateValue("roles", values)}
-            data={roleService.getSelectValues()}
+            data={getSelectValues()}
             error={form.errors.roles}
           />
 

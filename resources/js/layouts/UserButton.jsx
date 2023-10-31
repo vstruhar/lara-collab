@@ -1,4 +1,4 @@
-import UserService from "@/services/UserService";
+import useUser from "@/hooks/useUser";
 import { redirectTo } from "@/utils/route";
 import { router, usePage } from "@inertiajs/react";
 import { Avatar, Group, Menu, Text, UnstyledButton, rem } from "@mantine/core";
@@ -12,7 +12,7 @@ import classes from "./css/UserButton.module.css";
 
 export default function UserButton() {
   const { user } = usePage().props.auth;
-  const service = new UserService(user);
+  const { getInitials } = useUser(user);
 
   const logout = () => {
     router.delete(route("logout"), {
@@ -26,7 +26,7 @@ export default function UserButton() {
         <UnstyledButton className={classes.user}>
           <Group>
             <Avatar src={user.avatar} radius="xl" color="blue" alt={user.name}>
-              {service.getInitials()}
+              {getInitials()}
             </Avatar>
 
             <div style={{ flex: 1 }}>

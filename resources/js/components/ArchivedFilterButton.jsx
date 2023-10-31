@@ -1,15 +1,14 @@
 import { reloadWithQuery, reloadWithoutQueryParams } from "@/utils/route";
 import { ActionIcon, Tooltip } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDidUpdate, useDisclosure } from "@mantine/hooks";
 import { IconArchive } from "@tabler/icons-react";
-import { useEffect } from "react";
 
 export default function ArchivedFilterButton() {
   const [selected, { toggle }] = useDisclosure(
     route().params?.archived !== undefined,
   );
 
-  useEffect(() => {
+  useDidUpdate(() => {
     if (selected) reloadWithQuery({ archived: 1 });
     else reloadWithoutQueryParams(["archived"]);
   }, [selected]);

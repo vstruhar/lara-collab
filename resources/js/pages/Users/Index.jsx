@@ -7,6 +7,7 @@ import { redirectTo, reloadWithQuery } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import { Button, Grid, Group, Table } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
+import remove from "lodash/remove";
 import TableRow from "./TableRow";
 
 const UsersIndex = () => {
@@ -19,6 +20,10 @@ const UsersIndex = () => {
     { label: "Rate", column: "rate" },
     { label: "Actions", sortable: false },
   ];
+
+  if (!can("view user rate")) remove(columns, (i) => i.label === "Rate");
+  if (!can("edit user") && !can("archive user"))
+    remove(columns, (i) => i.label === "Actions");
 
   const rows = users.data.map((user) => <TableRow user={user} key={user.id} />);
   const searchUsers = (search) => reloadWithQuery({ search });
@@ -34,13 +39,15 @@ const UsersIndex = () => {
           </Group>
         </Grid.Col>
         <Grid.Col span="content">
-          <Button
-            leftSection={<IconPlus size={14} />}
-            radius="xl"
-            onClick={redirectTo("users.create")}
-          >
-            Create
-          </Button>
+          {can("create user") && (
+            <Button
+              leftSection={<IconPlus size={14} />}
+              radius="xl"
+              onClick={redirectTo("users.create")}
+            >
+              Create
+            </Button>
+          )}
         </Grid.Col>
       </Grid>
 
