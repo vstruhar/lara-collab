@@ -1,10 +1,11 @@
+import ArchivedFilterButton from "@/components/ArchivedFilterButton";
 import Pagination from "@/components/Pagination";
 import SearchInput from "@/components/SearchInput";
 import TableHead from "@/components/TableHead";
 import Layout from "@/layouts/MainLayout";
 import { redirectTo, reloadWithQuery } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
-import { Button, Grid, Table } from "@mantine/core";
+import { Button, Grid, Group, Table } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import TableRow from "./TableRow";
 
@@ -27,7 +28,10 @@ const UsersIndex = () => {
     <>
       <Grid justify="space-between" align="center">
         <Grid.Col span="content">
-          <SearchInput placeholder="Search users" search={searchUsers} />
+          <Group>
+            <SearchInput placeholder="Search users" search={searchUsers} />
+            <ArchivedFilterButton />
+          </Group>
         </Grid.Col>
         <Grid.Col span="content">
           <Button

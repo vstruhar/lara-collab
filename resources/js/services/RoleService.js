@@ -1,5 +1,5 @@
 import { usePage } from '@inertiajs/react';
-import {upperFirst} from 'lodash';
+import upperFirst from 'lodash/upperFirst';
 
 class RoleService {
   roles = [];

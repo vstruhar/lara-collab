@@ -2,23 +2,18 @@
 
 namespace App\Listeners;
 
-use App\Events\UserCreated;
+use App\Events\UserCreated as UserCreatedEvent;
+use App\Notifications\UserCreatedNotification;
 
 class SendEmailWithCredentials
 {
     /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Handle the event.
      */
-    public function handle(UserCreated $event): void
+    public function handle(UserCreatedEvent $event): void
     {
-        //
+        $event->user->notify(
+            new UserCreatedNotification($event->password)
+        );
     }
 }

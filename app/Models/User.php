@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use Lacodix\LaravelModelFilter\Traits\IsSortable;
 use Laravel\Sanctum\HasApiTokens;
@@ -64,4 +65,9 @@ class User extends Authenticatable implements CanResetPasswordContract
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getFirstName(): string
+    {
+        return Str::beforeLast($this->name, ' ');
+    }
 }

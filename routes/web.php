@@ -14,6 +14,10 @@ use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
+// Route::get('mail', function () {
+//     return (new App\Notifications\UserCreatedNotification('secret'))->toMail(App\Models\User::first());
+// });
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -29,6 +33,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Users
     Route::resource('users', UserController::class)->except(['show']);
+    Route::post('users/{user}/restore', [UserController::class, 'restore'])->name('users.restore');
 
     // Invoices
     Route::resource('invoices', InvoiceController::class)->except(['show']);

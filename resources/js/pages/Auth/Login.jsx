@@ -14,18 +14,21 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "laravel-precognition-react-inertia";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LoginNotification from "./LoginNotification";
 import classes from "./css/Login.module.css";
 
 const Login = ({ notify }) => {
   const [socialLoginPending, setSocialLoginPending] = useState(false);
+  const passwordRef = useRef(null);
 
   const form = useForm("post", route("auth.login.attempt"), {
-    email: "",
+    email: route().params?.email || "",
     password: "",
     remember: false,
   });
+
+  useEffect(() => route().params?.email && passwordRef.current.focus(), []);
 
   const submit = (e) => {
     e.preventDefault();
@@ -76,6 +79,7 @@ const Login = ({ notify }) => {
             error={form.errors.email}
           />
           <PasswordInput
+            ref={passwordRef}
             label="Password"
             placeholder="Your password"
             required

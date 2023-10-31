@@ -1,5 +1,7 @@
 import ActionButton from "@/components/ActionButton";
 import BackButton from "@/components/BackButton";
+import useForm from "@/hooks/useForm";
+import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
 import RoleService from "@/services/RoleService";
 import UserService from "@/services/UserService";
@@ -14,20 +16,16 @@ import {
   Group,
   MultiSelect,
   NumberInput,
-  Paper,
   PasswordInput,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
-import { useScrollIntoView } from "@mantine/hooks";
-import { useForm } from "laravel-precognition-react-inertia";
 
 const UsersCreate = () => {
   const roleService = new RoleService();
-  const { scrollIntoView } = useScrollIntoView({ duration: 1000 });
 
-  const form = useForm("post", route("users.store"), {
+  const [form, submit, updateValue] = useForm("post", route("users.store"), {
     avatar: null,
     job_title: "",
     name: "",
@@ -38,25 +36,6 @@ const UsersCreate = () => {
     password_confirmation: "",
     roles: [],
   });
-
-  const submit = (e) => {
-    e.preventDefault();
-
-    form.submit({
-      forceFormData: true,
-      preserveScroll: true,
-      onError: () => {
-        scrollIntoView({
-          target: document.querySelector('[data-error="true"]'),
-        });
-      },
-    });
-  };
-
-  const updateValue = (field, value) => {
-    form.setData(field, value);
-    form.forgetError(field);
-  };
 
   return (
     <>
@@ -74,7 +53,7 @@ const UsersCreate = () => {
         <Grid.Col span="content"></Grid.Col>
       </Grid>
 
-      <Paper px={45} py={35} withBorder maw={550}>
+      <ContainerBox maw={550}>
         <form onSubmit={submit}>
           <Grid justify="flex-start" align="flex-start" gutter="lg">
             <Grid.Col span="content">
@@ -209,7 +188,7 @@ const UsersCreate = () => {
             <ActionButton loading={form.processing}>Create</ActionButton>
           </Group>
         </form>
-      </Paper>
+      </ContainerBox>
     </>
   );
 };

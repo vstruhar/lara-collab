@@ -1,16 +1,16 @@
-import "./bootstrap";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/dropzone/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/tiptap/styles.css";
-import "@mantine/dropzone/styles.css";
 import "../css/app.css";
+import "./bootstrap";
 
-import { createRoot } from "react-dom/client";
 import { createInertiaApp } from "@inertiajs/react";
-import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import { createRoot } from "react-dom/client";
 
 const theme = createTheme({});
 

@@ -9,6 +9,7 @@ use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,13 +18,14 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return Inertia::render('Users/Index', [
             'users' => new UserCollection(
                 User::searchByQueryString()
                     ->sortByQueryString()
                     ->with('roles:id,name')
+                    ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                     ->paginate(12)
             ),
         ]);
@@ -44,7 +46,7 @@ class UserController extends Controller
     {
         (new CreateUser)->create($request->validated());
 
-        return redirect()->route('users.index')->success('User created', 'New user was created successfully.');
+        return redirect()->route('users.index')->success('User created', 'A new user was successfully created.');
     }
 
     /**
@@ -62,7 +64,7 @@ class UserController extends Controller
     {
         (new UpdateUser)->update($user, $request->validated());
 
-        return redirect()->route('users.index')->success('User updated', 'User was updated successfully.');
+        return redirect()->route('users.index')->success('User updated', 'The user was successfully updated.');
     }
 
     /**
@@ -75,6 +77,16 @@ class UserController extends Controller
         }
         $user->archive();
 
-        return redirect()->route('users.index')->success('User archived', 'User was archived successfully.');
+        return redirect()->back()->success('User archived', 'The user was successfully archived.');
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     */
+    public function restore(int $user)
+    {
+        User::withArchived()->find($user)->unArchive();
+
+        return redirect()->back()->success('User restored', 'The restoring of the user was completed successfully.');
     }
 }
