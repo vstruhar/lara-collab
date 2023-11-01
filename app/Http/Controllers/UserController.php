@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Actions\User\CreateUser;
 use App\Actions\User\UpdateUser;
-use App\Http\Requests\User\StoreRequest;
-use App\Http\Requests\User\UpdateRequest;
-use App\Http\Resources\UserCollection;
-use App\Http\Resources\UserResource;
+use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
+use App\Http\Resources\User\UserCollection;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,7 +29,7 @@ class UserController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Users/Index', [
-            'users' => new UserCollection(
+            'items' => new UserCollection(
                 User::searchByQueryString()
                     ->sortByQueryString()
                     ->with('roles:id,name')
@@ -50,7 +50,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request)
+    public function store(StoreUserRequest $request)
     {
         (new CreateUser)->create($request->validated());
 
@@ -62,13 +62,13 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return Inertia::render('Users/Edit', ['user' => new UserResource($user)]);
+        return Inertia::render('Users/Edit', ['item' => new UserResource($user)]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(User $user, UpdateRequest $request)
+    public function update(User $user, UpdateUserRequest $request)
     {
         (new UpdateUser)->update($user, $request->validated());
 
@@ -93,7 +93,7 @@ class UserController extends Controller
      */
     public function restore(int $user)
     {
-        $user = User::withArchived()->find($user);
+        $user = User::withArchived()->findOrFail($user);
 
         $this->authorize('restore', $user);
 

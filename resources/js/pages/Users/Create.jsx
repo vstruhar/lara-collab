@@ -22,7 +22,7 @@ import {
   Title,
 } from "@mantine/core";
 
-const UsersCreate = () => {
+const UserCreate = () => {
   const { getSelectValues } = useRoles();
 
   const [form, submit, updateValue] = useForm("post", route("users.store"), {
@@ -193,6 +193,6 @@ const UsersCreate = () => {
   );
 };
 
-UsersCreate.layout = (page) => <Layout children={page} title="Create user" />;
+UserCreate.layout = (page) => <Layout children={page} title="Create user" />;
 
-export default UsersCreate;
+export default UserCreate;

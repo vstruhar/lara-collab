@@ -2,16 +2,17 @@
 
 namespace App\Policies;
 
+use App\Models\Role;
 use App\Models\User;
 
-class UserPolicy
+class RolePolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('view users');
+        return $user->hasPermissionTo('view roles');
     }
 
     /**
@@ -19,30 +20,30 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('create user');
+        return $user->hasPermissionTo('create role');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, User $model): bool
+    public function update(User $user, Role $role): bool
     {
-        return $user->hasPermissionTo('edit user');
+        return $user->hasPermissionTo('edit role') && $role->name !== 'admin';
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, User $model): bool
+    public function delete(User $user, Role $role): bool
     {
-        return $user->hasPermissionTo('archive user');
+        return $user->hasPermissionTo('archive role') && $role->name !== 'admin';
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, User $model): bool
+    public function restore(User $user, Role $role): bool
     {
-        return $user->hasPermissionTo('restore user');
+        return $user->hasPermissionTo('restore role');
     }
 }

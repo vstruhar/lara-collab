@@ -23,24 +23,24 @@ import {
   Title,
 } from "@mantine/core";
 
-const UsersEdit = () => {
-  const { user } = usePage().props;
+const UserEdit = () => {
+  const { item } = usePage().props;
   const { getSelectValues } = useRoles();
 
   const [form, submit, updateValue] = useForm(
     "post",
-    route("users.update", user.id),
+    route("users.update", item.id),
     {
       _method: "put",
       avatar: null,
-      job_title: user.job_title,
-      name: user.name,
-      phone: user.phone || "",
-      rate: user.rate / 100,
-      email: user.email,
+      job_title: item.job_title,
+      name: item.name,
+      phone: item.phone || "",
+      rate: item.rate / 100,
+      email: item.email,
       password: "",
       password_confirmation: "",
-      roles: user.roles,
+      roles: item.roles,
     },
   );
 
@@ -67,7 +67,7 @@ const UsersEdit = () => {
               <Avatar
                 src={
                   form.data.avatar === null
-                    ? user.avatar
+                    ? item.avatar
                     : URL.createObjectURL(form.data.avatar)
                 }
                 size={120}
@@ -198,6 +198,6 @@ const UsersEdit = () => {
   );
 };
 
-UsersEdit.layout = (page) => <Layout children={page} title="Edit user" />;
+UserEdit.layout = (page) => <Layout children={page} title="Edit user" />;
 
-export default UsersEdit;
+export default UserEdit;

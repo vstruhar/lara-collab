@@ -12,7 +12,7 @@ const useForm = (method, url, fields) => {
 
       form.submit({
         forceFormData: true,
-        preserveScroll: true,
+        preserveScroll: false,
         onError: () => {
           scrollIntoView({
             target: document.querySelector('[data-error="true"]'),

@@ -10,7 +10,11 @@ use Illuminate\Support\Facades\DB;
 class PermissionSeeder extends Seeder
 {
     protected $permissionsByRole = [
-        'admin' => ['view users', 'view user rate', 'create user', 'edit user', 'archive user', 'restore users'],
+        'admin' => [
+            'view users', 'view user rate', 'create user', 'edit user', 'archive user', 'restore user',
+            'view labels', 'create label', 'edit label', 'archive label', 'restore label',
+            'view roles', 'create role', 'edit role', 'archive role', 'restore role',
+        ],
         'manager' => ['view users'],
         'developer' => [],
         'designer' => [],

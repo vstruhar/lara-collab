@@ -11,7 +11,7 @@ import remove from "lodash/remove";
 import TableRow from "./TableRow";
 
 const UsersIndex = () => {
-  const { users } = usePage().props;
+  const { items } = usePage().props;
 
   const columns = [
     { label: "User", column: "name" },
@@ -25,16 +25,16 @@ const UsersIndex = () => {
   if (!can("edit user") && !can("archive user"))
     remove(columns, (i) => i.label === "Actions");
 
-  const rows = users.data.map((user) => <TableRow user={user} key={user.id} />);
-  const searchUsers = (search) => reloadWithQuery({ search });
-  const sortUsers = (sort) => reloadWithQuery(sort);
+  const rows = items.data.map((user) => <TableRow item={user} key={user.id} />);
+  const search = (search) => reloadWithQuery({ search });
+  const sort = (sort) => reloadWithQuery(sort);
 
   return (
     <>
       <Grid justify="space-between" align="center">
         <Grid.Col span="content">
           <Group>
-            <SearchInput placeholder="Search users" search={searchUsers} />
+            <SearchInput placeholder="Search users" search={search} />
             <ArchivedFilterButton />
           </Group>
         </Grid.Col>
@@ -51,16 +51,16 @@ const UsersIndex = () => {
         </Grid.Col>
       </Grid>
 
-      <Table.ScrollContainer minWidth={800} my="lg">
+      <Table.ScrollContainer miw={800} my="lg">
         <Table verticalSpacing="sm">
-          <TableHead columns={columns} sort={sortUsers} />
+          <TableHead columns={columns} sort={sort} />
           <Table.Tbody>{rows}</Table.Tbody>
         </Table>
       </Table.ScrollContainer>
 
       <Pagination
-        current={users.meta.current_page}
-        pages={users.meta.last_page}
+        current={items.meta.current_page}
+        pages={items.meta.last_page}
       />
     </>
   );

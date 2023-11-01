@@ -35,7 +35,7 @@ export default function UserButton() {
               </Text>
 
               <Text c="dimmed" size="xs">
-                {user.email}
+                {user.job_title}
               </Text>
             </div>
 

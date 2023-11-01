@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Route;
 //     return (new App\Notifications\UserCreatedNotification('secret'))->toMail(App\Models\User::first());
 // });
 
+// Route::get('test', function () {
+//     App\Services\PermissionService::allPermissionsGrouped();
+// });
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -44,8 +48,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Settings
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
         Route::resource('company', CompanyController::class)->except(['show']);
+
         Route::resource('roles', RoleController::class)->except(['show']);
+        Route::post('roles/{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');
+
         Route::resource('labels', LabelController::class)->except(['show']);
+        Route::post('labels/{label}/restore', [LabelController::class, 'restore'])->name('labels.restore');
     });
 
     // Account

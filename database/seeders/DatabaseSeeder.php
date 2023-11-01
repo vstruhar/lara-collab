@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,
+            LabelSeeder::class,
         ]);
 
         if ($this->command->confirm('Seed development data?', false)) {

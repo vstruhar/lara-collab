@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Label;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class LabelResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,12 +17,7 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email,
-            'job_title' => $this->job_title,
-            'avatar' => $this->avatar,
-            'phone' => $this->phone,
-            'rate' => $this->rate,
-            'roles' => $this->roles->map->only('name')->flatten()->toArray(),
+            'color' => $this->color,
         ];
     }
 }

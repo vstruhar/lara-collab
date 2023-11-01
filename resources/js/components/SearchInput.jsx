@@ -1,14 +1,16 @@
+import { reloadWithoutQueryParams } from "@/utils/route";
 import { TextInput, rem } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
+import { useDebouncedValue, useDidUpdate } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function SearchInput({ search, ...props }) {
   const [value, setValue] = useState("");
   const [debounced] = useDebouncedValue(value, 250);
 
-  useEffect(() => {
-    debounced.length && search(debounced);
+  useDidUpdate(() => {
+    if (debounced !== "") search(debounced);
+    else reloadWithoutQueryParams(["search"]);
   }, [debounced]);
 
   return (
