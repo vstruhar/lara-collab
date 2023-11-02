@@ -1,17 +1,15 @@
-import useUser from "@/hooks/useUser";
+import { getInitials } from "@/services/UserService";
 import { Avatar, Grid, Group, Paper, Text } from "@mantine/core";
 import { IconAt, IconPhoneCall } from "@tabler/icons-react";
 import classes from "./css/UserInfoCard.module.css";
 
 export function UserInfoCard({ user }) {
-  const { getInitials } = useUser(user);
-
   return (
     <Paper p={25} withBorder maw={400}>
       <Grid justify="flex-start" align="flex-start">
         <Grid.Col span="content">
           <Avatar src={user.avatar} size={94}>
-            {getInitials()}
+            {getInitials(user.name)}
           </Avatar>
         </Grid.Col>
         <Grid.Col span="auto">

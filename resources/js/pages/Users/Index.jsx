@@ -3,8 +3,11 @@ import Pagination from "@/components/Pagination";
 import SearchInput from "@/components/SearchInput";
 import TableHead from "@/components/TableHead";
 import TableRowEmpty from "@/components/TableRowEmpty";
-import useTable from "@/hooks/useTable";
 import Layout from "@/layouts/MainLayout";
+import {
+  actionColumnVisibility,
+  prepareColumns,
+} from "@/services/TableService";
 import { redirectTo, reloadWithQuery } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import { Button, Grid, Group, Table } from "@mantine/core";
@@ -12,7 +15,6 @@ import { IconPlus } from "@tabler/icons-react";
 import TableRow from "./TableRow";
 
 const UsersIndex = () => {
-  const { prepareColumns, actionColumnVisibility } = useTable();
   const { items } = usePage().props;
 
   const columns = prepareColumns([

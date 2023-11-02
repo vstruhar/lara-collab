@@ -6,9 +6,6 @@ import "@mantine/tiptap/styles.css";
 import "../css/app.css";
 import "./bootstrap";
 
-import { can } from "@/utils/authorization";
-window.can = can;
-
 import { createInertiaApp } from "@inertiajs/react";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";

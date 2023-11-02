@@ -54,7 +54,6 @@ export default function Sidebar() {
       icon: IconUsers,
       link: route("users.index"),
       active: route().current("users.*"),
-      visible: can("view roles"),
       visible: true,
     },
     {

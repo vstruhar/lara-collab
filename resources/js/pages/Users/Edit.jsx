@@ -2,9 +2,9 @@ import ActionButton from "@/components/ActionButton";
 import BackButton from "@/components/BackButton";
 import useForm from "@/hooks/useForm";
 import useRoles from "@/hooks/useRoles";
-import useUser from "@/hooks/useUser";
 import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
+import { getInitials } from "@/services/UserService";
 import { redirectTo } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import {
@@ -72,7 +72,7 @@ const UserEdit = () => {
                 }
                 size={120}
               >
-                {useUser(form.data).getInitials()}
+                {getInitials(form.data.name)}
               </Avatar>
             </Grid.Col>
             <Grid.Col span="auto">

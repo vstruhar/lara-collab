@@ -1,9 +1,12 @@
 import FlashNotification from "@/components/FlashNotification";
+import useAuthorization from "@/hooks/useAuthorization";
 import NavBarNested from "@/layouts/NavBarNested";
 import { Head } from "@inertiajs/react";
 import { AppShell } from "@mantine/core";
 
 export default function MainLayout({ children, title }) {
+  window.can = useAuthorization().can;
+
   return (
     <AppShell
       navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: false } }}

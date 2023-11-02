@@ -1,12 +1,10 @@
 import RoleBadge from "@/components/RoleBadge";
 import TableRowActions from "@/components/TableRowActions";
-import useUser from "@/hooks/useUser";
+import { getInitials } from "@/services/UserService";
 import { money } from "@/utils/formatCurrency";
 import { Avatar, Flex, Group, Table, Text } from "@mantine/core";
 
 export default function TableRow({ item }) {
-  const { getInitials } = useUser(item);
-
   return (
     <Table.Tr key={item.id}>
       <Table.Td>
@@ -18,7 +16,7 @@ export default function TableRow({ item }) {
             color="blue"
             alt={item.name}
           >
-            {getInitials()}
+            {getInitials(item.name)}
           </Avatar>
           <div>
             <Text fz="sm" fw={500}>
