@@ -2,6 +2,8 @@ import ArchivedFilterButton from "@/components/ArchivedFilterButton";
 import Pagination from "@/components/Pagination";
 import SearchInput from "@/components/SearchInput";
 import TableHead from "@/components/TableHead";
+import TableRowEmpty from "@/components/TableRowEmpty";
+import useTable from "@/hooks/useTable";
 import Layout from "@/layouts/MainLayout";
 import { redirectTo, reloadWithQuery } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
@@ -10,15 +12,24 @@ import { IconPlus } from "@tabler/icons-react";
 import TableRow from "./TableRow";
 
 const RolesIndex = () => {
+  const { prepareColumns, actionColumnVisibility } = useTable();
   const { items } = usePage().props;
 
-  const columns = [
+  const columns = prepareColumns([
     { label: "Name", column: "name" },
     { label: "Permissions count", sortable: false },
-    { label: "Actions", sortable: false },
-  ];
+    {
+      label: "Actions",
+      sortable: false,
+      visible: actionColumnVisibility("role"),
+    },
+  ]);
 
-  const rows = items.data.map((role) => <TableRow item={role} key={role.id} />);
+  const rows = items.data.length ? (
+    items.data.map((role) => <TableRow item={role} key={role.id} />)
+  ) : (
+    <TableRowEmpty colSpan={columns.length} />
+  );
 
   const search = (search) => reloadWithQuery({ search });
   const sort = (sort) => reloadWithQuery(sort);

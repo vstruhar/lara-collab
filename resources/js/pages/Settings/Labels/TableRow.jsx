@@ -10,7 +10,7 @@ export default function TableRow({ item }) {
       <Table.Td>
         <Text fz="sm">{item.name}</Text>
       </Table.Td>
-      {(can("edit label") || can("archive label")) && (
+      {(can("edit label") || can("archive label") || can("restore label")) && (
         <Table.Td w={100}>
           <TableRowActions
             item={item}

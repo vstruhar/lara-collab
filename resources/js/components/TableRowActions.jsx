@@ -43,7 +43,7 @@ export default function TableRowActions({
 
   return (
     <Group gap={0} justify="flex-end">
-      {(!route().params.archived || !can(editPermission)) && (
+      {can(editPermission) && !route().params.archived && (
         <ActionIcon
           variant="subtle"
           color="blue"
@@ -55,7 +55,8 @@ export default function TableRowActions({
           />
         </ActionIcon>
       )}
-      {(can(archivePermission) || can(restorePermission)) && (
+      {((can(archivePermission) && !route().params.archived) ||
+        (can(restorePermission) && route().params.archived)) && (
         <Menu
           withArrow
           position="bottom-end"
@@ -72,7 +73,7 @@ export default function TableRowActions({
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
-            {can(archivePermission) && route().params.archived && (
+            {can(restorePermission) && route().params.archived && (
               <Menu.Item
                 leftSection={
                   <IconArchiveOff
@@ -86,7 +87,7 @@ export default function TableRowActions({
                 Restore
               </Menu.Item>
             )}
-            {can(restorePermission) && !route().params.archived && (
+            {can(archivePermission) && !route().params.archived && (
               <Menu.Item
                 leftSection={
                   <IconArchive

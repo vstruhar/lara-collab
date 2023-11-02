@@ -33,6 +33,7 @@
 .link {
     font-weight: 500;
     display: block;
+    width: calc(100% - var(--mantine-spacing-md) - var(--mantine-spacing-md));
     text-decoration: none;
     padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
     padding-left: var(--mantine-spacing-md);

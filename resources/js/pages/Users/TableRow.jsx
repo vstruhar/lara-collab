@@ -51,7 +51,7 @@ export default function TableRow({ item }) {
           </Text>
         </Table.Td>
       )}
-      {(can("edit user") || can("archive user")) && (
+      {(can("edit user") || can("archive user") || can("restore user")) && (
         <Table.Td>
           <TableRowActions
             item={item}

@@ -2,30 +2,37 @@ import ArchivedFilterButton from "@/components/ArchivedFilterButton";
 import Pagination from "@/components/Pagination";
 import SearchInput from "@/components/SearchInput";
 import TableHead from "@/components/TableHead";
+import TableRowEmpty from "@/components/TableRowEmpty";
+import useTable from "@/hooks/useTable";
 import Layout from "@/layouts/MainLayout";
 import { redirectTo, reloadWithQuery } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import { Button, Grid, Group, Table } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
-import remove from "lodash/remove";
 import TableRow from "./TableRow";
 
 const UsersIndex = () => {
+  const { prepareColumns, actionColumnVisibility } = useTable();
   const { items } = usePage().props;
 
-  const columns = [
+  const columns = prepareColumns([
     { label: "User", column: "name" },
     { label: "Role", sortable: false },
     { label: "Email", column: "email" },
-    { label: "Rate", column: "rate" },
-    { label: "Actions", sortable: false },
-  ];
+    { label: "Rate", column: "rate", visible: can("view user rate") },
+    {
+      label: "Actions",
+      sortable: false,
+      visible: actionColumnVisibility("user"),
+    },
+  ]);
 
-  if (!can("view user rate")) remove(columns, (i) => i.label === "Rate");
-  if (!can("edit user") && !can("archive user"))
-    remove(columns, (i) => i.label === "Actions");
+  const rows = items.data.length ? (
+    items.data.map((user) => <TableRow item={user} key={user.id} />)
+  ) : (
+    <TableRowEmpty colSpan={columns.length} />
+  );
 
-  const rows = items.data.map((user) => <TableRow item={user} key={user.id} />);
   const search = (search) => reloadWithQuery({ search });
   const sort = (sort) => reloadWithQuery(sort);
 

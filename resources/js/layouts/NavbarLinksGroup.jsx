@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { router } from "@inertiajs/react";
-import { Group, Box, Collapse, Text, UnstyledButton, rem } from "@mantine/core";
+import { Box, Collapse, Group, UnstyledButton, rem } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
+import { useState } from "react";
 import classes from "./css/NavbarLinksGroup.module.css";
 
 export default function NavbarLinksGroup({
@@ -14,16 +14,14 @@ export default function NavbarLinksGroup({
   const hasLinks = Array.isArray(links);
   const [opened, setOpened] = useState(active || false);
 
-  const items = (hasLinks ? links : []).map((item) => (
-    <Text
-      component="a"
+  const items = (hasLinks ? links.filter((l) => l.visible) : []).map((item) => (
+    <UnstyledButton
       className={`${classes.link} ${item.active ? classes.active : ""}`}
-      href={item.link}
       key={item.label}
       onClick={() => router.get(item.link)}
     >
       {item.label}
-    </Text>
+    </UnstyledButton>
   ));
 
   const handleClick = () => {
