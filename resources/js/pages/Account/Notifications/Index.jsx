@@ -5,7 +5,7 @@ const NotificationsIndex = () => {
 };
 
 NotificationsIndex.layout = (page) => (
-  <Layout children={page} title="Notifications" />
+  <Layout title="Notifications">{page}</Layout>
 );
 
 export default NotificationsIndex;

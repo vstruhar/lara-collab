@@ -1,17 +1,15 @@
-import { Head } from "@inertiajs/react";
-import { useEffect } from "react";
-import { useForm } from "laravel-precognition-react-inertia";
+import GuestLayout from "@/layouts/GuestLayout";
 import {
+  Button,
   Paper,
-  Title,
+  PasswordInput,
   Text,
   TextInput,
-  Button,
-  PasswordInput,
-  Alert,
+  Title,
 } from "@mantine/core";
+import { useForm } from "laravel-precognition-react-inertia";
+import { useEffect } from "react";
 import classes from "./css/ResetPassword.module.css";
-import GuestLayout from "@/layouts/GuestLayout";
 
 const ResetPassword = ({ token }) => {
   const form = useForm("post", route("auth.newPassword.save"), {
@@ -81,7 +79,7 @@ const ResetPassword = ({ token }) => {
 };
 
 ResetPassword.layout = (page) => (
-  <GuestLayout children={page} title="Reset Password" />
+  <GuestLayout title="Reset Password">{page}</GuestLayout>
 );
 
 export default ResetPassword;

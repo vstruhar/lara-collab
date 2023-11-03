@@ -74,13 +74,14 @@ export default function Sidebar() {
       label: "Settings",
       icon: IconSettings,
       active: route().current("settings.*"),
-      visible: true,
+      visible:
+        can("view owner company") || can("view roles") || can("view labels"),
       links: [
         {
           label: "Company",
-          link: route("settings.company.index"),
+          link: route("settings.company.edit"),
           active: route().current("settings.company.*"),
-          visible: true,
+          visible: can("view owner company"),
         },
         {
           label: "Roles",

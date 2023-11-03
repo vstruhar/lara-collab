@@ -1,22 +1,21 @@
-import { router } from "@inertiajs/react";
-import { useForm } from "laravel-precognition-react-inertia";
-import {
-  Paper,
-  Title,
-  Text,
-  TextInput,
-  Button,
-  Group,
-  Anchor,
-  Center,
-  Box,
-  rem,
-  Alert,
-} from "@mantine/core";
-import { IconArrowLeft, IconInfoCircle } from "@tabler/icons-react";
-import classes from "./css/ForgotPassword.module.css";
 import GuestLayout from "@/layouts/GuestLayout";
 import { redirectTo } from "@/utils/route";
+import {
+  Alert,
+  Anchor,
+  Box,
+  Button,
+  Center,
+  Group,
+  Paper,
+  Text,
+  TextInput,
+  Title,
+  rem,
+} from "@mantine/core";
+import { IconArrowLeft, IconInfoCircle } from "@tabler/icons-react";
+import { useForm } from "laravel-precognition-react-inertia";
+import classes from "./css/ForgotPassword.module.css";
 
 const ForgotPassword = ({ status }) => {
   const form = useForm("post", route("auth.forgotPassword.sendLink"), {
@@ -91,7 +90,7 @@ const ForgotPassword = ({ status }) => {
 };
 
 ForgotPassword.layout = (page) => (
-  <GuestLayout children={page} title="Forgot Password" />
+  <GuestLayout title="Forgot Password">{page}</GuestLayout>
 );
 
 export default ForgotPassword;

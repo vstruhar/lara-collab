@@ -99,6 +99,6 @@ const RoleEdit = () => {
   );
 };
 
-RoleEdit.layout = (page) => <Layout children={page} title="Edit role" />;
+RoleEdit.layout = (page) => <Layout title="Edit role">{page}</Layout>;
 
 export default RoleEdit;

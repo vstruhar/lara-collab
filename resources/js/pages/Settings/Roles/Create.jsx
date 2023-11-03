@@ -98,6 +98,6 @@ const RoleCreate = () => {
   );
 };
 
-RoleCreate.layout = (page) => <Layout children={page} title="Create role" />;
+RoleCreate.layout = (page) => <Layout title="Create role">{page}</Layout>;
 
 export default RoleCreate;

@@ -91,6 +91,6 @@ const LabelEdit = () => {
   );
 };
 
-LabelEdit.layout = (page) => <Layout children={page} title="Edit user" />;
+LabelEdit.layout = (page) => <Layout title="Edit user">{page}</Layout>;
 
 export default LabelEdit;

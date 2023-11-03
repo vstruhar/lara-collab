@@ -75,6 +75,6 @@ const UsersIndex = () => {
   );
 };
 
-UsersIndex.layout = (page) => <Layout children={page} title="Users" />;
+UsersIndex.layout = (page) => <Layout title="Users">{page}</Layout>;
 
 export default UsersIndex;

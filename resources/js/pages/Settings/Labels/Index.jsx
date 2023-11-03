@@ -73,6 +73,6 @@ const LabelsIndex = () => {
   );
 };
 
-LabelsIndex.layout = (page) => <Layout children={page} title="Labels" />;
+LabelsIndex.layout = (page) => <Layout title="Labels">{page}</Layout>;
 
 export default LabelsIndex;

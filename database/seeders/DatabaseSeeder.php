@@ -16,11 +16,14 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             LabelSeeder::class,
+            CurrencySeeder::class,
+            CountrySeeder::class,
         ]);
 
         if ($this->command->confirm('Seed development data?', false)) {
             $this->call([
                 UserSeeder::class,
+                OwnerCompanySeeder::class,
             ]);
         }
     }

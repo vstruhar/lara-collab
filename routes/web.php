@@ -8,8 +8,8 @@ use App\Http\Controllers\MyWork\ActivityController;
 use App\Http\Controllers\MyWork\TaskController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\Settings\CompanyController;
 use App\Http\Controllers\Settings\LabelController;
+use App\Http\Controllers\Settings\OwnerCompanyController;
 use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -47,7 +47,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Settings
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
-        Route::resource('company', CompanyController::class)->except(['show']);
+        Route::get('company', [OwnerCompanyController::class, 'edit'])->name('company.edit');
+        Route::put('company', [OwnerCompanyController::class, 'update'])->name('company.update');
 
         Route::resource('roles', RoleController::class)->except(['show']);
         Route::post('roles/{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');

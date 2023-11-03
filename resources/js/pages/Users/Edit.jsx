@@ -198,6 +198,6 @@ const UserEdit = () => {
   );
 };
 
-UserEdit.layout = (page) => <Layout children={page} title="Edit user" />;
+UserEdit.layout = (page) => <Layout title="Edit user">{page}</Layout>;
 
 export default UserEdit;

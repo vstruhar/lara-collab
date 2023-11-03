@@ -4,6 +4,6 @@ const Dashboard = () => {
   return <></>;
 };
 
-Dashboard.layout = (page) => <Layout children={page} title="Dashboard" />;
+Dashboard.layout = (page) => <Layout title="Dashboard">{page}</Layout>;
 
 export default Dashboard;

@@ -87,6 +87,6 @@ const LabelCreate = () => {
   );
 };
 
-LabelCreate.layout = (page) => <Layout children={page} title="Create label" />;
+LabelCreate.layout = (page) => <Layout title="Create label">{page}</Layout>;
 
 export default LabelCreate;

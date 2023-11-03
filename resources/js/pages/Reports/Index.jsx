@@ -4,6 +4,6 @@ const ReportsIndex = () => {
   return <></>;
 };
 
-ReportsIndex.layout = (page) => <Layout children={page} title="Reports" />;
+ReportsIndex.layout = (page) => <Layout title="Reports">{page}</Layout>;
 
 export default ReportsIndex;

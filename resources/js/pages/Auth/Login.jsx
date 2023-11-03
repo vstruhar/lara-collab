@@ -106,6 +106,6 @@ const Login = ({ notify }) => {
   );
 };
 
-Login.layout = (page) => <GuestLayout children={page} title="Login" />;
+Login.layout = (page) => <GuestLayout title="Login">{page}</GuestLayout>;
 
 export default Login;

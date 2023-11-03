@@ -193,6 +193,6 @@ const UserCreate = () => {
   );
 };
 
-UserCreate.layout = (page) => <Layout children={page} title="Create user" />;
+UserCreate.layout = (page) => <Layout title="Create user">{page}</Layout>;
 
 export default UserCreate;

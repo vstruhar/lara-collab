@@ -4,6 +4,6 @@ const ProfileIndex = () => {
   return <></>;
 };
 
-ProfileIndex.layout = (page) => <Layout children={page} title="Profile" />;
+ProfileIndex.layout = (page) => <Layout title="Profile">{page}</Layout>;
 
 export default ProfileIndex;

@@ -73,6 +73,6 @@ const RolesIndex = () => {
   );
 };
 
-RolesIndex.layout = (page) => <Layout children={page} title="Roles" />;
+RolesIndex.layout = (page) => <Layout title="Roles">{page}</Layout>;
 
 export default RolesIndex;

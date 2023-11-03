@@ -4,6 +4,6 @@ const ActivityIndex = () => {
   return <></>;
 };
 
-ActivityIndex.layout = (page) => <Layout children={page} title="Activity" />;
+ActivityIndex.layout = (page) => <Layout title="Activity">{page}</Layout>;
 
 export default ActivityIndex;

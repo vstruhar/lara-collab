@@ -4,6 +4,6 @@ const TasksIndex = () => {
   return <></>;
 };
 
-TasksIndex.layout = (page) => <Layout children={page} title="Tasks" />;
+TasksIndex.layout = (page) => <Layout title="Tasks">{page}</Layout>;
 
 export default TasksIndex;
