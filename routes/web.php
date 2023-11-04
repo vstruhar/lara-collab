@@ -40,15 +40,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Clients
     Route::group(['prefix' => 'clients', 'as' => 'clients.'], function () {
         Route::resource('users', ClientUserController::class)->except(['show']);
-        Route::post('users/{user}/restore', [ClientUserController::class, 'restore'])->name('users.restore');
+        Route::post('users/{userId}/restore', [ClientUserController::class, 'restore'])->name('users.restore');
 
         Route::resource('companies', ClientCompanyController::class)->except(['show']);
-        Route::post('companies/{company}/restore', [ClientCompanyController::class, 'restore'])->name('companies.restore');
+        Route::post('companies/{companyId}/restore', [ClientCompanyController::class, 'restore'])->name('companies.restore');
     });
 
     // Users
     Route::resource('users', UserController::class)->except(['show']);
-    Route::post('users/{user}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::post('users/{userId}/restore', [UserController::class, 'restore'])->name('users.restore');
 
     // Invoices
     Route::resource('invoices', InvoiceController::class)->except(['show']);
@@ -62,10 +62,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('company', [OwnerCompanyController::class, 'update'])->name('company.update');
 
         Route::resource('roles', RoleController::class)->except(['show']);
-        Route::post('roles/{role}/restore', [RoleController::class, 'restore'])->name('roles.restore');
+        Route::post('roles/{roleId}/restore', [RoleController::class, 'restore'])->name('roles.restore');
 
         Route::resource('labels', LabelController::class)->except(['show']);
-        Route::post('labels/{label}/restore', [LabelController::class, 'restore'])->name('labels.restore');
+        Route::post('labels/{labelId}/restore', [LabelController::class, 'restore'])->name('labels.restore');
     });
 
     // Account

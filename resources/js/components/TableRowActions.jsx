@@ -56,54 +56,55 @@ export default function TableRowActions({
         </ActionIcon>
       )}
       {((can(archivePermission) && !route().params.archived) ||
-        (can(restorePermission) && route().params.archived)) && (
-        <Menu
-          withArrow
-          position="bottom-end"
-          withinPortal
-          transitionProps={{ duration: 100, transition: "pop-top-right" }}
-          offset={{ mainAxis: 3, alignmentAxis: 5 }}
-        >
-          <Menu.Target>
-            <ActionIcon variant="subtle" color="gray">
-              <IconDots
-                style={{ width: rem(16), height: rem(16) }}
-                stroke={1.5}
-              />
-            </ActionIcon>
-          </Menu.Target>
-          <Menu.Dropdown>
-            {can(restorePermission) && route().params.archived && (
-              <Menu.Item
-                leftSection={
-                  <IconArchiveOff
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-                color="blue"
-                onClick={openRestoreModal}
-              >
-                Restore
-              </Menu.Item>
-            )}
-            {can(archivePermission) && !route().params.archived && (
-              <Menu.Item
-                leftSection={
-                  <IconArchive
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-                color="red"
-                onClick={openArchiveModal}
-              >
-                Archive
-              </Menu.Item>
-            )}
-          </Menu.Dropdown>
-        </Menu>
-      )}
+        (can(restorePermission) && route().params.archived)) &&
+        item.name !== "client" && (
+          <Menu
+            withArrow
+            position="bottom-end"
+            withinPortal
+            transitionProps={{ duration: 100, transition: "pop-top-right" }}
+            offset={{ mainAxis: 3, alignmentAxis: 5 }}
+          >
+            <Menu.Target>
+              <ActionIcon variant="subtle" color="gray">
+                <IconDots
+                  style={{ width: rem(16), height: rem(16) }}
+                  stroke={1.5}
+                />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              {can(restorePermission) && route().params.archived && (
+                <Menu.Item
+                  leftSection={
+                    <IconArchiveOff
+                      style={{ width: rem(16), height: rem(16) }}
+                      stroke={1.5}
+                    />
+                  }
+                  color="blue"
+                  onClick={openRestoreModal}
+                >
+                  Restore
+                </Menu.Item>
+              )}
+              {can(archivePermission) && !route().params.archived && (
+                <Menu.Item
+                  leftSection={
+                    <IconArchive
+                      style={{ width: rem(16), height: rem(16) }}
+                      stroke={1.5}
+                    />
+                  }
+                  color="red"
+                  onClick={openArchiveModal}
+                >
+                  Archive
+                </Menu.Item>
+              )}
+            </Menu.Dropdown>
+          </Menu>
+        )}
     </Group>
   );
 }

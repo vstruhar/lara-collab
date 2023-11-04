@@ -3,27 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
+use App\Services\PermissionService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class PermissionSeeder extends Seeder
 {
-    protected $permissionsByRole = [
-        'admin' => [
-            'view users', 'view user rate', 'create user', 'edit user', 'archive user', 'restore user',
-            'view labels', 'create label', 'edit label', 'archive label', 'restore label',
-            'view roles', 'create role', 'edit role', 'archive role', 'restore role',
-            'view owner company', 'edit owner company',
-            'view client users', 'create client user', 'edit client user', 'archive client user', 'restore client user',
-            'view client companies', 'create client company', 'edit client company', 'archive client company', 'restore client company',
-        ],
-        'manager' => ['view users'],
-        'developer' => [],
-        'designer' => [],
-        'client' => [],
-    ];
-
     /**
      * Run the database seeds.
      */
@@ -31,7 +17,8 @@ class PermissionSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $insertPermissions = fn ($role) => collect($this->permissionsByRole[$role])
+        $insertPermissions = fn ($role) => collect(PermissionService::$permissionsByRole[$role])
+            ->flatten()
             ->map(function ($name) {
                 $permission = DB::table('permissions')->where('name', $name)->first();
 

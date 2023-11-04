@@ -18,9 +18,7 @@ class ClientCollection extends ResourceCollection
             'id',
             'name',
             'email',
-            'job_title',
-            'avatar',
-            'phone',
+            'companies',
         )->toArray();
     }
 }

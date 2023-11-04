@@ -2,31 +2,25 @@
 
 namespace App\Services;
 
-use App\Models\Permission;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
-
 class PermissionService
 {
+    public static $permissionsByRole = [
+        'admin' => [
+            'User' => ['view users', 'view user rate', 'create user', 'edit user', 'archive user', 'restore user'],
+            'Label' => ['view labels', 'create label', 'edit label', 'archive label', 'restore label'],
+            'Role' => ['view roles', 'create role', 'edit role', 'archive role', 'restore role'],
+            'Owner Company' => ['view owner company', 'edit owner company'],
+            'Client User' => ['view client users', 'create client user', 'edit client user', 'archive client user', 'restore client user'],
+            'Client Company' => ['view client companies', 'create client company', 'edit client company', 'archive client company', 'restore client company'],
+        ],
+        'manager' => ['view users'],
+        'developer' => [],
+        'designer' => [],
+        'client' => [],
+    ];
+
     public static function allPermissionsGrouped(): array
     {
-        $permissions = Permission::pluck('name');
-
-        $modelNames = collect(File::files(app_path('Models')))
-            ->map(fn ($item) => Str::of($item->getFilename())->replace('.php', '')->lower()->toString())
-            ->reject('permission')
-            ->sort();
-
-        return $modelNames
-            ->mapWithKeys(function (string $permission) use ($permissions) {
-                return [
-                    $permission => $permissions
-                        ->filter(fn ($p) => Str::contains($p, $permission))
-                        ->sort()
-                        ->values()
-                        ->toArray(),
-                ];
-            })
-            ->toArray();
+        return self::$permissionsByRole['admin'];
     }
 }

@@ -28,7 +28,7 @@ const LabelsIndex = () => {
   ]);
 
   const rows = items.data.length ? (
-    items.data.map((label) => <TableRow item={label} key={label.id} />)
+    items.data.map((item) => <TableRow item={item} key={item.id} />)
   ) : (
     <TableRowEmpty colSpan={columns.length} />
   );

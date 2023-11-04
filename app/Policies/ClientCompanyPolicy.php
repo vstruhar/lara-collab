@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\ClientCompany;
 use App\Models\User;
 
 class ClientCompanyPolicy
@@ -25,7 +26,7 @@ class ClientCompanyPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, User $model): bool
+    public function update(User $user, ClientCompany $model): bool
     {
         return $user->hasPermissionTo('edit client company');
     }
@@ -33,7 +34,7 @@ class ClientCompanyPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, User $model): bool
+    public function delete(User $user, ClientCompany $model): bool
     {
         return $user->hasPermissionTo('archive client company');
     }
@@ -41,7 +42,7 @@ class ClientCompanyPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, User $model): bool
+    public function restore(User $user, ClientCompany $model): bool
     {
         return $user->hasPermissionTo('restore client company');
     }

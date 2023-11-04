@@ -3,6 +3,7 @@ import { getInitials } from "@/services/UserService";
 import { Avatar, Group, Table, Text } from "@mantine/core";
 
 export default function TableRow({ item }) {
+  console.log(item);
   return (
     <Table.Tr key={item.id}>
       <Table.Td>
@@ -32,9 +33,7 @@ export default function TableRow({ item }) {
           Email
         </Text>
       </Table.Td>
-      <Table.Td>
-        <Text fz="sm">/</Text>
-      </Table.Td>
+      <Table.Td></Table.Td>
       {(can("edit client user") ||
         can("archive client user") ||
         can("restore client user")) && (

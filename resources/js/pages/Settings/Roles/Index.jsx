@@ -28,7 +28,7 @@ const RolesIndex = () => {
   ]);
 
   const rows = items.data.length ? (
-    items.data.map((role) => <TableRow item={role} key={role.id} />)
+    items.data.map((item) => <TableRow item={item} key={item.id} />)
   ) : (
     <TableRowEmpty colSpan={columns.length} />
   );

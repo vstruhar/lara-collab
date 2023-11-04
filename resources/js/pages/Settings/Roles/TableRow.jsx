@@ -17,7 +17,7 @@ export default function TableRow({ item }) {
         <Text fz="sm">{item.permissions_count}</Text>
       </Table.Td>
       {(can("edit role") || can("archive role") || can("restore role")) &&
-        !isLocked(item.name) && (
+        item.name !== "admin" && (
           <Table.Td w={100}>
             <TableRowActions
               item={item}

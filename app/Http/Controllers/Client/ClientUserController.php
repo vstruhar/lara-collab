@@ -9,7 +9,6 @@ use App\Http\Requests\Client\StoreClientRequest;
 use App\Http\Requests\Client\UpdateClientRequest;
 use App\Http\Resources\Client\ClientCollection;
 use App\Http\Resources\Client\ClientResource;
-use App\Models\Client;
 use App\Models\ClientCompany;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,23 +18,18 @@ use Inertia\Response;
 class ClientUserController extends Controller
 {
     /**
-     * Create the controller instance.
-     */
-    public function __construct()
-    {
-        $this->authorizeResource(Client::class, 'users');
-    }
-
-    /**
      * Display a listing of the resource.
      */
     public function index(Request $request): Response
     {
+        abort_if(! $request->user()->can('view client users'), 401);
+
         return Inertia::render('Clients/Users/Index', [
             'items' => new ClientCollection(
                 User::searchByQueryString()
                     ->sortByQueryString()
                     ->role('client')
+                    ->with('clientCompanies')
                     ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                     ->paginate(12)
             ),
@@ -47,6 +41,8 @@ class ClientUserController extends Controller
      */
     public function create()
     {
+        abort_if(! request()->user()->can('create client user'), 401);
+
         return Inertia::render('Clients/Users/Create', [
             'companies' => ClientCompany::dropdownValues(),
         ]);
@@ -57,6 +53,8 @@ class ClientUserController extends Controller
      */
     public function store(StoreClientRequest $request)
     {
+        abort_if(! request()->user()->can('create client user'), 401);
+
         $client = (new CreateClient)->create($request->validated());
 
         if (empty($request->companies)) {
@@ -73,6 +71,8 @@ class ClientUserController extends Controller
      */
     public function edit(User $user)
     {
+        abort_if(! request()->user()->can('edit client user'), 401);
+
         return Inertia::render('Clients/Users/Edit', [
             'item' => new ClientResource($user),
             'companies' => ClientCompany::dropdownValues(),
@@ -84,6 +84,8 @@ class ClientUserController extends Controller
      */
     public function update(User $user, UpdateClientRequest $request)
     {
+        abort_if(! request()->user()->can('edit client user'), 401);
+
         (new UpdateClient)->update($user, $request->validated());
 
         return redirect()->route('clients.users.index')->success('Client updated', 'The client was successfully updated.');
@@ -94,6 +96,8 @@ class ClientUserController extends Controller
      */
     public function destroy(User $user)
     {
+        abort_if(! request()->user()->can('archive client user'), 401);
+
         if (auth()->id() === $user->id) {
             return redirect()->route('clients.users.index')->warning('Action stopped', 'You cannot archive the client with whom you are currently logged in.');
         }
@@ -105,11 +109,11 @@ class ClientUserController extends Controller
     /**
      * Restore the specified resource from storage.
      */
-    public function restore(int $user)
+    public function restore(int $userId)
     {
-        $user = User::withArchived()->findOrFail($user);
+        abort_if(! request()->user()->can('restore client user'), 401);
 
-        $this->authorize('restore', $user);
+        $user = User::withArchived()->findOrFail($userId);
 
         $user->unArchive();
 

@@ -17,7 +17,7 @@ class OwnerCompanyController extends Controller
      */
     public function edit()
     {
-        $this->authorize('view', OwnerCompanyPolicy::class);
+        $this->authorize('view', OwnerCompany::class);
 
         return Inertia::render('Settings/Company/Edit', [
             'item' => OwnerCompany::first(),
@@ -31,7 +31,7 @@ class OwnerCompanyController extends Controller
      */
     public function update(UpdateOwnerCompanyRequest $request)
     {
-        $this->authorize('update', OwnerCompanyPolicy::class);
+        $this->authorize('update', OwnerCompany::class);
 
         (new UpdateOwnerCompany)->update($request);
 

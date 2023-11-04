@@ -24,7 +24,7 @@ class ClientCompanyController extends Controller
      */
     public function __construct()
     {
-        $this->authorizeResource(ClientCompany::class, 'companies');
+        $this->authorizeResource(ClientCompany::class, 'company');
     }
 
     /**
@@ -67,10 +67,10 @@ class ClientCompanyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ClientCompany $clientCompany)
+    public function edit(ClientCompany $company)
     {
         return Inertia::render('Clients/Companies/Edit', [
-            'item' => new ClientCompanyResource($clientCompany),
+            'item' => new ClientCompanyResource($company),
             'clients' => User::clientDropdownValues(),
             'countries' => Country::dropdownValues(),
             'currencies' => Currency::dropdownValues(),
@@ -80,9 +80,9 @@ class ClientCompanyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ClientCompany $clientCompany, UpdateClientCompanyRequest $request)
+    public function update(ClientCompany $company, UpdateClientCompanyRequest $request)
     {
-        (new UpdateClientCompany)->update($clientCompany, $request->validated());
+        (new UpdateClientCompany)->update($company, $request->validated());
 
         return redirect()->route('clients.companies.index')->success('Company updated', 'The company was successfully updated.');
     }
@@ -90,9 +90,9 @@ class ClientCompanyController extends Controller
     /**
      * Archive the specified resource from storage.
      */
-    public function destroy(ClientCompany $clientCompany)
+    public function destroy(ClientCompany $company)
     {
-        $clientCompany->archive();
+        $company->archive();
 
         return redirect()->back()->success('Company archived', 'The company was successfully archived.');
     }
@@ -100,9 +100,9 @@ class ClientCompanyController extends Controller
     /**
      * Restore the specified resource from storage.
      */
-    public function restore(int $clientCompany)
+    public function restore(int $companyId)
     {
-        $clientCompany = ClientCompany::withArchived()->findOrFail($clientCompany);
+        $clientCompany = ClientCompany::withArchived()->findOrFail($companyId);
 
         $this->authorize('restore', $clientCompany);
 

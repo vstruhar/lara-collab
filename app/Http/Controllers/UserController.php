@@ -92,9 +92,9 @@ class UserController extends Controller
     /**
      * Restore the specified resource from storage.
      */
-    public function restore(int $user)
+    public function restore(int $userId)
     {
-        $user = User::withArchived()->findOrFail($user);
+        $user = User::withArchived()->findOrFail($userId);
 
         $this->authorize('restore', $user);
 

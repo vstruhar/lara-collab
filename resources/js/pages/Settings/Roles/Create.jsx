@@ -59,7 +59,6 @@ const RoleCreate = () => {
             label="Name"
             placeholder="Role name"
             required
-            mt="md"
             value={form.data.name}
             onChange={(e) => updateValue("name", e.target.value)}
             error={form.errors.name}

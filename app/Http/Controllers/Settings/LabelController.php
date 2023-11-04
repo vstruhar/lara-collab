@@ -86,9 +86,9 @@ class LabelController extends Controller
     /**
      * Restore the specified resource from storage.
      */
-    public function restore(int $label)
+    public function restore(int $labelId)
     {
-        $label = Label::withArchived()->findOrFail($label);
+        $label = Label::withArchived()->findOrFail($labelId);
 
         $this->authorize('restore', $label);
 

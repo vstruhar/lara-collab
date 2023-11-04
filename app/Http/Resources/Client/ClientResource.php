@@ -18,9 +18,6 @@ class ClientResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'job_title' => $this->job_title,
-            'avatar' => $this->avatar,
-            'phone' => $this->phone,
             'companies' => $this->clientCompanies->pluck('id')->map(fn ($i) => (string) $i),
         ];
     }

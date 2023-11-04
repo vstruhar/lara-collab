@@ -93,6 +93,7 @@ const CompanyEdit = () => {
                 onChange={(image) => updateValue("logo", image)}
                 clearable
                 error={form.errors.logo}
+                disabled={!can("edit owner company")}
               />
               <Text size="xs" c="dimmed" mt="sm">
                 240px &times; 64px (aspect 15:4)
@@ -108,6 +109,7 @@ const CompanyEdit = () => {
             value={form.data.name}
             onChange={(e) => updateValue("name", e.target.value)}
             error={form.errors.name}
+            disabled={!can("edit owner company")}
           />
 
           <Fieldset legend="Location" mt="xl">
@@ -117,6 +119,7 @@ const CompanyEdit = () => {
               value={form.data.address}
               onChange={(e) => updateValue("address", e.target.value)}
               error={form.errors.address}
+              disabled={!can("edit owner company")}
             />
 
             <Group grow>
@@ -127,6 +130,7 @@ const CompanyEdit = () => {
                 value={form.data.postal_code}
                 onChange={(e) => updateValue("postal_code", e.target.value)}
                 error={form.errors.postal_code}
+                disabled={!can("edit owner company")}
               />
 
               <TextInput
@@ -136,6 +140,7 @@ const CompanyEdit = () => {
                 value={form.data.city}
                 onChange={(e) => updateValue("city", e.target.value)}
                 error={form.errors.city}
+                disabled={!can("edit owner company")}
               />
             </Group>
 
@@ -148,6 +153,7 @@ const CompanyEdit = () => {
               onChange={(value) => updateValue("country_id", value)}
               data={countries}
               error={form.errors.country_id}
+              disabled={!can("edit owner company")}
             />
           </Fieldset>
 
@@ -158,6 +164,7 @@ const CompanyEdit = () => {
               value={form.data.business_id}
               onChange={(e) => updateValue("business_id", e.target.value)}
               error={form.errors.business_id}
+              disabled={!can("edit owner company")}
             />
 
             <TextInput
@@ -167,6 +174,7 @@ const CompanyEdit = () => {
               value={form.data.tax_id}
               onChange={(e) => updateValue("tax_id", e.target.value)}
               error={form.errors.tax_id}
+              disabled={!can("edit owner company")}
             />
 
             <TextInput
@@ -176,6 +184,7 @@ const CompanyEdit = () => {
               value={form.data.vat}
               onChange={(e) => updateValue("vat", e.target.value)}
               error={form.errors.vat}
+              disabled={!can("edit owner company")}
             />
           </Fieldset>
 
@@ -186,6 +195,7 @@ const CompanyEdit = () => {
               value={form.data.iban}
               onChange={(e) => updateValue("iban", e.target.value)}
               error={form.errors.iban}
+              disabled={!can("edit owner company")}
             />
 
             <TextInput
@@ -195,6 +205,7 @@ const CompanyEdit = () => {
               value={form.data.swift}
               onChange={(e) => updateValue("swift", e.target.value)}
               error={form.errors.swift}
+              disabled={!can("edit owner company")}
             />
 
             <Group grow>
@@ -208,6 +219,7 @@ const CompanyEdit = () => {
                 onChange={(value) => updateValue("currency_id", value)}
                 data={currencies}
                 error={form.errors.currency_id}
+                disabled={!can("edit owner company")}
               />
 
               <NumberInput
@@ -222,6 +234,7 @@ const CompanyEdit = () => {
                 value={form.data.tax}
                 onChange={(value) => updateValue("tax", value)}
                 error={form.errors.tax}
+                disabled={!can("edit owner company")}
               />
             </Group>
           </Fieldset>
@@ -234,6 +247,7 @@ const CompanyEdit = () => {
                 value={form.data.email}
                 onChange={(e) => updateValue("email", e.target.value)}
                 error={form.errors.email}
+                disabled={!can("edit owner company")}
               />
 
               <TextInput
@@ -242,6 +256,7 @@ const CompanyEdit = () => {
                 value={form.data.phone}
                 onChange={(e) => updateValue("phone", e.target.value)}
                 error={form.errors.phone}
+                disabled={!can("edit owner company")}
               />
             </Group>
 
@@ -252,11 +267,14 @@ const CompanyEdit = () => {
               value={form.data.web}
               onChange={(e) => updateValue("web", e.target.value)}
               error={form.errors.web}
+              disabled={!can("edit owner company")}
             />
           </Fieldset>
 
           <Group justify="flex-end" mt="xl">
-            <ActionButton loading={form.processing}>Save</ActionButton>
+            {can("edit owner company") && (
+              <ActionButton loading={form.processing}>Save</ActionButton>
+            )}
           </Group>
         </form>
       </ContainerBox>

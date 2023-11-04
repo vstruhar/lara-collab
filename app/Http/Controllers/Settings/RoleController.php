@@ -101,9 +101,9 @@ class RoleController extends Controller
     /**
      * Restore the specified resource from storage.
      */
-    public function restore(int $role)
+    public function restore(int $roleId)
     {
-        $role = Role::withArchived()->findOrFail($role);
+        $role = Role::withArchived()->findOrFail($roleId);
 
         $this->authorize('restore', $role);
 
