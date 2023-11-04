@@ -25,7 +25,7 @@ import {
 
 const UserEdit = () => {
   const { item } = usePage().props;
-  const { getSelectValues } = useRoles();
+  const { getDropdownValues } = useRoles();
 
   const [form, submit, updateValue] = useForm(
     "post",
@@ -125,7 +125,7 @@ const UserEdit = () => {
             mt="md"
             value={form.data.roles}
             onChange={(values) => updateValue("roles", values)}
-            data={getSelectValues()}
+            data={getDropdownValues({ except: ["client"] })}
             error={form.errors.roles}
           />
 

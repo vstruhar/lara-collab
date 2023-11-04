@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Account\NotificationController;
 use App\Http\Controllers\Account\ProfileController;
+use App\Http\Controllers\Client\ClientCompanyController;
+use App\Http\Controllers\Client\ClientUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MyWork\ActivityController;
@@ -33,6 +35,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['prefix' => 'my-work', 'as' => 'my-work.'], function () {
         Route::resource('tasks', TaskController::class)->except(['show']);
         Route::get('activity', [ActivityController::class, 'index'])->name('activity.index');
+    });
+
+    // Clients
+    Route::group(['prefix' => 'clients', 'as' => 'clients.'], function () {
+        Route::resource('users', ClientUserController::class)->except(['show']);
+        Route::post('users/{user}/restore', [ClientUserController::class, 'restore'])->name('users.restore');
+
+        Route::resource('companies', ClientCompanyController::class)->except(['show']);
+        Route::post('companies/{company}/restore', [ClientCompanyController::class, 'restore'])->name('companies.restore');
     });
 
     // Users

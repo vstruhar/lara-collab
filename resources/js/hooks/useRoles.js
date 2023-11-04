@@ -23,11 +23,13 @@ const useRoles = () => {
     return roleColors[role];
   };
 
-  const getSelectValues = () => {
-    return roles.map(role => ({value: role.name, label: upperFirst(role.name)}));
+  const getDropdownValues = ({except = []}) => {
+    return roles
+      .filter(i => !except.includes(i.name))
+      .map(role => ({value: role.name, label: upperFirst(role.name)}));
   }
 
-  return {getColor, getSelectValues};
+  return {getColor, getDropdownValues};
 }
 
 export default useRoles;

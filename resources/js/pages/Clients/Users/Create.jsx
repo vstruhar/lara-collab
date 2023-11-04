@@ -1,11 +1,11 @@
 import ActionButton from "@/components/ActionButton";
 import BackButton from "@/components/BackButton";
 import useForm from "@/hooks/useForm";
-import useRoles from "@/hooks/useRoles";
 import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
 import { getInitials } from "@/services/UserService";
 import { redirectTo } from "@/utils/route";
+import { usePage } from "@inertiajs/react";
 import {
   Anchor,
   Avatar,
@@ -15,40 +15,41 @@ import {
   Grid,
   Group,
   MultiSelect,
-  NumberInput,
   PasswordInput,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
 
-const UserCreate = () => {
-  const { getDropdownValues } = useRoles();
+const ClientCreate = () => {
+  const { companies } = usePage().props;
 
-  const [form, submit, updateValue] = useForm("post", route("users.store"), {
-    avatar: null,
-    job_title: "",
-    name: "",
-    phone: "",
-    rate: 0,
-    email: "",
-    password: "",
-    password_confirmation: "",
-    roles: [],
-  });
+  const [form, submit, updateValue] = useForm(
+    "post",
+    route("clients.users.store"),
+    {
+      avatar: null,
+      name: "",
+      phone: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+      companies: [],
+    },
+  );
 
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor href="#" onClick={redirectTo("users.index")} fz={14}>
-          Users
+        <Anchor href="#" onClick={redirectTo("clients.users.index")} fz={14}>
+          Clients
         </Anchor>
         <div>Create</div>
       </Breadcrumbs>
 
       <Grid justify="space-between" align="flex-end" gutter="xl" mb="lg">
         <Grid.Col span="auto">
-          <Title order={1}>Create user</Title>
+          <Title order={1}>Create client</Title>
         </Grid.Col>
         <Grid.Col span="content"></Grid.Col>
       </Grid>
@@ -102,47 +103,30 @@ const UserCreate = () => {
           />
 
           <TextInput
-            label="Job title"
-            placeholder="e.g. Frontend Developer"
-            required
+            label="Phone"
+            placeholder="Users phone number"
             mt="md"
-            value={form.data.job_title}
-            onChange={(e) => updateValue("job_title", e.target.value)}
-            error={form.errors.job_title}
+            value={form.data.phone}
+            onChange={(e) => updateValue("phone", e.target.value)}
+            error={form.errors.phone}
           />
 
           <MultiSelect
-            label="Roles"
-            placeholder="Select role"
-            required
+            label="Companies"
+            placeholder="Clients companies"
             mt="md"
-            value={form.data.roles}
-            onChange={(values) => updateValue("roles", values)}
-            data={getDropdownValues({ except: ["client"] })}
-            error={form.errors.roles}
+            value={form.data.companies}
+            onChange={(values) => updateValue("companies", values)}
+            data={companies}
+            error={form.errors.companies}
           />
 
-          <Group grow mt="md">
-            <TextInput
-              label="Phone"
-              placeholder="Users phone number"
-              value={form.data.phone}
-              onChange={(e) => updateValue("phone", e.target.value)}
-              error={form.errors.phone}
-            />
-
-            <NumberInput
-              label="Hourly rate"
-              allowNegative={false}
-              clampBehavior="strict"
-              decimalScale={2}
-              fixedDecimalScale={true}
-              prefix="$"
-              value={form.data.rate}
-              onChange={(value) => updateValue("rate", value)}
-              error={form.errors.rate}
-            />
-          </Group>
+          {form.data.companies.length === 0 && (
+            <Text c="dimmed" fz="xs" mt="xs">
+              If left empty, you will be asked to create a company after
+              creating the client.
+            </Text>
+          )}
 
           <Divider
             mt="xl"
@@ -184,7 +168,7 @@ const UserCreate = () => {
           />
 
           <Group justify="space-between" mt="xl">
-            <BackButton route="users.index" />
+            <BackButton route="clients.users.index" />
             <ActionButton loading={form.processing}>Create</ActionButton>
           </Group>
         </form>
@@ -193,6 +177,6 @@ const UserCreate = () => {
   );
 };
 
-UserCreate.layout = (page) => <Layout title="Create user">{page}</Layout>;
+ClientCreate.layout = (page) => <Layout title="Create client">{page}</Layout>;
 
-export default UserCreate;
+export default ClientCreate;

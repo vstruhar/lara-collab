@@ -9,6 +9,7 @@ class RoleSeeder extends Seeder
 {
     public static $roles = [
         'developer',
+        'qa_engineer',
         'designer',
         'client',
         'manager',

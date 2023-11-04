@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Settings;
 
-use App\Actions\OwnerCompany\CreateOwnerCompany;
+use App\Actions\OwnerCompany\UpdateOwnerCompany;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OwnerCompany\UpdateOwnerCompanyRequest;
 use App\Models\Country;
@@ -17,6 +17,8 @@ class OwnerCompanyController extends Controller
      */
     public function edit()
     {
+        $this->authorize('view', OwnerCompanyPolicy::class);
+
         return Inertia::render('Settings/Company/Edit', [
             'item' => OwnerCompany::first(),
             'countries' => Country::dropdownValues(),
@@ -29,9 +31,9 @@ class OwnerCompanyController extends Controller
      */
     public function update(UpdateOwnerCompanyRequest $request)
     {
-        $this->authorize(OwnerCompanyPolicy::class);
+        $this->authorize('update', OwnerCompanyPolicy::class);
 
-        (new CreateOwnerCompany)->update($request);
+        (new UpdateOwnerCompany)->update($request);
 
         return redirect()->back()->success('Company updated', 'The company was successfully updated.');
     }

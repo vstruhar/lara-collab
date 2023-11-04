@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class OwnerCompany extends Model
 {
@@ -38,5 +39,10 @@ class OwnerCompany extends Model
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    public function clients(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'client_company', 'owner_company_id', 'client_id');
     }
 }

@@ -1,5 +1,6 @@
 import { Code, Group, ScrollArea, rem } from "@mantine/core";
 import {
+  IconBuildingSkyscraper,
   IconFileDollar,
   IconGauge,
   IconLayoutList,
@@ -46,6 +47,26 @@ export default function Sidebar() {
           link: route("my-work.activity.index"),
           active: route().current("my-work.activity.*"),
           visible: true,
+        },
+      ],
+    },
+    {
+      label: "Clients",
+      icon: IconBuildingSkyscraper,
+      active: route().current("clients.*"),
+      visible: can("view client users") || can("view client companies"),
+      links: [
+        {
+          label: "Users",
+          link: route("clients.users.index"),
+          active: route().current("clients.users.*"),
+          visible: can("view client users"),
+        },
+        {
+          label: "Companies",
+          link: route("clients.companies.index"),
+          active: route().current("clients.companies.*"),
+          visible: can("view client companies"),
         },
       ],
     },

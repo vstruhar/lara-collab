@@ -4,7 +4,7 @@ namespace App\Actions\OwnerCompany;
 
 use App\Models\OwnerCompany;
 
-class CreateOwnerCompany
+class UpdateOwnerCompany
 {
     public function update($request): bool
     {

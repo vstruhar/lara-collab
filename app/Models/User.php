@@ -6,6 +6,7 @@ use App\Models\Scopes\OrderByScope;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -60,5 +61,18 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function getFirstName(): string
     {
         return Str::beforeLast($this->name, ' ');
+    }
+
+    public function clientCompanies(): BelongsToMany
+    {
+        return $this->belongsToMany(ClientCompany::class, 'client_company', 'client_id', 'client_company_id');
+    }
+
+    public static function clientDropdownValues(): array
+    {
+        return self::orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn ($i) => ['value' => (string) $i->id, 'label' => $i->name])
+            ->toArray();
     }
 }

@@ -15,6 +15,8 @@ class PermissionSeeder extends Seeder
             'view labels', 'create label', 'edit label', 'archive label', 'restore label',
             'view roles', 'create role', 'edit role', 'archive role', 'restore role',
             'view owner company', 'edit owner company',
+            'view client users', 'create client user', 'edit client user', 'archive client user', 'restore client user',
+            'view client companies', 'create client company', 'edit client company', 'archive client company', 'restore client company',
         ],
         'manager' => ['view users'],
         'developer' => [],
