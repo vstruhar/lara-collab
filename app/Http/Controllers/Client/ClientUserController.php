@@ -7,7 +7,6 @@ use App\Actions\Client\UpdateClient;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\StoreClientRequest;
 use App\Http\Requests\Client\UpdateClientRequest;
-use App\Http\Resources\Client\ClientCollection;
 use App\Http\Resources\Client\ClientResource;
 use App\Models\ClientCompany;
 use App\Models\User;
@@ -25,7 +24,7 @@ class ClientUserController extends Controller
         abort_if(! $request->user()->can('view client users'), 401);
 
         return Inertia::render('Clients/Users/Index', [
-            'items' => new ClientCollection(
+            'items' => ClientResource::collection(
                 User::searchByQueryString()
                     ->sortByQueryString()
                     ->role('client')
@@ -44,7 +43,9 @@ class ClientUserController extends Controller
         abort_if(! request()->user()->can('create client user'), 401);
 
         return Inertia::render('Clients/Users/Create', [
-            'companies' => ClientCompany::dropdownValues(),
+            'dropdowns' => [
+                'companies' => ClientCompany::dropdownValues(),
+            ],
         ]);
     }
 
@@ -60,7 +61,7 @@ class ClientUserController extends Controller
         if (empty($request->companies)) {
             return redirect()
                 ->route('clients.companies.create', ['client_id' => $client->id])
-                ->success('Client created', 'A new client was successfully created.');
+                ->success('Client created', 'A new client was successfully created. Now you can create a company for the client.');
         }
 
         return redirect()->route('clients.users.index')->success('Client created', 'A new client was successfully created.');
@@ -75,7 +76,9 @@ class ClientUserController extends Controller
 
         return Inertia::render('Clients/Users/Edit', [
             'item' => new ClientResource($user),
-            'companies' => ClientCompany::dropdownValues(),
+            'dropdowns' => [
+                'companies' => ClientCompany::dropdownValues(),
+            ],
         ]);
     }
 

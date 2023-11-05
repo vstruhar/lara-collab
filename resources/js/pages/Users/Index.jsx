@@ -30,7 +30,7 @@ const UsersIndex = () => {
   ]);
 
   const rows = items.data.length ? (
-    items.data.map((user) => <TableRow item={user} key={user.id} />)
+    items.data.map((item) => <TableRow item={item} key={item.id} />)
   ) : (
     <TableRowEmpty colSpan={columns.length} />
   );

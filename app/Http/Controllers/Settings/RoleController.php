@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\StoreRoleRequest;
 use App\Http\Requests\Role\UpdateRoleRequest;
-use App\Http\Resources\Role\RoleCollection;
 use App\Http\Resources\Role\RoleResource;
 use App\Models\Role;
 use App\Services\PermissionService;
@@ -30,7 +29,7 @@ class RoleController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Settings/Roles/Index', [
-            'items' => new RoleCollection(
+            'items' => RoleResource::collection(
                 Role::searchByQueryString()
                     ->sortByQueryString()
                     ->when($request->has('archived'), fn ($query) => $query->onlyArchived())

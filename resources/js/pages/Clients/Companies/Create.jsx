@@ -18,7 +18,9 @@ import {
 } from "@mantine/core";
 
 const ClientCompanyCreate = () => {
-  const { clients, countries, currencies } = usePage().props;
+  const {
+    dropdowns: { clients, countries, currencies },
+  } = usePage().props;
 
   const [form, submit, updateValue] = useForm(
     "post",

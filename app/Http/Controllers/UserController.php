@@ -6,7 +6,6 @@ use App\Actions\User\CreateUser;
 use App\Actions\User\UpdateUser;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -29,7 +28,7 @@ class UserController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Users/Index', [
-            'items' => new UserCollection(
+            'items' => UserResource::collection(
                 User::searchByQueryString()
                     ->sortByQueryString()
                     ->withoutRole('client')

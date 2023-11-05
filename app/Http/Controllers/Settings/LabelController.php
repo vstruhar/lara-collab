@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Label\StoreLabelRequest;
 use App\Http\Requests\Label\UpdateLabelRequest;
-use App\Http\Resources\Label\LabelCollection;
 use App\Http\Resources\Label\LabelResource;
 use App\Models\Label;
 use Illuminate\Http\Request;
@@ -28,7 +27,7 @@ class LabelController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Settings/Labels/Index', [
-            'items' => new LabelCollection(
+            'items' => LabelResource::collection(
                 Label::searchByQueryString()
                     ->sortByQueryString()
                     ->when($request->has('archived'), fn ($query) => $query->onlyArchived())

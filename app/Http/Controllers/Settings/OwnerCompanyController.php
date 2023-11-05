@@ -21,8 +21,10 @@ class OwnerCompanyController extends Controller
 
         return Inertia::render('Settings/Company/Edit', [
             'item' => OwnerCompany::first(),
-            'countries' => Country::dropdownValues(),
-            'currencies' => Currency::dropdownValues(),
+            'dropdowns' => [
+                'countries' => Country::dropdownValues(),
+                'currencies' => Currency::dropdownValues(),
+            ],
         ]);
     }
 

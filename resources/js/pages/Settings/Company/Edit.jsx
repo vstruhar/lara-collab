@@ -19,7 +19,10 @@ import {
 } from "@mantine/core";
 
 const CompanyEdit = () => {
-  const { item, countries, currencies } = usePage().props;
+  const {
+    item,
+    dropdowns: { countries, currencies },
+  } = usePage().props;
 
   const [form, submit, updateValue] = useForm(
     "post",

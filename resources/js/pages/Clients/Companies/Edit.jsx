@@ -18,7 +18,10 @@ import {
 } from "@mantine/core";
 
 const ClientCompanyEdit = () => {
-  const { item, clients, countries, currencies } = usePage().props;
+  const {
+    item,
+    dropdowns: { clients, countries, currencies },
+  } = usePage().props;
 
   const [form, submit, updateValue] = useForm(
     "post",
@@ -39,7 +42,7 @@ const ClientCompanyEdit = () => {
       business_id: item.business_id || "",
       tax_id: item.tax_id || "",
       vat: item.vat || "",
-      clients: item.clients,
+      clients: item.clients.map((i) => i.id.toString()),
     },
   );
 

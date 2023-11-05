@@ -1,5 +1,6 @@
 import TableRowActions from "@/components/TableRowActions";
-import { Table, Text } from "@mantine/core";
+import { Link } from "@inertiajs/react";
+import { Badge, Group, Table, Text } from "@mantine/core";
 
 export default function TableRow({ item }) {
   return (
@@ -16,7 +17,15 @@ export default function TableRow({ item }) {
         </Text>
       </Table.Td>
       <Table.Td>
-        <Text fz="sm">/</Text>
+        <Group gap="sm">
+          {item.clients.map((item) => (
+            <Link href={route("clients.users.edit", item.id)} key={item.id}>
+              <Badge variant="light" tt="unset">
+                {item.name}
+              </Badge>
+            </Link>
+          ))}
+        </Group>
       </Table.Td>
       {(can("edit client company") ||
         can("archive client company") ||

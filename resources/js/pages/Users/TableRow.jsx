@@ -30,8 +30,8 @@ export default function TableRow({ item }) {
       </Table.Td>
       <Table.Td maw={200}>
         <Flex gap="sm" align="center" direction="row" wrap="wrap">
-          {item.roles.map((role) => (
-            <RoleBadge role={role.name} key={role.id} />
+          {item.roles.map((role, index) => (
+            <RoleBadge role={role} key={`role-${index}-${item.id}`} />
           ))}
         </Flex>
       </Table.Td>

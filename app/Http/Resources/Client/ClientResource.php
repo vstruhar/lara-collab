@@ -18,7 +18,7 @@ class ClientResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'companies' => $this->clientCompanies->pluck('id')->map(fn ($i) => (string) $i),
+            'companies' => $this->clientCompanies->map->only(['id', 'name']),
         ];
     }
 }

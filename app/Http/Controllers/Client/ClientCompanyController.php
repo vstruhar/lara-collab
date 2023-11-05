@@ -7,7 +7,6 @@ use App\Actions\ClientCompany\UpdateClientCompany;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientCompany\StoreClientCompanyRequest;
 use App\Http\Requests\ClientCompany\UpdateClientCompanyRequest;
-use App\Http\Resources\ClientCompany\ClientCompanyCollection;
 use App\Http\Resources\ClientCompany\ClientCompanyResource;
 use App\Models\ClientCompany;
 use App\Models\Country;
@@ -33,9 +32,10 @@ class ClientCompanyController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Clients/Companies/Index', [
-            'items' => new ClientCompanyCollection(
+            'items' => ClientCompanyResource::collection(
                 ClientCompany::searchByQueryString()
                     ->sortByQueryString()
+                    ->with('clients')
                     ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                     ->paginate(12)
             ),
@@ -48,9 +48,11 @@ class ClientCompanyController extends Controller
     public function create()
     {
         return Inertia::render('Clients/Companies/Create', [
-            'clients' => User::clientDropdownValues(),
-            'countries' => Country::dropdownValues(),
-            'currencies' => Currency::dropdownValues(),
+            'dropdowns' => [
+                'clients' => User::clientDropdownValues(),
+                'countries' => Country::dropdownValues(),
+                'currencies' => Currency::dropdownValues(),
+            ],
         ]);
     }
 
@@ -71,9 +73,11 @@ class ClientCompanyController extends Controller
     {
         return Inertia::render('Clients/Companies/Edit', [
             'item' => new ClientCompanyResource($company),
-            'clients' => User::clientDropdownValues(),
-            'countries' => Country::dropdownValues(),
-            'currencies' => Currency::dropdownValues(),
+            'dropdowns' => [
+                'clients' => User::clientDropdownValues(),
+                'countries' => Country::dropdownValues(),
+                'currencies' => Currency::dropdownValues(),
+            ],
         ]);
     }
 

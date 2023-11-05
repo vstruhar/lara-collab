@@ -22,7 +22,10 @@ import {
 } from "@mantine/core";
 
 const ClientEdit = () => {
-  const { item, companies } = usePage().props;
+  const {
+    item,
+    dropdowns: { companies },
+  } = usePage().props;
 
   const [form, submit, updateValue] = useForm(
     "post",
@@ -35,7 +38,7 @@ const ClientEdit = () => {
       email: item.email,
       password: "",
       password_confirmation: "",
-      companies: item.companies,
+      companies: item.companies.map((i) => i.id.toString()),
     },
   );
 

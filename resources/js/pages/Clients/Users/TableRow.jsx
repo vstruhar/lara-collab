@@ -1,9 +1,9 @@
 import TableRowActions from "@/components/TableRowActions";
 import { getInitials } from "@/services/UserService";
-import { Avatar, Group, Table, Text } from "@mantine/core";
+import { Link } from "@inertiajs/react";
+import { Avatar, Badge, Group, Table, Text } from "@mantine/core";
 
 export default function TableRow({ item }) {
-  console.log(item);
   return (
     <Table.Tr key={item.id}>
       <Table.Td>
@@ -33,7 +33,17 @@ export default function TableRow({ item }) {
           Email
         </Text>
       </Table.Td>
-      <Table.Td></Table.Td>
+      <Table.Td>
+        <Group gap="sm">
+          {item.companies.map((item) => (
+            <Link href={route("clients.companies.edit", item.id)} key={item.id}>
+              <Badge variant="light" tt="unset">
+                {item.name}
+              </Badge>
+            </Link>
+          ))}
+        </Group>
+      </Table.Td>
       {(can("edit client user") ||
         can("archive client user") ||
         can("restore client user")) && (
