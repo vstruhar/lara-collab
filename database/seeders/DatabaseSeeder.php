@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
                 OwnerCompanySeeder::class,
                 ClientSeeder::class,
                 ClientCompanySeeder::class,
+                ProjectSeeder::class,
             ]);
         }
     }

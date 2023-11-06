@@ -5,6 +5,7 @@ use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Client\ClientCompanyController;
 use App\Http\Controllers\Client\ClientUserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DropdownValuesController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MyWork\ActivityController;
 use App\Http\Controllers\MyWork\TaskController;
@@ -30,6 +31,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Projects
     Route::resource('projects', ProjectController::class)->except(['show']);
+    Route::post('projects/{projectId}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
+    Route::put('projects/{project}/favorite/toggle', [ProjectController::class, 'favoriteToggle'])->name('projects.favorite.toggle');
+    Route::post('projects/{project}/user-access', [ProjectController::class, 'userAccess'])->name('projects.user_access');
 
     // My Work
     Route::group(['prefix' => 'my-work', 'as' => 'my-work.'], function () {
@@ -73,4 +77,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::resource('profile', ProfileController::class)->except(['show']);
         Route::resource('notifications', NotificationController::class)->except(['show']);
     });
+
+    Route::get('dropdown/values', DropdownValuesController::class)->name('dropdown.values');
 });

@@ -28,7 +28,7 @@ export default function Sidebar() {
       icon: IconListDetails,
       link: route("projects.index"),
       active: route().current("projects.*"),
-      visible: true,
+      visible: can("view projects"),
     },
     {
       label: "My Work",

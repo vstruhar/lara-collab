@@ -1,7 +1,53 @@
+import ArchivedFilterButton from "@/components/ArchivedFilterButton";
+import SearchInput from "@/components/SearchInput";
 import Layout from "@/layouts/MainLayout";
+import { redirectTo, reloadWithQuery } from "@/utils/route";
+import { usePage } from "@inertiajs/react";
+import { Button, Flex, Grid, Group } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
+import ProjectCard from "./Index/ProjectCard";
 
 const ProjectsIndex = () => {
-  return <></>;
+  const { items } = usePage().props;
+
+  const search = (search) => reloadWithQuery({ search });
+
+  return (
+    <>
+      <Grid justify="space-between" align="center">
+        <Grid.Col span="content">
+          <Group>
+            <SearchInput placeholder="Search projects" search={search} />
+            <ArchivedFilterButton />
+          </Group>
+        </Grid.Col>
+        <Grid.Col span="content">
+          {can("create project") && (
+            <Button
+              leftSection={<IconPlus size={14} />}
+              radius="xl"
+              onClick={redirectTo("projects.create")}
+            >
+              Create
+            </Button>
+          )}
+        </Grid.Col>
+      </Grid>
+
+      <Flex
+        mt="xl"
+        gap="lg"
+        justify="flex-start"
+        align="flex-start"
+        direction="row"
+        wrap="wrap"
+      >
+        {items.map((item) => (
+          <ProjectCard item={item} key={item.id} />
+        ))}
+      </Flex>
+    </>
+  );
 };
 
 ProjectsIndex.layout = (page) => <Layout title="Projects">{page}</Layout>;

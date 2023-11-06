@@ -14,11 +14,12 @@ use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use Lacodix\LaravelModelFilter\Traits\IsSortable;
 use Laravel\Sanctum\HasApiTokens;
 use LaravelArchivable\Archivable;
+use Overtrue\LaravelFavorite\Traits\Favoriter;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements CanResetPasswordContract
 {
-    use Archivable, CanResetPassword, HasApiTokens, HasFactory, HasRoles, IsSearchable, IsSortable, Notifiable;
+    use Archivable, CanResetPassword, Favoriter, HasApiTokens, HasFactory, HasRoles, IsSearchable, IsSortable, Notifiable;
 
     protected static function booted(): void
     {
@@ -66,6 +67,23 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function clientCompanies(): BelongsToMany
     {
         return $this->belongsToMany(ClientCompany::class, 'client_company', 'client_id', 'client_company_id');
+    }
+
+    /**
+     * Projects that user can access
+     */
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_user_access');
+    }
+
+    public static function userDropdownValues(): array
+    {
+        return self::orderBy('name')
+            ->role(roles: ['admin', 'client'], without: true)
+            ->get(['id', 'name'])
+            ->map(fn ($i) => ['value' => (string) $i->id, 'label' => $i->name])
+            ->toArray();
     }
 
     public static function clientDropdownValues(): array
