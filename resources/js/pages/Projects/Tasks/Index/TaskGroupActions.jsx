@@ -1,25 +1,28 @@
 import { openConfirmModal } from "@/components/ConfirmModal";
-import useForm from "@/hooks/useForm";
-import { router } from "@inertiajs/react";
-import { ActionIcon, Menu, rem } from "@mantine/core";
+import { ActionIcon, Group, Menu, rem } from "@mantine/core";
 import {
   IconArchive,
   IconArchiveOff,
   IconDots,
   IconPencil,
-  IconUsers,
 } from "@tabler/icons-react";
-import UserAccessModal from "./UserAccessModal.jsx";
+import { useForm } from "laravel-precognition-react-inertia";
 
-export default function ProjectCardActions({ item }) {
-  const [archiveForm] = useForm("delete", route("projects.destroy", item.id));
-  const [restoreForm] = useForm("post", route("projects.restore", item.id));
+export default function TaskGroupActions({ group, ...props }) {
+  const archiveForm = useForm(
+    "delete",
+    route("projects.task-groups.destroy", [group.project_id, group.id]),
+  );
+  const restoreForm = useForm(
+    "post",
+    route("projects.task-groups.restore", [group.project_id, group.id]),
+  );
 
   const openArchiveModal = () =>
     openConfirmModal({
       type: "danger",
-      title: "Archive project",
-      content: `Are you sure you want to archive this project? This action will prevent users from accessing it.`,
+      title: "Archive task group",
+      content: `Are you sure you want to archive this task group?`,
       confirmLabel: "Archive",
       confirmProps: { color: "red" },
       action: () => archiveForm.submit(),
@@ -28,21 +31,17 @@ export default function ProjectCardActions({ item }) {
   const openRestoreModal = () =>
     openConfirmModal({
       type: "info",
-      title: "Restore project",
-      content: `Are you sure you want to restore this project?`,
+      title: "Restore task group",
+      content: `Are you sure you want to restore this task group?`,
       confirmLabel: "Restore",
       confirmProps: { color: "blue" },
       action: () => restoreForm.submit(),
     });
 
-  const openUserAccess = () => UserAccessModal(item);
-
   return (
-    <>
-      {(can("assign users to project") ||
-        can("edit project") ||
-        can("restore project") ||
-        can("archive project")) && (
+    <Group gap={0} justify="flex-end" {...props}>
+      {((can("archive task group") && !route().params.archived) ||
+        (can("restore task group") && route().params.archived)) && (
         <Menu
           withArrow
           position="bottom-end"
@@ -59,20 +58,7 @@ export default function ProjectCardActions({ item }) {
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
-            {can("assign users to project") && (
-              <Menu.Item
-                leftSection={
-                  <IconUsers
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-                onClick={openUserAccess}
-              >
-                User access
-              </Menu.Item>
-            )}
-            {can("edit project") && (
+            {can("edit task group") && !route().params.archived && (
               <Menu.Item
                 leftSection={
                   <IconPencil
@@ -80,12 +66,11 @@ export default function ProjectCardActions({ item }) {
                     stroke={1.5}
                   />
                 }
-                onClick={() => router.visit(route("projects.edit", item.id))}
               >
                 Edit
               </Menu.Item>
             )}
-            {can("restore project") && route().params.archived && (
+            {can("restore task group") && route().params.archived && (
               <Menu.Item
                 leftSection={
                   <IconArchiveOff
@@ -99,7 +84,7 @@ export default function ProjectCardActions({ item }) {
                 Restore
               </Menu.Item>
             )}
-            {can("archive project") && !route().params.archived && (
+            {can("archive task group") && !route().params.archived && (
               <Menu.Item
                 leftSection={
                   <IconArchive
@@ -116,6 +101,6 @@ export default function ProjectCardActions({ item }) {
           </Menu.Dropdown>
         </Menu>
       )}
-    </>
+    </Group>
   );
 }

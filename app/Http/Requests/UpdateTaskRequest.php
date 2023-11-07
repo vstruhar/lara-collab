@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Project;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UpdateProjectRequest extends FormRequest
+class UpdateTaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -23,9 +22,7 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', Rule::unique('projects', 'name')->ignore($this->route('project')->id)],
-            'description' => 'string|nullable',
-            'client_company_id' => 'required|integer|exists:client_companies,id',
+            //
         ];
     }
 }

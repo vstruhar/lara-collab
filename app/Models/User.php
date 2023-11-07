@@ -64,6 +64,16 @@ class User extends Authenticatable implements CanResetPasswordContract
         return Str::beforeLast($this->name, ' ');
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function isNotAdmin(): bool
+    {
+        return ! $this->isAdmin();
+    }
+
     public function clientCompanies(): BelongsToMany
     {
         return $this->belongsToMany(ClientCompany::class, 'client_company', 'client_id', 'client_company_id');
@@ -80,7 +90,7 @@ class User extends Authenticatable implements CanResetPasswordContract
     public static function userDropdownValues(): array
     {
         return self::orderBy('name')
-            ->role(roles: ['admin', 'client'], without: true)
+            ->withoutRole(['admin', 'client'])
             ->get(['id', 'name'])
             ->map(fn ($i) => ['value' => (string) $i->id, 'label' => $i->name])
             ->toArray();
@@ -89,6 +99,7 @@ class User extends Authenticatable implements CanResetPasswordContract
     public static function clientDropdownValues(): array
     {
         return self::orderBy('name')
+            ->role('client')
             ->get(['id', 'name'])
             ->map(fn ($i) => ['value' => (string) $i->id, 'label' => $i->name])
             ->toArray();

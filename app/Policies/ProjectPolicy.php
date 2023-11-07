@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Project;
 use App\Models\User;
+use App\Services\PermissionService;
 
 class ProjectPolicy
 {
@@ -18,9 +19,13 @@ class ProjectPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function view(User $user): bool
+    public function view(User $user, Project $model): bool
     {
-        return $user->hasPermissionTo('view project');
+        $users = PermissionService::usersWithAccessToProject($model);
+
+        $hasAccessToProject = collect($users)->pluck('id')->contains($user->id);
+
+        return $user->hasPermissionTo('view project') && $hasAccessToProject;
     }
 
     /**

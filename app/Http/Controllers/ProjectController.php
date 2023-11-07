@@ -31,6 +31,10 @@ class ProjectController extends Controller
                 Project::searchByQueryString()
                     ->orderBy('favorite', 'desc')
                     ->orderBy('name', 'asc')
+                    ->when($request->user()->isNotAdmin(), function ($query) {
+                        $query->whereHas('clientCompany.clients', fn ($query) => $query->where('users.id', auth()->id()))
+                            ->orWhereHas('users', fn ($query) => $query->where('id', auth()->id()));
+                    })
                     ->with([
                         'clientCompany:id,name',
                         'clientCompany.clients:id,name,avatar',
@@ -131,6 +135,8 @@ class ProjectController extends Controller
             $request->get('users', []),
             $request->get('clients', [])
         );
+
+        // dd($userIds);
 
         (new ProjectService($project))->updateUserAccess($userIds);
 

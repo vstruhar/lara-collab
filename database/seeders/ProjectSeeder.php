@@ -13,16 +13,29 @@ class ProjectSeeder extends Seeder
      */
     public function run(): void
     {
-        Project::create([
+        $projects = [];
+
+        $projects[] = Project::create([
             'name' => 'Demo Project',
             'description' => fake()->sentence(),
             'client_company_id' => ClientCompany::first()->id,
         ]);
 
-        Project::create([
+        $projects[] = Project::create([
             'name' => 'Demo Project 2',
             'description' => fake()->sentence(),
             'client_company_id' => ClientCompany::oldest()->first()->id,
         ]);
+
+        foreach ($projects as $project) {
+            $project->taskGroups()->createMany([
+                ['name' => 'New'],
+                ['name' => 'Todo'],
+                ['name' => 'In progress'],
+                ['name' => 'QA'],
+                ['name' => 'Done'],
+                ['name' => 'Deployed'],
+            ]);
+        }
     }
 }

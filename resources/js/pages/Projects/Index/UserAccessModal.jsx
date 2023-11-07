@@ -1,4 +1,5 @@
 import useForm from "@/hooks/useForm";
+import { hasRoles } from "@/services/UserService";
 import { Button, Flex, MultiSelect, Skeleton, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import axios from "axios";
@@ -14,10 +15,13 @@ function ModalForm({ item }) {
     route("projects.user_access", item.id),
     {
       users: item.users_with_access
-        .filter((i) => i.reason === "given access")
+        .filter((user) => !hasRoles(user, ["admin", "client"]))
         .map((i) => i.id.toString()),
       clients: item.users_with_access
-        .filter((i) => i.reason === "client")
+        .filter(
+          (user) =>
+            hasRoles(user, ["client"]) && user.reason !== "company owner",
+        )
         .map((i) => i.id.toString()),
     },
   );

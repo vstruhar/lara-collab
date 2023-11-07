@@ -10,3 +10,7 @@ export const getInitials = (name) => {
 
     return (firstname[0] + lastname[0]).toUpperCase();
 };
+
+export const hasRoles = (user, roles) => {
+  return user.roles.find((i) => roles.includes(i.name)) !== undefined;
+};

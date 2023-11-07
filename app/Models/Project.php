@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use Lacodix\LaravelModelFilter\Traits\IsSortable;
 use LaravelArchivable\Archivable;
@@ -29,6 +30,16 @@ class Project extends Model
         return $this->belongsTo(ClientCompany::class);
     }
 
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_user_access');
+    }
+
+    public function taskGroups(): HasMany
+    {
+        return $this->hasMany(TaskGroup::class);
+    }
+
     public function favoritedByAuthUser(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -39,10 +50,5 @@ class Project extends Model
         )
             ->where('favoriteable_type', $this->getMorphClass())
             ->where('user_id', auth()->id());
-    }
-
-    public function users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'project_user_access');
     }
 }

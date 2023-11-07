@@ -10,6 +10,8 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MyWork\ActivityController;
 use App\Http\Controllers\MyWork\TaskController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectTaskController;
+use App\Http\Controllers\ProjectTaskGroupController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Settings\LabelController;
 use App\Http\Controllers\Settings\OwnerCompanyController;
@@ -31,9 +33,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Projects
     Route::resource('projects', ProjectController::class)->except(['show']);
-    Route::post('projects/{projectId}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
-    Route::put('projects/{project}/favorite/toggle', [ProjectController::class, 'favoriteToggle'])->name('projects.favorite.toggle');
-    Route::post('projects/{project}/user-access', [ProjectController::class, 'userAccess'])->name('projects.user_access');
+
+    Route::group(['prefix' => 'projects', 'as' => 'projects.'], function () {
+        Route::post('{projectId}/restore', [ProjectController::class, 'restore'])->name('restore');
+        Route::put('{project}/favorite/toggle', [ProjectController::class, 'favoriteToggle'])->name('favorite.toggle');
+        Route::post('{project}/user-access', [ProjectController::class, 'userAccess'])->name('user_access');
+
+        Route::get('{project}/tasks', [ProjectTaskController::class, 'index'])->name('tasks');
+
+        Route::delete('{project}/tasks/groups/{taskGroup}', [ProjectTaskGroupController::class, 'destroy'])->name('task-groups.destroy');
+        Route::post('{project}/tasks/groups/{taskGroup}/restore', [ProjectTaskGroupController::class, 'restore'])->name('task-groups.restore');
+        Route::post('{project}/tasks/groups/reorder', [ProjectTaskGroupController::class, 'groupsReorder'])->name('task-groups.reorder');
+    });
 
     // My Work
     Route::group(['prefix' => 'my-work', 'as' => 'my-work.'], function () {

@@ -13,14 +13,11 @@ class LabelSeeder extends Seeder
     public function run(): void
     {
         Label::insert([
-            ['name' => 'New', 'color' => '#1864AB'],
-            ['name' => 'Confirmed', 'color' => '#5F3DC4'],
-            ['name' => 'Estimate', 'color' => '#862E9C'],
-            ['name' => 'Blocked', 'color' => '#A61E4D'],
-            ['name' => 'Bug', 'color' => '#C92A2A'],
-            ['name' => 'In progress', 'color' => '#E67700'],
-            ['name' => 'Deployed', 'color' => '#099268'],
-            ['name' => 'Done', 'color' => '#2B8A3E'],
+            ['name' => 'Confirmed', 'color' => '#37B24D'],
+            ['name' => 'Estimate', 'color' => '#AE3EC9'],
+            ['name' => 'Blocked', 'color' => '#F03E3E'],
+            ['name' => 'Bug', 'color' => '#D6336C'],
+            ['name' => 'Rework', 'color' => '#F76707'],
         ]);
     }
 }

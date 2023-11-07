@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('client_companies', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('country_id')->nullable();
+            $table->foreignId('currency_id')->nullable();
             $table->string('name');
             $table->string('address')->nullable();
             $table->string('postal_code')->nullable();
             $table->string('city')->nullable();
-            $table->string('country_id')->nullable();
-            $table->foreignId('currency_id')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('web')->nullable();
