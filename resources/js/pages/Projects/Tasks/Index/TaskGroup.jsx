@@ -1,11 +1,25 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { ActionIcon, Group, Text, rem } from "@mantine/core";
 import { IconGripVertical, IconPlus } from "@tabler/icons-react";
-import classes from "../css/Index.module.css";
+import { useState } from "react";
 import Task from "./Task";
 import TaskGroupActions from "./TaskGroupActions";
+import classes from "./css/TaskGroup.module.css";
 
 export default function TaskGroup({ group, tasks, ...props }) {
+  const [stateTasks, setTasks] = useState(tasks);
+
+  const completed = stateTasks.filter((i) => i.completed_at !== null);
+  const notCompleted = stateTasks.filter((i) => i.completed_at === null);
+
+  const completeTask = (task, state) => {
+    const item = stateTasks.find((i) => i.id === task.id);
+
+    item.completed_at = state ? true : null;
+
+    setTasks([...stateTasks]);
+  };
+
   return (
     <Draggable draggableId={group.id.toString()} {...props}>
       {(provided, snapshot) => (
@@ -36,11 +50,19 @@ export default function TaskGroup({ group, tasks, ...props }) {
               />
             </ActionIcon>
           </div>
-          <div>
-            {tasks.map((task) => (
-              <Task key={task.id} task={task} />
+          {notCompleted.length > 0 &&
+            notCompleted.map((task) => (
+              <Task key={task.id} task={task} completeTask={completeTask} />
             ))}
-          </div>
+          {completed.length > 0 &&
+            completed.map((task) => (
+              <Task
+                key={task.id}
+                task={task}
+                completeTask={completeTask}
+                opacity={0.4}
+              />
+            ))}
         </div>
       )}
     </Draggable>

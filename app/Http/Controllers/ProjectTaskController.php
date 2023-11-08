@@ -20,6 +20,7 @@ class ProjectTaskController extends Controller
             'project' => $project,
             'taskGroups' => $project->taskGroups,
             'groupedTasks' => Task::where('project_id', $project->id)
+                ->with(['assignedToUser:id,name'])
                 ->get()
                 ->groupBy('task_group_id'),
         ]);
@@ -71,5 +72,14 @@ class ProjectTaskController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function complete(Request $request, Project $project, Task $task)
+    {
+        $task->update([
+            'completed_at' => ($request->completed === true) ? now() : null,
+        ]);
+
+        return response()->json();
     }
 }

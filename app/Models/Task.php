@@ -42,6 +42,13 @@ class Task extends Model implements Sortable
         'billable' => 'boolean',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('ordered', function ($query) {
+            $query->ordered();
+        });
+    }
+
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
@@ -57,7 +64,7 @@ class Task extends Model implements Sortable
         return $this->belongsTo(User::class, 'created_by_user_id');
     }
 
-    public function assignedByUser(): BelongsTo
+    public function assignedToUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to_user_id');
     }

@@ -1,8 +1,9 @@
 import Layout from "@/layouts/MainLayout";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { usePage } from "@inertiajs/react";
-import { Grid } from "@mantine/core";
+import { Button, Grid } from "@mantine/core";
 import { useDidUpdate, useListState } from "@mantine/hooks";
+import { IconPlus } from "@tabler/icons-react";
 import axios from "axios";
 import Header from "./Index/Header";
 import TaskGroup from "./Index/TaskGroup";
@@ -21,20 +22,20 @@ const TasksIndex = () => {
     });
   }, [groups, project.id]);
 
+  const onDragEnd = ({ source, destination }) => {
+    handlers.reorder({
+      from: source.index,
+      to: destination?.index || 0,
+    });
+  };
+
   return (
     <>
       <Header />
 
       <Grid columns={12} gutter="lg" mt="xl">
         <Grid.Col span="auto">
-          <DragDropContext
-            onDragEnd={({ source, destination }) =>
-              handlers.reorder({
-                from: source.index,
-                to: destination?.index || 0,
-              })
-            }
-          >
+          <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="dnd-group-list" direction="vertical">
               {(provided) => (
                 <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -51,6 +52,16 @@ const TasksIndex = () => {
               )}
             </Droppable>
           </DragDropContext>
+
+          <Button
+            leftSection={<IconPlus size={14} />}
+            variant="transparent"
+            size="sm"
+            mt="md"
+            radius="xl"
+          >
+            Add tasks group
+          </Button>
         </Grid.Col>
         <Grid.Col span={3}>Filters</Grid.Col>
       </Grid>
