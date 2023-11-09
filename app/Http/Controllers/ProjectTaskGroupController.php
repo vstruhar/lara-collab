@@ -32,7 +32,7 @@ class ProjectTaskGroupController extends Controller
         //
     }
 
-    public function groupsReorder(Request $request, Project $project)
+    public function reorder(Request $request, Project $project)
     {
         TaskGroup::setNewOrder($request->ids);
 

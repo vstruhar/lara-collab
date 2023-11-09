@@ -41,10 +41,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         Route::get('{project}/tasks', [ProjectTaskController::class, 'index'])->name('tasks');
         Route::post('{project}/tasks/{task}/complete', [ProjectTaskController::class, 'complete'])->name('tasks.complete');
+        Route::post('{project}/tasks/reorder', [ProjectTaskController::class, 'reorder'])->name('tasks.reorder');
 
-        Route::delete('{project}/tasks/groups/{taskGroup}', [ProjectTaskGroupController::class, 'destroy'])->name('task-groups.destroy');
-        Route::post('{project}/tasks/groups/{taskGroup}/restore', [ProjectTaskGroupController::class, 'restore'])->name('task-groups.restore');
-        Route::post('{project}/tasks/groups/reorder', [ProjectTaskGroupController::class, 'groupsReorder'])->name('task-groups.reorder');
+        Route::delete('{project}/task-groups/{taskGroup}', [ProjectTaskGroupController::class, 'destroy'])->name('task-groups.destroy');
+        Route::post('{project}/task-groups/{taskGroup}/restore', [ProjectTaskGroupController::class, 'restore'])->name('task-groups.restore');
+        Route::post('{project}/task-groups/reorder', [ProjectTaskGroupController::class, 'reorder'])->name('task-groups.reorder');
     });
 
     // My Work

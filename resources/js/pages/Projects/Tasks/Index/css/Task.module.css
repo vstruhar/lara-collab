@@ -20,7 +20,7 @@
 
 .task {
     transition: 0.3s ease color, 0.3s ease background-color;
-    padding: 10px 10px 10px 15px;
+    padding: 5px 10px 5px 15px;
     border-radius: var(--mantine-radius-md);
 
     @mixin hover {
@@ -33,7 +33,14 @@
     }
 }
 
+.itemDragging {}
+
 .dragHandle {
     opacity: 0;
     transition: 0.3s ease opacity;
+    margin-top: 7px;
+}
+
+.completed {
+    opacity: 0.35;
 }

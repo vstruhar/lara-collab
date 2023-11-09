@@ -74,6 +74,13 @@ class ProjectTaskController extends Controller
         //
     }
 
+    public function reorder(Request $request, Project $project)
+    {
+        Task::setNewOrder($request->ids);
+
+        return response()->json();
+    }
+
     public function complete(Request $request, Project $project, Task $task)
     {
         $task->update([

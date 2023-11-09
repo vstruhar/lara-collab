@@ -1,25 +1,11 @@
-import { Draggable } from "@hello-pangea/dnd";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { ActionIcon, Group, Text, rem } from "@mantine/core";
 import { IconGripVertical, IconPlus } from "@tabler/icons-react";
-import { useState } from "react";
 import Task from "./Task";
 import TaskGroupActions from "./TaskGroupActions";
 import classes from "./css/TaskGroup.module.css";
 
 export default function TaskGroup({ group, tasks, ...props }) {
-  const [stateTasks, setTasks] = useState(tasks);
-
-  const completed = stateTasks.filter((i) => i.completed_at !== null);
-  const notCompleted = stateTasks.filter((i) => i.completed_at === null);
-
-  const completeTask = (task, state) => {
-    const item = stateTasks.find((i) => i.id === task.id);
-
-    item.completed_at = state ? true : null;
-
-    setTasks([...stateTasks]);
-  };
-
   return (
     <Draggable draggableId={group.id.toString()} {...props}>
       {(provided, snapshot) => (
@@ -50,19 +36,20 @@ export default function TaskGroup({ group, tasks, ...props }) {
               />
             </ActionIcon>
           </div>
-          {notCompleted.length > 0 &&
-            notCompleted.map((task) => (
-              <Task key={task.id} task={task} completeTask={completeTask} />
-            ))}
-          {completed.length > 0 &&
-            completed.map((task) => (
-              <Task
-                key={task.id}
-                task={task}
-                completeTask={completeTask}
-                opacity={0.4}
-              />
-            ))}
+          <Droppable droppableId={`group-${group.id}-tasks`} type="task">
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className={snapshot.isDraggingOver ? "isDraggingOver" : ""}
+              >
+                {tasks.map((task, index) => (
+                  <Task key={task.id} task={task} index={index} />
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
         </div>
       )}
     </Draggable>
