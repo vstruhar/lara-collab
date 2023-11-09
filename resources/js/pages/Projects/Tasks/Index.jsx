@@ -1,6 +1,5 @@
 import useTasksStore from "@/hooks/useTasksStore";
 import Layout from "@/layouts/MainLayout";
-import { move } from "@/services/ReorderService";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { usePage } from "@inertiajs/react";
 import { Button, Grid } from "@mantine/core";
@@ -22,11 +21,12 @@ const TasksIndex = () => {
   const tasks = useTasksStore((state) => state.tasks);
   const setTasks = useTasksStore((state) => state.setTasks);
   const reorderTask = useTasksStore((state) => state.reorderTask);
+  const moveTask = useTasksStore((state) => state.moveTask);
 
   useEffect(() => {
     setGroups(taskGroups);
     setTasks(groupedTasks);
-  }, []);
+  }, [taskGroups, groupedTasks]);
 
   const onDragEnd = ({ source, destination }) => {
     if (!destination) {
@@ -36,19 +36,10 @@ const TasksIndex = () => {
       source.droppableId.includes("tasks") &&
       destination.droppableId.includes("tasks")
     ) {
-      // TASKS
-      const newState = { ...tasks };
-
-      const sId = +source.droppableId.split("-")[1];
-      const dId = +destination.droppableId.split("-")[1];
-
       if (source.droppableId === destination.droppableId) {
-        reorderTask(sId, source.index, destination.index);
+        reorderTask(source, destination);
       } else {
-        // MOVE
-        const result = move(tasks[sId], tasks[dId], source, destination);
-        newState[sId] = result[sId];
-        newState[dId] = result[dId];
+        moveTask(source, destination);
       }
     } else {
       reorderGroup(source.index, destination.index);

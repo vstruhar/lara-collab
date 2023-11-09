@@ -1,4 +1,4 @@
-import { reorder } from '@/services/ReorderService';
+import { move, reorder } from '@/utils/reorder';
 import axios from 'axios';
 import { produce } from "immer";
 import zukeeper from 'zukeeper';
@@ -30,14 +30,32 @@ const useTasksStore = create(zukeeper((set, get) => ({
 
       return set(() => ({groups: [...result]}));
     },
-    reorderTask: (groupId, fromIndex, toIndex) => {
-      const result = reorder(get().tasks[groupId], fromIndex, toIndex);
+    reorderTask: (source, destination) => {
+      const sourceGroupId = +source.droppableId.split("-")[1];
+
+      const result = reorder(get().tasks[sourceGroupId], source.index, destination.index);
 
       axios.post(route("projects.tasks.reorder", [route().params.project]), {
         ids: result.map((i) => i.id),
       });
 
-      return set(produce(state => {state.tasks[groupId] = result}));
+      return set(produce(state => {state.tasks[sourceGroupId] = result}));
+    },
+    moveTask: (source, destination) => {
+      const sourceGroupId = +source.droppableId.split("-")[1];
+      const destinationGroupId = +destination.droppableId.split("-")[1];
+
+      const result = move(get().tasks, sourceGroupId, destinationGroupId, source, destination);
+
+      axios.post(route("projects.tasks.move", [route().params.project]), {
+          group_id: destinationGroupId,
+          ids: result[destinationGroupId].map((i) => i.id),
+      });
+
+      return set(produce(state => {
+        state.tasks[sourceGroupId] = result[sourceGroupId];
+        state.tasks[destinationGroupId] = result[destinationGroupId];
+      }));
     },
   }))
 );

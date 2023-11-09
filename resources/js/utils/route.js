@@ -5,10 +5,24 @@ export const redirectTo = (routeName, params = {}) => () => {
   router.get(route(routeName, params));
 };
 
+export const currentUrl = () => {
+  return location.origin + location.pathname;
+}
+
+export const currentUrlParams = () => {
+  const urlParams = new URLSearchParams(location.search);
+  const params = {};
+
+  for(const entry of urlParams.entries()) {
+    params[entry[0]] = entry[1];
+  }
+  return params;
+}
+
 export const reloadWithQuery = (query) => {
   router.get(
-    route(route().current()),
-    { ...route().params, ...query },
+    currentUrl(),
+    { ...currentUrlParams(), ...query },
     {
       preserveState: true,
       preserveScroll: true,
@@ -19,8 +33,8 @@ export const reloadWithQuery = (query) => {
 
 export const reloadWithoutQueryParams = (excludeParams = []) => {
   router.get(
-    route(route().current()),
-    omit(route().params, excludeParams),
+    currentUrl(),
+    omit(currentUrlParams(), excludeParams),
     {
       preserveState: true,
       preserveScroll: true,

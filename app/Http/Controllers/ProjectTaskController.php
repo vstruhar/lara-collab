@@ -12,7 +12,7 @@ class ProjectTaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Project $project)
+    public function index(Request $request, Project $project)
     {
         $this->authorize('view', $project);
 
@@ -20,7 +20,10 @@ class ProjectTaskController extends Controller
             'project' => $project,
             'taskGroups' => $project->taskGroups,
             'groupedTasks' => Task::where('project_id', $project->id)
+                ->searchByQueryString()
+                ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                 ->with(['assignedToUser:id,name'])
+                ->orderBy('completed_at')
                 ->get()
                 ->groupBy('task_group_id'),
         ]);
@@ -77,6 +80,15 @@ class ProjectTaskController extends Controller
     public function reorder(Request $request, Project $project)
     {
         Task::setNewOrder($request->ids);
+
+        return response()->json();
+    }
+
+    public function move(Request $request, Project $project)
+    {
+        Task::setNewOrder($request->ids);
+
+        Task::whereIn('id', $request->ids)->update(['task_group_id' => $request->group_id]);
 
         return response()->json();
     }
