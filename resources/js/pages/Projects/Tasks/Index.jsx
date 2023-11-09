@@ -62,26 +62,21 @@ const TasksIndex = () => {
       <Grid columns={12} gutter="lg" mt="xl">
         <Grid.Col span="auto">
           <DragDropContext onDragEnd={onDragEnd}>
-            {groups.map((group, index) => (
-              <Droppable
-                key={group.id}
-                droppableId={"group-" + group.id}
-                direction="vertical"
-                type="group"
-              >
-                {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef}>
+            <Droppable droppableId="groups" direction="vertical" type="group">
+              {(provided) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {groups.map((group, index) => (
                     <TaskGroup
                       key={group.id}
                       index={index}
                       group={group}
                       tasks={tasks[group.id] || []}
                     />
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            ))}
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
           </DragDropContext>
 
           <Button
