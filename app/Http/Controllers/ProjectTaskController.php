@@ -27,7 +27,10 @@ class ProjectTaskController extends Controller
                 ->searchByQueryString()
                 ->filterByQueryString()
                 ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
-                ->with(['assignedToUser:id,name'])
+                ->with([
+                    'assignedToUser:id,name',
+                    'labels:id,name,color',
+                ])
                 ->orderBy('completed_at')
                 ->get()
                 ->groupBy('group_id'),

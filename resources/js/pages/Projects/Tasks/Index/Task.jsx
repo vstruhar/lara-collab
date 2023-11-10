@@ -3,7 +3,15 @@ import { isOverdue } from "@/utils/task";
 import { shortName } from "@/utils/user";
 import { Draggable } from "@hello-pangea/dnd";
 import { Link } from "@inertiajs/react";
-import { Checkbox, Flex, Group, Pill, Text, rem } from "@mantine/core";
+import {
+  Checkbox,
+  ColorSwatch,
+  Flex,
+  Group,
+  Pill,
+  Text,
+  rem,
+} from "@mantine/core";
 import { IconGripVertical } from "@tabler/icons-react";
 import classes from "./css/Task.module.css";
 
@@ -56,6 +64,17 @@ export default function Task({ task, index }) {
             >
               #{task.number + ": " + task.name}
             </Text>
+
+            <Group gap={12} ml={8}>
+              {task.labels.map((label) => (
+                <Group gap={5} key={label.id}>
+                  <ColorSwatch color={label.color} size={10} />
+                  <Text fz={10} tt="uppercase" c={label.color} fw={500}>
+                    {label.name}
+                  </Text>
+                </Group>
+              ))}
+            </Group>
           </Group>
         </Flex>
       )}

@@ -1,4 +1,5 @@
 import useGroupsStore from "@/hooks/store/useGroupsStore";
+import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
 import Layout from "@/layouts/MainLayout";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
@@ -24,6 +25,9 @@ const TasksIndex = () => {
   const setTasks = useTasksStore((state) => state.setTasks);
   const reorderTask = useTasksStore((state) => state.reorderTask);
   const moveTask = useTasksStore((state) => state.moveTask);
+
+  const hasUrlParams = useTaskFiltersStore((state) => state.hasUrlParams);
+  const usingFilters = hasUrlParams();
 
   useEffect(() => {
     setGroups(taskGroups);
@@ -58,14 +62,20 @@ const TasksIndex = () => {
             <Droppable droppableId="groups" direction="vertical" type="group">
               {(provided) => (
                 <div {...provided.droppableProps} ref={provided.innerRef}>
-                  {groups.map((group, index) => (
-                    <TaskGroup
-                      key={group.id}
-                      index={index}
-                      group={group}
-                      tasks={tasks[group.id] || []}
-                    />
-                  ))}
+                  {groups
+                    .filter(
+                      (group) =>
+                        !usingFilters ||
+                        (usingFilters && tasks[group.id]?.length > 0),
+                    )
+                    .map((group, index) => (
+                      <TaskGroup
+                        key={group.id}
+                        index={index}
+                        group={group}
+                        tasks={tasks[group.id] || []}
+                      />
+                    ))}
                   {provided.placeholder}
                 </div>
               )}

@@ -1,10 +1,11 @@
 import { currentUrlParams, reloadWithQuery, reloadWithoutQueryParams } from '@/utils/route';
 import { produce } from "immer";
+import isArray from 'lodash/isArray';
 import { create } from 'zustand';
 
 const params = currentUrlParams();
 
-const useTaskFiltersStore = create((set) => ({
+const useTaskFiltersStore = create((set, get) => ({
   filters: {
     groups: params.groups || [],
     assignees: params.assignees || [],
@@ -13,6 +14,22 @@ const useTaskFiltersStore = create((set) => ({
       overdue: params.overdue || 0,
     },
     labels: params.labels || [],
+  },
+  hasUrlParams: () => {
+    return Object.keys(currentUrlParams()).length > 0;
+  },
+  hasFilters: () => {
+    const filters = get().filters;
+    const keys = Object.keys(filters);
+
+    return keys.some((key) => {
+      if (isArray(filters[key])) {
+        return filters[key].length > 0;
+      } else {
+        const keys = Object.keys(filters[key]);
+        return keys.some((k) => !!filters[key][k]);
+      }
+    });
   },
   toggleArrayFilter: (field, id) => {
     return set(

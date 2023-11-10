@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Models\Filters\IsNullFilter;
 use App\Models\Filters\TaskOverdueFilter;
+use App\Models\Filters\WhereHasFilter;
 use App\Models\Filters\WhereInFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Lacodix\LaravelModelFilter\Traits\HasFilters;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
@@ -54,6 +56,7 @@ class Task extends Model implements Sortable
             (new WhereInFilter('assigned_to_user_id'))->setQueryName('assignees'),
             (new TaskOverdueFilter('due_on'))->setQueryName('overdue'),
             (new IsNullFilter('due_on'))->setQueryName('not_set'),
+            (new WhereHasFilter('labels'))->setQueryName('labels'),
         ]);
     }
 
@@ -82,5 +85,10 @@ class Task extends Model implements Sortable
     public function assignedToUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to_user_id');
+    }
+
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(Label::class);
     }
 }

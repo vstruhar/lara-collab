@@ -72,6 +72,7 @@ class PermissionService
         ])
             ->unique('id')
             ->sortBy('name')
+            ->values()
             ->toArray();
     }
 }

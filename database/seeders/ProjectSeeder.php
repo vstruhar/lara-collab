@@ -26,16 +26,5 @@ class ProjectSeeder extends Seeder
             'description' => fake()->sentence(),
             'client_company_id' => ClientCompany::oldest()->first()->id,
         ]);
-
-        foreach ($projects as $project) {
-            $project->taskGroups()->createMany([
-                ['name' => 'New'],
-                ['name' => 'Todo'],
-                ['name' => 'In progress'],
-                ['name' => 'QA'],
-                ['name' => 'Done'],
-                ['name' => 'Deployed'],
-            ]);
-        }
     }
 }
