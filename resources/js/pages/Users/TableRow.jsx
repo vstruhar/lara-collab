@@ -1,7 +1,7 @@
 import RoleBadge from "@/components/RoleBadge";
 import TableRowActions from "@/components/TableRowActions";
-import { getInitials } from "@/services/UserService";
 import { money } from "@/utils/formatCurrency";
+import { getInitials } from "@/utils/user";
 import { Avatar, Flex, Group, Table, Text } from "@mantine/core";
 
 export default function TableRow({ item }) {

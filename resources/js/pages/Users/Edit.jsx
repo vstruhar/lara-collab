@@ -4,8 +4,8 @@ import useForm from "@/hooks/useForm";
 import useRoles from "@/hooks/useRoles";
 import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
-import { getInitials } from "@/services/UserService";
 import { redirectTo } from "@/utils/route";
+import { getInitials } from "@/utils/user";
 import { usePage } from "@inertiajs/react";
 import {
   Anchor,

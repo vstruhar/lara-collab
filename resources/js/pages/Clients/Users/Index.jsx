@@ -4,11 +4,8 @@ import SearchInput from "@/components/SearchInput";
 import TableHead from "@/components/TableHead";
 import TableRowEmpty from "@/components/TableRowEmpty";
 import Layout from "@/layouts/MainLayout";
-import {
-  actionColumnVisibility,
-  prepareColumns,
-} from "@/services/TableService";
 import { redirectTo, reloadWithQuery } from "@/utils/route";
+import { actionColumnVisibility, prepareColumns } from "@/utils/table";
 import { usePage } from "@inertiajs/react";
 import { Button, Grid, Group, Table } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";

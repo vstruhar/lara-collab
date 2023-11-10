@@ -1,5 +1,5 @@
 import useForm from "@/hooks/useForm";
-import { hasRoles } from "@/services/UserService";
+import { hasRoles } from "@/utils/user";
 import { Button, Flex, MultiSelect, Skeleton, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import axios from "axios";

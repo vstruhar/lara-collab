@@ -1,4 +1,4 @@
-import { getInitials } from "@/services/UserService";
+import { getInitials } from "@/utils/user";
 import { Link } from "@inertiajs/react";
 import { Avatar, Card, Group, Progress, Text, Tooltip } from "@mantine/core";
 import ToggleFavorite from "./FavoriteToggle";

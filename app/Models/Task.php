@@ -2,9 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Filters\IsNullFilter;
+use App\Models\Filters\TaskOverdueFilter;
+use App\Models\Filters\WhereInFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
+use Lacodix\LaravelModelFilter\Traits\HasFilters;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use LaravelArchivable\Archivable;
 use Spatie\EloquentSortable\Sortable;
@@ -12,11 +17,11 @@ use Spatie\EloquentSortable\SortableTrait;
 
 class Task extends Model implements Sortable
 {
-    use Archivable, HasFactory, IsSearchable, SortableTrait;
+    use Archivable, HasFactory, HasFilters, IsSearchable, SortableTrait;
 
     protected $fillable = [
         'project_id',
-        'task_group_id',
+        'group_id',
         'created_by_user_id',
         'assigned_to_user_id',
         'name',
@@ -42,6 +47,16 @@ class Task extends Model implements Sortable
         'billable' => 'boolean',
     ];
 
+    public function filters(): Collection
+    {
+        return collect([
+            (new WhereInFilter('group_id'))->setQueryName('groups'),
+            (new WhereInFilter('assigned_to_user_id'))->setQueryName('assignees'),
+            (new TaskOverdueFilter('due_on'))->setQueryName('overdue'),
+            (new IsNullFilter('due_on'))->setQueryName('not_set'),
+        ]);
+    }
+
     protected static function booted(): void
     {
         static::addGlobalScope('ordered', function ($query) {
@@ -56,7 +71,7 @@ class Task extends Model implements Sortable
 
     public function taskGroup(): BelongsTo
     {
-        return $this->belongsTo(TaskGroup::class);
+        return $this->belongsTo(TaskGroup::class, 'group_id');
     }
 
     public function createdByUser(): BelongsTo

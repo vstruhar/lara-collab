@@ -1,5 +1,5 @@
-import { getInitials } from "@/services/UserService";
 import { redirectTo } from "@/utils/route";
+import { getInitials } from "@/utils/user";
 import { router, usePage } from "@inertiajs/react";
 import { Avatar, Group, Menu, Text, UnstyledButton, rem } from "@mantine/core";
 import {

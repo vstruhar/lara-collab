@@ -1,5 +1,6 @@
 import { router } from '@inertiajs/react';
 import omit from 'lodash/omit';
+import queryString from 'query-string';
 
 export const redirectTo = (routeName, params = {}) => () => {
   router.get(route(routeName, params));
@@ -10,13 +11,11 @@ export const currentUrl = () => {
 }
 
 export const currentUrlParams = () => {
-  const urlParams = new URLSearchParams(location.search);
-  const params = {};
-
-  for(const entry of urlParams.entries()) {
-    params[entry[0]] = entry[1];
-  }
-  return params;
+  return queryString.parse(location.search, {
+    arrayFormat: 'bracket',
+    parseBooleans: true,
+    parseNumbers: true,
+  });
 }
 
 export const reloadWithQuery = (query) => {

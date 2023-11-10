@@ -29,12 +29,14 @@ export default function TaskGroup({ group, tasks, ...props }) {
               </Text>
               <TaskGroupActions group={group} className={classes.actions} />
             </Group>
-            <ActionIcon variant="filled" size="md" radius="xl" mr={-10}>
-              <IconPlus
-                style={{ width: rem(18), height: rem(18) }}
-                stroke={2}
-              />
-            </ActionIcon>
+            {!route().params.archived && (
+              <ActionIcon variant="filled" size="md" radius="xl" mr={-10}>
+                <IconPlus
+                  style={{ width: rem(18), height: rem(18) }}
+                  stroke={2}
+                />
+              </ActionIcon>
+            )}
           </div>
           <Droppable droppableId={`group-${group.id}-tasks`} type="task">
             {(provided, snapshot) => (

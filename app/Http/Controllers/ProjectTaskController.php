@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Label;
 use App\Models\Project;
 use App\Models\Task;
+use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -18,14 +20,17 @@ class ProjectTaskController extends Controller
 
         return Inertia::render('Projects/Tasks/Index', [
             'project' => $project,
+            'assignees' => PermissionService::usersWithAccessToProject($project),
+            'labels' => Label::all(),
             'taskGroups' => $project->taskGroups,
             'groupedTasks' => Task::where('project_id', $project->id)
                 ->searchByQueryString()
+                ->filterByQueryString()
                 ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                 ->with(['assignedToUser:id,name'])
                 ->orderBy('completed_at')
                 ->get()
-                ->groupBy('task_group_id'),
+                ->groupBy('group_id'),
         ]);
     }
 

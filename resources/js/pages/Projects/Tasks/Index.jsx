@@ -1,10 +1,12 @@
-import useTasksStore from "@/hooks/useTasksStore";
+import useGroupsStore from "@/hooks/store/useGroupsStore";
+import useTasksStore from "@/hooks/store/useTasksStore";
 import Layout from "@/layouts/MainLayout";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { usePage } from "@inertiajs/react";
 import { Button, Grid } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { useEffect } from "react";
+import Filters from "./Index/Filters";
 import Header from "./Index/Header";
 import TaskGroup from "./Index/TaskGroup";
 
@@ -14,9 +16,9 @@ const TasksIndex = () => {
   const { project, taskGroups, groupedTasks } = usePage().props;
   currentProject = project;
 
-  const groups = useTasksStore((state) => state.groups);
-  const setGroups = useTasksStore((state) => state.setGroups);
-  const reorderGroup = useTasksStore((state) => state.reorderGroup);
+  const groups = useGroupsStore((state) => state.groups);
+  const setGroups = useGroupsStore((state) => state.setGroups);
+  const reorderGroup = useGroupsStore((state) => state.reorderGroup);
 
   const tasks = useTasksStore((state) => state.tasks);
   const setTasks = useTasksStore((state) => state.setTasks);
@@ -50,7 +52,7 @@ const TasksIndex = () => {
     <>
       <Header />
 
-      <Grid columns={12} gutter="lg" mt="xl">
+      <Grid columns={12} gutter={50} mt="xl">
         <Grid.Col span="auto">
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="groups" direction="vertical" type="group">
@@ -70,17 +72,21 @@ const TasksIndex = () => {
             </Droppable>
           </DragDropContext>
 
-          <Button
-            leftSection={<IconPlus size={14} />}
-            variant="transparent"
-            size="sm"
-            mt="md"
-            radius="xl"
-          >
-            Add tasks group
-          </Button>
+          {!route().params.archived && (
+            <Button
+              leftSection={<IconPlus size={14} />}
+              variant="transparent"
+              size="sm"
+              mt="md"
+              radius="xl"
+            >
+              Add tasks group
+            </Button>
+          )}
         </Grid.Col>
-        <Grid.Col span={3}>Filters</Grid.Col>
+        <Grid.Col span={3}>
+          <Filters />
+        </Grid.Col>
       </Grid>
     </>
   );

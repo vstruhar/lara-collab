@@ -1,5 +1,6 @@
-import useTasksStore from "@/hooks/useTasksStore";
-import { shortName } from "@/services/UserService";
+import useTasksStore from "@/hooks/store/useTasksStore";
+import { isOverdue } from "@/utils/task";
+import { shortName } from "@/utils/user";
 import { Draggable } from "@hello-pangea/dnd";
 import { Link } from "@inertiajs/react";
 import { Checkbox, Flex, Group, Pill, Text, rem } from "@mantine/core";
@@ -47,7 +48,12 @@ export default function Task({ task, index }) {
                 </Pill>
               </Link>
             )}
-            <Text key={task.id} size="sm" fw={500}>
+            <Text
+              key={task.id}
+              size="sm"
+              fw={500}
+              c={isOverdue(task) ? "red.7" : ""}
+            >
               #{task.number + ": " + task.name}
             </Text>
           </Group>

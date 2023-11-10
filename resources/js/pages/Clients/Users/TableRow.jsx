@@ -1,5 +1,5 @@
 import TableRowActions from "@/components/TableRowActions";
-import { getInitials } from "@/services/UserService";
+import { getInitials } from "@/utils/user";
 import { Link } from "@inertiajs/react";
 import { Avatar, Badge, Group, Table, Text } from "@mantine/core";
 

@@ -1,4 +1,4 @@
-import { getInitials } from "@/services/UserService";
+import { getInitials } from "@/utils/user";
 import { Avatar, Grid, Group, Paper, Text } from "@mantine/core";
 import { IconAt, IconPhoneCall } from "@tabler/icons-react";
 import classes from "./css/UserInfoCard.module.css";
