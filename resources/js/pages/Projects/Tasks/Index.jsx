@@ -9,6 +9,7 @@ import { IconPlus } from "@tabler/icons-react";
 import { useEffect } from "react";
 import Filters from "./Index/Filters";
 import Header from "./Index/Header";
+import CreateTasksGroupModal from "./Index/Modals/CreateTasksGroupModal";
 import TaskGroup from "./Index/TaskGroup";
 
 let currentProject = null;
@@ -66,6 +67,7 @@ const TasksIndex = () => {
                     .filter(
                       (group) =>
                         !usingFilters ||
+                        route().params.archived ||
                         (usingFilters && tasks[group.id]?.length > 0),
                     )
                     .map((group, index) => (
@@ -89,6 +91,7 @@ const TasksIndex = () => {
               size="sm"
               mt="md"
               radius="xl"
+              onClick={CreateTasksGroupModal}
             >
               Add tasks group
             </Button>

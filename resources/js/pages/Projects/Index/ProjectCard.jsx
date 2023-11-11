@@ -1,3 +1,4 @@
+import { stopOnIgnoreLink } from "@/utils/domEvents";
 import { getInitials } from "@/utils/user";
 import { Link } from "@inertiajs/react";
 import { Avatar, Card, Group, Progress, Text, Tooltip } from "@mantine/core";
@@ -7,7 +8,11 @@ import classes from "./css/ProjectCard.module.css";
 
 export default function ProjectCard({ item }) {
   return (
-    <Link href={route("projects.tasks", item.id)} className={classes.link}>
+    <Link
+      href={route("projects.tasks", item.id)}
+      className={classes.link}
+      onClick={stopOnIgnoreLink}
+    >
       <Card
         withBorder
         padding="xl"
@@ -33,11 +38,14 @@ export default function ProjectCard({ item }) {
         <Text c="dimmed" fz="sm" mt="md">
           Tasks completed:{" "}
           <Text span fw={500} c="bright">
-            0/36
+            {item.completed_tasks_count} / {item.all_tasks_count}
           </Text>
         </Text>
 
-        <Progress value={(0 / 36) * 100} mt={5} />
+        <Progress
+          value={(item.completed_tasks_count / item.all_tasks_count) * 100}
+          mt={5}
+        />
 
         <Group justify="space-between" mt="md">
           <Avatar.Group spacing="sm">
@@ -48,7 +56,12 @@ export default function ProjectCard({ item }) {
                 openDelay={300}
                 withArrow
               >
-                <Avatar src={user.avatar} radius="xl">
+                <Avatar
+                  src={user.avatar}
+                  radius="xl"
+                  style={{ cursor: "default" }}
+                  data-ignore-link
+                >
                   {getInitials(user.name)}
                 </Avatar>
               </Tooltip>

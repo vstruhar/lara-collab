@@ -40,6 +40,11 @@ class Project extends Model
         return $this->hasMany(TaskGroup::class);
     }
 
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
     public function favoritedByAuthUser(): BelongsToMany
     {
         return $this->belongsToMany(

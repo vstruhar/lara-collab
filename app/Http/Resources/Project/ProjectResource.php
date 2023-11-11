@@ -22,6 +22,8 @@ class ProjectResource extends JsonResource
             'favorite' => $this->favorite,
             'client_company' => $this->clientCompany->only(['id', 'name']),
             'users_with_access' => PermissionService::usersWithAccessToProject($this),
+            'all_tasks_count' => $this->all_tasks_count,
+            'completed_tasks_count' => $this->completed_tasks_count,
         ];
     }
 }

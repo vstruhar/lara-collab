@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use LaravelArchivable\Archivable;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
 class TaskGroup extends Model implements Sortable
 {
-    use HasFactory, SortableTrait;
+    use Archivable, HasFactory, SortableTrait;
 
     public $timestamps = false;
 

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('project_id');
             $table->string('name');
             $table->unsignedInteger('order_column');
+            $table->archivedAt();
         });
     }
 

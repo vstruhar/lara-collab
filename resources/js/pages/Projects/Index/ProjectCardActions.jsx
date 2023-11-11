@@ -9,7 +9,7 @@ import {
   IconPencil,
   IconUsers,
 } from "@tabler/icons-react";
-import UserAccessModal from "./UserAccessModal.jsx";
+import UserAccessModal from "./Modals/UserAccessModal.jsx";
 
 export default function ProjectCardActions({ item }) {
   const [archiveForm] = useForm("delete", route("projects.destroy", item.id));
@@ -22,7 +22,7 @@ export default function ProjectCardActions({ item }) {
       content: `Are you sure you want to archive this project? This action will prevent users from accessing it.`,
       confirmLabel: "Archive",
       confirmProps: { color: "red" },
-      action: () => archiveForm.submit(),
+      action: () => archiveForm.submit({ preserveScroll: true }),
     });
 
   const openRestoreModal = () =>
@@ -32,7 +32,7 @@ export default function ProjectCardActions({ item }) {
       content: `Are you sure you want to restore this project?`,
       confirmLabel: "Restore",
       confirmProps: { color: "blue" },
-      action: () => restoreForm.submit(),
+      action: () => restoreForm.submit({ preserveScroll: true }),
     });
 
   const openUserAccess = () => UserAccessModal(item);
@@ -46,15 +46,16 @@ export default function ProjectCardActions({ item }) {
         <Menu
           withArrow
           position="bottom-end"
-          withinPortal
           transitionProps={{ duration: 100, transition: "pop-top-right" }}
           offset={{ mainAxis: 3, alignmentAxis: 5 }}
+          data-ignore-link
         >
           <Menu.Target>
-            <ActionIcon variant="subtle" color="gray">
+            <ActionIcon variant="subtle" color="gray" data-ignore-link>
               <IconDots
                 style={{ width: rem(20), height: rem(20) }}
                 stroke={1.5}
+                data-ignore-link
               />
             </ActionIcon>
           </Menu.Target>
@@ -65,9 +66,11 @@ export default function ProjectCardActions({ item }) {
                   <IconUsers
                     style={{ width: rem(16), height: rem(16) }}
                     stroke={1.5}
+                    data-ignore-link
                   />
                 }
                 onClick={openUserAccess}
+                data-ignore-link
               >
                 User access
               </Menu.Item>
@@ -78,9 +81,11 @@ export default function ProjectCardActions({ item }) {
                   <IconPencil
                     style={{ width: rem(16), height: rem(16) }}
                     stroke={1.5}
+                    data-ignore-link
                   />
                 }
                 onClick={() => router.visit(route("projects.edit", item.id))}
+                data-ignore-link
               >
                 Edit
               </Menu.Item>
@@ -91,10 +96,12 @@ export default function ProjectCardActions({ item }) {
                   <IconArchiveOff
                     style={{ width: rem(16), height: rem(16) }}
                     stroke={1.5}
+                    data-ignore-link
                   />
                 }
                 color="blue"
                 onClick={openRestoreModal}
+                data-ignore-link
               >
                 Restore
               </Menu.Item>
@@ -105,10 +112,12 @@ export default function ProjectCardActions({ item }) {
                   <IconArchive
                     style={{ width: rem(16), height: rem(16) }}
                     stroke={1.5}
+                    data-ignore-link
                   />
                 }
                 color="red"
                 onClick={openArchiveModal}
+                data-ignore-link
               >
                 Archive
               </Menu.Item>

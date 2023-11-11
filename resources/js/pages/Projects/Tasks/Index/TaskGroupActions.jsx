@@ -7,6 +7,7 @@ import {
   IconPencil,
 } from "@tabler/icons-react";
 import { useForm } from "laravel-precognition-react-inertia";
+import EditTasksGroupModal from "./Modals/EditTasksGroupModal";
 
 export default function TaskGroupActions({ group, ...props }) {
   const archiveForm = useForm(
@@ -25,7 +26,7 @@ export default function TaskGroupActions({ group, ...props }) {
       content: `Are you sure you want to archive this task group?`,
       confirmLabel: "Archive",
       confirmProps: { color: "red" },
-      action: () => archiveForm.submit(),
+      action: () => archiveForm.submit({ preserveScroll: true }),
     });
 
   const openRestoreModal = () =>
@@ -35,8 +36,10 @@ export default function TaskGroupActions({ group, ...props }) {
       content: `Are you sure you want to restore this task group?`,
       confirmLabel: "Restore",
       confirmProps: { color: "blue" },
-      action: () => restoreForm.submit(),
+      action: () => restoreForm.submit({ preserveScroll: true }),
     });
+
+  const openEditModal = () => EditTasksGroupModal(group);
 
   return (
     <Group gap={0} justify="flex-end" {...props}>
@@ -66,6 +69,7 @@ export default function TaskGroupActions({ group, ...props }) {
                     stroke={1.5}
                   />
                 }
+                onClick={openEditModal}
               >
                 Edit
               </Menu.Item>

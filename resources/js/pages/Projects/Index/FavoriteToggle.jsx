@@ -6,13 +6,12 @@ import classes from "./css/FavoriteToggle.module.css";
 export default function ToggleFavorite({ item }) {
   const favorite = useForm("put", route("projects.favorite.toggle", item.id));
 
-  const toggleFavorite = (event) => {
-    event.preventDefault();
-    favorite.submit();
-  };
-
   return (
-    <UnstyledButton onClick={toggleFavorite} className={classes.button}>
+    <UnstyledButton
+      onClick={() => favorite.submit({ preserveScroll: true })}
+      className={classes.button}
+      data-ignore-link
+    >
       {item.favorite ? (
         <IconStarFilled
           style={{
@@ -20,6 +19,7 @@ export default function ToggleFavorite({ item }) {
             width: rem(20),
             height: rem(20),
           }}
+          data-ignore-link
         />
       ) : (
         <IconStar
@@ -27,6 +27,7 @@ export default function ToggleFavorite({ item }) {
             width: rem(20),
             height: rem(20),
           }}
+          data-ignore-link
         />
       )}
     </UnstyledButton>

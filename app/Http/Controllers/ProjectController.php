@@ -35,13 +35,17 @@ class ProjectController extends Controller
                         $query->whereHas('clientCompany.clients', fn ($query) => $query->where('users.id', auth()->id()))
                             ->orWhereHas('users', fn ($query) => $query->where('id', auth()->id()));
                     })
+                    ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                     ->with([
                         'clientCompany:id,name',
                         'clientCompany.clients:id,name,avatar',
                         'users:id,name,avatar',
                     ])
+                    ->withCount([
+                        'tasks AS all_tasks_count',
+                        'tasks AS completed_tasks_count' => fn ($query) => $query->whereNotNull('completed_at'),
+                    ])
                     ->withExists('favoritedByAuthUser AS favorite')
-                    ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                     ->get()
             ),
         ]);

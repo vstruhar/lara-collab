@@ -29,6 +29,7 @@ function ModalForm({ item }) {
   const submitModal = (event) => {
     submit(event, {
       onSuccess: () => modals.closeAll(),
+      preserveScroll: true,
     });
   };
 
@@ -95,7 +96,7 @@ function ModalForm({ item }) {
 const UserAccessModal = (item) => {
   modals.open({
     title: (
-      <Text size="xl" fw={700} mb={-20}>
+      <Text size="xl" fw={700} mb={-10}>
         User access
       </Text>
     ),

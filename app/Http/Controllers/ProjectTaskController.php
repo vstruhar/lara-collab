@@ -22,7 +22,10 @@ class ProjectTaskController extends Controller
             'project' => $project,
             'assignees' => PermissionService::usersWithAccessToProject($project),
             'labels' => Label::all(),
-            'taskGroups' => $project->taskGroups,
+            'taskGroups' => $project
+                ->taskGroups()
+                ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
+                ->get(),
             'groupedTasks' => Task::where('project_id', $project->id)
                 ->searchByQueryString()
                 ->filterByQueryString()
