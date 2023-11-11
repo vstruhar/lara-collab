@@ -59,4 +59,12 @@ class ProjectPolicy
     {
         return $user->hasPermissionTo('restore project');
     }
+
+    /**
+     * Determine whether the user can edit the model user access.
+     */
+    public function editUserAccess(User $user, Project $model): bool
+    {
+        return $user->hasPermissionTo('edit project user access');
+    }
 }

@@ -135,12 +135,12 @@ class ProjectController extends Controller
      */
     public function userAccess(Request $request, Project $project)
     {
+        $this->authorize('editUserAccess', $project);
+
         $userIds = array_merge(
             $request->get('users', []),
             $request->get('clients', [])
         );
-
-        // dd($userIds);
 
         (new ProjectService($project))->updateUserAccess($userIds);
 

@@ -20,7 +20,11 @@ export default function TaskGroup({ group, tasks, ...props }) {
             <Group>
               <div {...provided.dragHandleProps} className={classes.dragHandle}>
                 <IconGripVertical
-                  style={{ width: rem(18), height: rem(18) }}
+                  style={{
+                    width: rem(18),
+                    height: rem(18),
+                    display: can("reorder task group") ? "inline" : "none",
+                  }}
                   stroke={1.5}
                 />
               </div>
@@ -29,7 +33,7 @@ export default function TaskGroup({ group, tasks, ...props }) {
               </Text>
               <TaskGroupActions group={group} className={classes.actions} />
             </Group>
-            {!route().params.archived && (
+            {!route().params.archived && can("create task") && (
               <ActionIcon variant="filled" size="md" radius="xl" mr={-10}>
                 <IconPlus
                   style={{ width: rem(18), height: rem(18) }}

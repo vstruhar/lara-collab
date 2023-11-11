@@ -30,10 +30,10 @@ export const reloadWithQuery = (query) => {
   );
 };
 
-export const reloadWithoutQueryParams = (excludeParams = []) => {
+export const reloadWithoutQueryParams = (excludeParams = null) => {
   router.get(
     currentUrl(),
-    omit(currentUrlParams(), excludeParams),
+    !excludeParams ? {} : omit(currentUrlParams(), excludeParams),
     {
       preserveState: true,
       preserveScroll: true,

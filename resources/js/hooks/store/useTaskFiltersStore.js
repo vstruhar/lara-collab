@@ -31,6 +31,21 @@ const useTaskFiltersStore = create((set, get) => ({
       }
     });
   },
+  clearFilters: () => {
+    reloadWithoutQueryParams();
+
+    return set(() => ({
+      filters: {
+        groups: [],
+        assignees: [],
+        due_date: {
+          not_set: 0,
+          overdue: 0,
+        },
+        labels: [],
+      }
+    }));
+  },
   toggleArrayFilter: (field, id) => {
     return set(
       produce((state) => {

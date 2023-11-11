@@ -15,6 +15,8 @@ class ProjectTaskGroupController extends Controller
      */
     public function store(StoreTaskGroupRequest $request, Project $project)
     {
+        $this->authorize('create', TaskGroup::class);
+
         $project->taskGroups()->create($request->validated());
 
         return redirect()->route('projects.tasks', $project)->success('Tasks group created', 'A new tasks group was successfully created.');
@@ -25,6 +27,8 @@ class ProjectTaskGroupController extends Controller
      */
     public function update(UpdateTaskGroupRequest $request, Project $project, TaskGroup $taskGroup)
     {
+        $this->authorize('update', TaskGroup::class);
+
         $taskGroup->update($request->validated());
 
         return redirect()->route('projects.tasks', $project)->success('Tasks group updated', 'The tasks group was successfully updated.');
@@ -35,6 +39,8 @@ class ProjectTaskGroupController extends Controller
      */
     public function destroy(Project $project, TaskGroup $taskGroup)
     {
+        $this->authorize('delete', TaskGroup::class);
+
         if ($taskGroup->tasks->isNotEmpty()) {
             return redirect()->route('projects.tasks', $project)->warning('Action stopped', 'You cannot archive a task group that still contains tasks.');
         }
@@ -46,6 +52,8 @@ class ProjectTaskGroupController extends Controller
 
     public function restore(Project $project, int $taskGroupId)
     {
+        $this->authorize('restore', TaskGroup::class);
+
         $taskGroup = TaskGroup::withArchived()->findOrFail($taskGroupId);
 
         $taskGroup->unArchive();
@@ -55,6 +63,8 @@ class ProjectTaskGroupController extends Controller
 
     public function reorder(Request $request, Project $project)
     {
+        $this->authorize('reorder', TaskGroup::class);
+
         TaskGroup::setNewOrder($request->ids);
 
         return response()->json();

@@ -24,17 +24,17 @@ export default function SearchInput({ search, ...props }) {
       }
       rightSectionWidth={38}
       rightSection={
-        <IconX
-          style={{
-            width: rem(16),
-            height: rem(16),
-            cursor: "pointer",
-            opacity: debounced === "" ? 0 : 1,
-            pointerEvents: debounced === "" ? "none" : "auto",
-          }}
-          stroke={2.5}
-          onClick={() => setValue("")}
-        />
+        debounced !== "" && (
+          <IconX
+            style={{
+              width: rem(16),
+              height: rem(16),
+              cursor: "pointer",
+            }}
+            stroke={2.5}
+            onClick={() => setValue("")}
+          />
+        )
       }
       {...props}
     />

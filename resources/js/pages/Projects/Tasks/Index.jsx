@@ -84,7 +84,7 @@ const TasksIndex = () => {
             </Droppable>
           </DragDropContext>
 
-          {!route().params.archived && (
+          {!route().params.archived && can("create task group") && (
             <Button
               leftSection={<IconPlus size={14} />}
               variant="transparent"

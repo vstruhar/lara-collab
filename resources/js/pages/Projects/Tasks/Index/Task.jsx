@@ -35,7 +35,11 @@ export default function Task({ task, index }) {
           <Group gap="sm">
             <div {...provided.dragHandleProps}>
               <IconGripVertical
-                style={{ width: rem(18), height: rem(18) }}
+                style={{
+                  width: rem(18),
+                  height: rem(18),
+                  display: can("reorder task") ? "inline" : "none",
+                }}
                 stroke={1.5}
                 className={classes.dragHandle}
               />
