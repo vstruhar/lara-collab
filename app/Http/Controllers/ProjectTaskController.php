@@ -29,6 +29,7 @@ class ProjectTaskController extends Controller
             'groupedTasks' => Task::where('project_id', $project->id)
                 ->searchByQueryString()
                 ->filterByQueryString()
+                ->when($request->user()->role('client'), fn ($query) => $query->where('hidden_from_clients', false))
                 ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                 ->with([
                     'assignedToUser:id,name',

@@ -1,4 +1,5 @@
 import ArchivedFilterButton from "@/components/ArchivedFilterButton";
+import { EmptyResult } from "@/components/EmptyResult";
 import SearchInput from "@/components/SearchInput";
 import Layout from "@/layouts/MainLayout";
 import { redirectTo, reloadWithQuery } from "@/utils/route";
@@ -34,18 +35,25 @@ const ProjectsIndex = () => {
         </Grid.Col>
       </Grid>
 
-      <Flex
-        mt="xl"
-        gap="lg"
-        justify="flex-start"
-        align="flex-start"
-        direction="row"
-        wrap="wrap"
-      >
-        {items.map((item) => (
-          <ProjectCard item={item} key={item.id} />
-        ))}
-      </Flex>
+      {items.length ? (
+        <Flex
+          mt="xl"
+          gap="lg"
+          justify="flex-start"
+          align="flex-start"
+          direction="row"
+          wrap="wrap"
+        >
+          {items.map((item) => (
+            <ProjectCard item={item} key={item.id} />
+          ))}
+        </Flex>
+      ) : (
+        <EmptyResult
+          title="No projects found"
+          subtitle="or you do not have access to any of them"
+        />
+      )}
     </>
   );
 };

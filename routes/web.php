@@ -23,10 +23,6 @@ use Illuminate\Support\Facades\Route;
 //     return (new App\Notifications\UserCreatedNotification('secret'))->toMail(App\Models\User::first());
 // });
 
-// Route::get('test', function () {
-//     App\Services\PermissionService::allPermissionsGrouped();
-// });
-
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

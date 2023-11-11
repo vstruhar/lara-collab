@@ -1,6 +1,7 @@
 import ArchivedFilterButton from "@/components/ArchivedFilterButton";
 import ClearFiltersButton from "@/components/ClearFiltersButton";
 import SearchInput from "@/components/SearchInput";
+import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import { reloadWithQuery } from "@/utils/route";
 import { Button, Grid, Group } from "@mantine/core";
@@ -9,6 +10,7 @@ import { IconPlus } from "@tabler/icons-react";
 export default function Header() {
   const search = (search) => reloadWithQuery({ search });
 
+  const { openCreateTask } = useTaskDrawerStore();
   const { hasUrlParams } = useTaskFiltersStore();
   const usingFilters = hasUrlParams(["archived"]);
 
@@ -23,7 +25,11 @@ export default function Header() {
       </Grid.Col>
       <Grid.Col span="content">
         {can("create task") && (
-          <Button leftSection={<IconPlus size={14} />} radius="xl">
+          <Button
+            leftSection={<IconPlus size={14} />}
+            radius="xl"
+            onClick={() => openCreateTask()}
+          >
             Add task
           </Button>
         )}

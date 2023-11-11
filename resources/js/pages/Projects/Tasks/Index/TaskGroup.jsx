@@ -1,3 +1,4 @@
+import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { ActionIcon, Group, Text, Tooltip, rem } from "@mantine/core";
 import { IconGripVertical, IconPlus } from "@tabler/icons-react";
@@ -6,6 +7,8 @@ import TaskGroupActions from "./TaskGroupActions";
 import classes from "./css/TaskGroup.module.css";
 
 export default function TaskGroup({ group, tasks, ...props }) {
+  const { openCreateTask } = useTaskDrawerStore();
+
   return (
     <Draggable draggableId={group.id.toString()} {...props}>
       {(provided, snapshot) => (
@@ -38,7 +41,13 @@ export default function TaskGroup({ group, tasks, ...props }) {
             </Group>
             {!route().params.archived && can("create task") && (
               <Tooltip label="Add task" openDelay={1000} withArrow>
-                <ActionIcon variant="filled" size="md" radius="xl" mr={-10}>
+                <ActionIcon
+                  variant="filled"
+                  size="md"
+                  radius="xl"
+                  mr={-10}
+                  onClick={() => openCreateTask(group.id)}
+                >
                   <IconPlus
                     style={{ width: rem(18), height: rem(18) }}
                     stroke={2}

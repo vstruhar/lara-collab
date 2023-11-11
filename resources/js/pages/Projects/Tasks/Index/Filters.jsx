@@ -14,39 +14,43 @@ export default function Filters() {
   return (
     <>
       <Stack justify="flex-start" gap={24}>
-        <div>
-          <Text fz="xs" fw={700} tt="uppercase" mb="sm">
-            Task groups
-          </Text>
-          <Stack justify="flex-start" gap={6}>
-            {groups.map((item) => (
-              <FilterButton
-                key={item.id}
-                selected={filters.groups.includes(item.id)}
-                onClick={() => toggleArrayFilter("groups", item.id)}
-              >
-                {item.name}
-              </FilterButton>
-            ))}
-          </Stack>
-        </div>
+        {groups.length > 0 && (
+          <div>
+            <Text fz="xs" fw={700} tt="uppercase" mb="sm">
+              Task groups
+            </Text>
+            <Stack justify="flex-start" gap={6}>
+              {groups.map((item) => (
+                <FilterButton
+                  key={item.id}
+                  selected={filters.groups.includes(item.id)}
+                  onClick={() => toggleArrayFilter("groups", item.id)}
+                >
+                  {item.name}
+                </FilterButton>
+              ))}
+            </Stack>
+          </div>
+        )}
 
-        <div>
-          <Text fz="xs" fw={700} tt="uppercase" mb="sm">
-            Assignees
-          </Text>
-          <Stack justify="flex-start" gap={6}>
-            {assignees.map((item) => (
-              <FilterButton
-                key={item.id}
-                selected={filters.assignees.includes(item.id)}
-                onClick={() => toggleArrayFilter("assignees", item.id)}
-              >
-                {item.name}
-              </FilterButton>
-            ))}
-          </Stack>
-        </div>
+        {assignees.length > 0 && (
+          <div>
+            <Text fz="xs" fw={700} tt="uppercase" mb="sm">
+              Assignees
+            </Text>
+            <Stack justify="flex-start" gap={6}>
+              {assignees.map((item) => (
+                <FilterButton
+                  key={item.id}
+                  selected={filters.assignees.includes(item.id)}
+                  onClick={() => toggleArrayFilter("assignees", item.id)}
+                >
+                  {item.name}
+                </FilterButton>
+              ))}
+            </Stack>
+          </div>
+        )}
 
         <div>
           <Text fz="xs" fw={700} tt="uppercase" mb="sm">
@@ -68,23 +72,25 @@ export default function Filters() {
           </Stack>
         </div>
 
-        <div>
-          <Text fz="xs" fw={700} tt="uppercase" mb="sm">
-            Labels
-          </Text>
-          <Stack justify="flex-start" gap={6}>
-            {labels.map((item) => (
-              <FilterButton
-                key={item.id}
-                selected={filters.labels.includes(item.id)}
-                onClick={() => toggleArrayFilter("labels", item.id)}
-                leftSection={<ColorSwatch color={item.color} size={18} />}
-              >
-                {item.name}
-              </FilterButton>
-            ))}
-          </Stack>
-        </div>
+        {labels.length > 0 && (
+          <div>
+            <Text fz="xs" fw={700} tt="uppercase" mb="sm">
+              Labels
+            </Text>
+            <Stack justify="flex-start" gap={6}>
+              {labels.map((item) => (
+                <FilterButton
+                  key={item.id}
+                  selected={filters.labels.includes(item.id)}
+                  onClick={() => toggleArrayFilter("labels", item.id)}
+                  leftSection={<ColorSwatch color={item.color} size={18} />}
+                >
+                  {item.name}
+                </FilterButton>
+              ))}
+            </Stack>
+          </div>
+        )}
       </Stack>
     </>
   );

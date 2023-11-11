@@ -1,3 +1,4 @@
+import { EmptyResult } from "@/components/EmptyResult";
 import useGroupsStore from "@/hooks/store/useGroupsStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
@@ -7,6 +8,7 @@ import { usePage } from "@inertiajs/react";
 import { Button, Grid } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { useEffect } from "react";
+import { CreateTaskDrawer } from "./Drawers/CreateTaskDrawer";
 import Filters from "./Index/Filters";
 import Header from "./Index/Header";
 import CreateTasksGroupModal from "./Index/Modals/CreateTasksGroupModal";
@@ -51,44 +53,60 @@ const TasksIndex = () => {
     <>
       <Header />
 
+      <CreateTaskDrawer />
+
       <Grid columns={12} gutter={50} mt="xl">
         <Grid.Col span="auto">
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="groups" direction="vertical" type="group">
-              {(provided) => (
-                <div {...provided.droppableProps} ref={provided.innerRef}>
-                  {groups
-                    .filter(
-                      (group) =>
-                        !usingFilters ||
-                        route().params.archived ||
-                        (usingFilters && tasks[group.id]?.length > 0),
-                    )
-                    .map((group, index) => (
-                      <TaskGroup
-                        key={group.id}
-                        index={index}
-                        group={group}
-                        tasks={tasks[group.id] || []}
-                      />
-                    ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
+          {groups.length ? (
+            <>
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable
+                  droppableId="groups"
+                  direction="vertical"
+                  type="group"
+                >
+                  {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                      {groups
+                        .filter(
+                          (group) =>
+                            !usingFilters ||
+                            route().params.archived ||
+                            (usingFilters && tasks[group.id]?.length > 0),
+                        )
+                        .map((group, index) => (
+                          <TaskGroup
+                            key={group.id}
+                            index={index}
+                            group={group}
+                            tasks={tasks[group.id] || []}
+                          />
+                        ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
 
-          {!route().params.archived && can("create task group") && (
-            <Button
-              leftSection={<IconPlus size={14} />}
-              variant="transparent"
-              size="sm"
-              mt="md"
-              radius="xl"
-              onClick={CreateTasksGroupModal}
-            >
-              Add tasks group
-            </Button>
+              {!route().params.archived && can("create task group") && (
+                <Button
+                  leftSection={<IconPlus size={14} />}
+                  variant="transparent"
+                  size="sm"
+                  mt="md"
+                  m={4}
+                  radius="xl"
+                  onClick={CreateTasksGroupModal}
+                >
+                  Add tasks group
+                </Button>
+              )}
+            </>
+          ) : (
+            <EmptyResult
+              title="No tasks found"
+              subtitle="or none match your search criteria"
+            />
           )}
         </Grid.Col>
         <Grid.Col span={3}>
