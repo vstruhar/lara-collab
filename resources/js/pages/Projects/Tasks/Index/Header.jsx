@@ -9,8 +9,8 @@ import { IconPlus } from "@tabler/icons-react";
 export default function Header() {
   const search = (search) => reloadWithQuery({ search });
 
-  const hasUrlParams = useTaskFiltersStore((state) => state.hasUrlParams);
-  const usingFilters = hasUrlParams();
+  const { hasUrlParams } = useTaskFiltersStore();
+  const usingFilters = hasUrlParams(["archived"]);
 
   return (
     <Grid justify="space-between" align="center">

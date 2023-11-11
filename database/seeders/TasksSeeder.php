@@ -18,15 +18,17 @@ class TasksSeeder extends Seeder
         $projects = Project::with(['taskGroups'])->get();
         $admin = User::role('admin')->first();
 
-        foreach ($projects as $index => $project) {
-            $project->taskGroups->each(function (TaskGroup $taskGroup) use ($project, $admin, $index) {
+        foreach ($projects as $project) {
+            $number = 1;
+
+            $project->taskGroups->each(function (TaskGroup $taskGroup, int $key) use ($project, $admin, &$number) {
                 for ($i = 0; $i < random_int(0, 4); $i++) {
                     $task = $taskGroup->tasks()->create([
                         'project_id' => $project->id,
                         'created_by_user_id' => $admin->id,
                         'assigned_to_user_id' => $admin->id,
                         'name' => fake()->sentence,
-                        'number' => $index + $i + 1,
+                        'number' => $number++,
                         'description' => fake()->sentences(4, true),
                         'due_on' => fake()->randomElement([
                             now()->addDays(random_int(1, 9)),
@@ -40,7 +42,6 @@ class TasksSeeder extends Seeder
                         'estimation' => 0,
                         'hidden_from_clients' => false,
                         'billable' => true,
-                        'order_column' => $index + 1,
                         'completed_at' => fake()->randomElement([now(), null, null, null]),
                     ]);
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\OrderByScope;
+use App\Services\PermissionService;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -85,6 +86,13 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, 'project_user_access');
+    }
+
+    public function hasProjectAccess(Project $project): bool
+    {
+        $users = PermissionService::usersWithAccessToProject($project);
+
+        return $users->pluck('id')->contains($this->id);
     }
 
     public static function userDropdownValues(): array

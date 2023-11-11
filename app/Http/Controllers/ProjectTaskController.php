@@ -16,7 +16,7 @@ class ProjectTaskController extends Controller
      */
     public function index(Request $request, Project $project)
     {
-        $this->authorize('view', $project);
+        $this->authorize('viewAny', [Task::class, $project]);
 
         return Inertia::render('Projects/Tasks/Index', [
             'project' => $project,
@@ -57,14 +57,6 @@ class ProjectTaskController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
@@ -90,6 +82,8 @@ class ProjectTaskController extends Controller
 
     public function reorder(Request $request, Project $project)
     {
+        $this->authorize('reorder', [Task::class, $project]);
+
         Task::setNewOrder($request->ids);
 
         return response()->json();
@@ -97,15 +91,19 @@ class ProjectTaskController extends Controller
 
     public function move(Request $request, Project $project)
     {
+        $this->authorize('reorder', [Task::class, $project]);
+
         Task::setNewOrder($request->ids);
 
-        Task::whereIn('id', $request->ids)->update(['task_group_id' => $request->group_id]);
+        Task::whereIn('id', $request->ids)->update(['group_id' => $request->group_id]);
 
         return response()->json();
     }
 
     public function complete(Request $request, Project $project, Task $task)
     {
+        $this->authorize('complete', [Task::class, $project]);
+
         $task->update([
             'completed_at' => ($request->completed === true) ? now() : null,
         ]);

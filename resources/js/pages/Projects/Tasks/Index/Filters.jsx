@@ -7,15 +7,9 @@ import FilterButton from "./Filters/FilterButton";
 export default function Filters() {
   const { assignees, labels } = usePage().props;
 
-  const groups = useGroupsStore((state) => state.groups);
-  const filters = useTaskFiltersStore((state) => state.filters);
-
-  const toggleArrayFilter = useTaskFiltersStore(
-    (state) => state.toggleArrayFilter,
-  );
-  const toggleObjectFilter = useTaskFiltersStore(
-    (state) => state.toggleObjectFilter,
-  );
+  const { groups } = useGroupsStore();
+  const { filters, toggleArrayFilter, toggleObjectFilter } =
+    useTaskFiltersStore();
 
   return (
     <>

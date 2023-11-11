@@ -10,7 +10,7 @@ export default function ArchivedFilterButton() {
 
   useDidUpdate(() => {
     if (selected) reloadWithQuery({ archived: 1 });
-    else reloadWithoutQueryParams(["archived"]);
+    else reloadWithoutQueryParams({ exclude: ["archived"] });
   }, [selected]);
 
   return (

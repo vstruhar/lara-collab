@@ -18,16 +18,10 @@ const TasksIndex = () => {
   const { project, taskGroups, groupedTasks } = usePage().props;
   currentProject = project;
 
-  const groups = useGroupsStore((state) => state.groups);
-  const setGroups = useGroupsStore((state) => state.setGroups);
-  const reorderGroup = useGroupsStore((state) => state.reorderGroup);
+  const { groups, setGroups, reorderGroup } = useGroupsStore();
+  const { tasks, setTasks, reorderTask, moveTask } = useTasksStore();
+  const { hasUrlParams } = useTaskFiltersStore();
 
-  const tasks = useTasksStore((state) => state.tasks);
-  const setTasks = useTasksStore((state) => state.setTasks);
-  const reorderTask = useTasksStore((state) => state.reorderTask);
-  const moveTask = useTasksStore((state) => state.moveTask);
-
-  const hasUrlParams = useTaskFiltersStore((state) => state.hasUrlParams);
   const usingFilters = hasUrlParams();
 
   useEffect(() => {

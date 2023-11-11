@@ -16,7 +16,7 @@ import { IconGripVertical } from "@tabler/icons-react";
 import classes from "./css/Task.module.css";
 
 export default function Task({ task, index }) {
-  const complete = useTasksStore((state) => state.complete);
+  const { complete } = useTasksStore();
 
   const toggleCompleted = (state) => {
     complete(task, state);
@@ -51,7 +51,11 @@ export default function Task({ task, index }) {
               color="green"
               checked={task.completed_at !== null}
               onChange={(e) => toggleCompleted(e.currentTarget.checked)}
-              className={classes.checkbox}
+              className={
+                can("complete task")
+                  ? classes.checkbox
+                  : classes.disabledCheckbox
+              }
             />
             {task.assigned_to_user && (
               <Link href={route("users.edit", task.assigned_to_user.id)}>

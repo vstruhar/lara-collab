@@ -1,6 +1,7 @@
 import { currentUrlParams, reloadWithQuery, reloadWithoutQueryParams } from '@/utils/route';
 import { produce } from "immer";
 import isArray from 'lodash/isArray';
+import omit from 'lodash/omit';
 import { create } from 'zustand';
 
 const params = currentUrlParams();
@@ -15,8 +16,10 @@ const useTaskFiltersStore = create((set, get) => ({
     },
     labels: params.labels || [],
   },
-  hasUrlParams: () => {
-    return Object.keys(currentUrlParams()).length > 0;
+  hasUrlParams: (exclude = []) => {
+    const params = omit(currentUrlParams(), exclude);
+
+    return Object.keys(params).length > 0;
   },
   hasFilters: () => {
     const filters = get().filters;
@@ -32,7 +35,7 @@ const useTaskFiltersStore = create((set, get) => ({
     });
   },
   clearFilters: () => {
-    reloadWithoutQueryParams();
+    reloadWithoutQueryParams({keep: ['archive']});
 
     return set(() => ({
       filters: {
@@ -68,7 +71,7 @@ const useTaskFiltersStore = create((set, get) => ({
           reloadWithQuery({ [property]: 1 });
         } else {
           state.filters[field][property] = 0;
-          reloadWithoutQueryParams([property]);
+          reloadWithoutQueryParams({exclude: [property]});
         }
       }),
     );

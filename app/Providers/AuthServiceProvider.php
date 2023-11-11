@@ -24,9 +24,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::before(function ($user, $ability) {
-            return $user->hasRole('admin') ? true : null;
-        });
+        // Gate::before(function ($user, $ability) {
+        //     return $user->hasRole('admin') ? true : null;
+        // });
 
         ResetPassword::createUrlUsing(function (User $user, string $token) {
             return route('auth.newPassword.form', ['token' => $token]);

@@ -23,7 +23,10 @@ export default function TaskGroup({ group, tasks, ...props }) {
                   style={{
                     width: rem(18),
                     height: rem(18),
-                    display: can("reorder task group") ? "inline" : "none",
+                    display:
+                      can("reorder task group") && !route().params.archived
+                        ? "inline"
+                        : "none",
                   }}
                   stroke={1.5}
                 />

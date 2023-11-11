@@ -1,5 +1,6 @@
 import { router } from '@inertiajs/react';
 import omit from 'lodash/omit';
+import pick from 'lodash/pick';
 import queryString from 'query-string';
 
 export const redirectTo = (routeName, params = {}) => () => {
@@ -30,10 +31,18 @@ export const reloadWithQuery = (query) => {
   );
 };
 
-export const reloadWithoutQueryParams = (excludeParams = null) => {
+export const reloadWithoutQueryParams = ({exclude, keep}) => {
+  let params = currentUrlParams();
+
+  if(exclude) {
+    params = omit(currentUrlParams(), exclude);
+  } else if(keep) {
+    params = pick(currentUrlParams(), keep);
+  }
+
   router.get(
     currentUrl(),
-    !excludeParams ? {} : omit(currentUrlParams(), excludeParams),
+    params,
     {
       preserveState: true,
       preserveScroll: true,

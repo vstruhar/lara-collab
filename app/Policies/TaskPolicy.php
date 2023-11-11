@@ -2,18 +2,18 @@
 
 namespace App\Policies;
 
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class TaskPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user, Project $project): bool
     {
-        //
+        return $user->hasPermissionTo('view tasks') && $user->hasProjectAccess($project);
     }
 
     /**
@@ -41,26 +41,26 @@ class TaskPolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Task $task): bool
-    {
-        //
-    }
-
-    /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Task $task): bool
+    public function restore(User $user, Project $project): bool
     {
-        //
+        return $user->hasPermissionTo('restore task') && $user->hasProjectAccess($project);
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Determine whether the user can reorder the model.
      */
-    public function forceDelete(User $user, Task $task): bool
+    public function reorder(User $user, Project $project): bool
     {
-        //
+        return $user->hasPermissionTo('reorder task') && $user->hasProjectAccess($project);
+    }
+
+    /**
+     * Determine whether the user can complete the model.
+     */
+    public function complete(User $user, Project $project): bool
+    {
+        return $user->hasPermissionTo('complete task') && $user->hasProjectAccess($project);
     }
 }

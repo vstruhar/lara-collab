@@ -10,7 +10,7 @@ export default function SearchInput({ search, ...props }) {
 
   useDidUpdate(() => {
     if (debounced !== "") search(debounced);
-    else reloadWithoutQueryParams(["search"]);
+    else reloadWithoutQueryParams({ exclude: ["search"] });
   }, [debounced]);
 
   return (

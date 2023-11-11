@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Collection;
 
 class PermissionService
 {
@@ -16,7 +17,7 @@ class PermissionService
             'Client Company' => ['view client companies', 'create client company', 'edit client company', 'archive client company', 'restore client company'],
             'Project' => ['view projects', 'view project', 'create project', 'edit project', 'archive project', 'restore project', 'edit project user access'],
             'TaskGroups' => ['create task group', 'edit task group', 'archive task group', 'restore task group', 'reorder task group'],
-            'Tasks' => ['view tasks', 'create task', 'edit task', 'archive task', 'restore task', 'reorder task'],
+            'Tasks' => ['view tasks', 'create task', 'edit task', 'archive task', 'restore task', 'reorder task', 'complete task'],
             'Invoices' => ['view invoices'],
             'Reports' => ['view reports'],
             'Activities' => ['view activities'],
@@ -47,8 +48,14 @@ class PermissionService
         return self::$permissionsByRole['admin'];
     }
 
-    public static function usersWithAccessToProject($project): array
+    private static $usersWithAccessToProject = null;
+
+    public static function usersWithAccessToProject($project): Collection
     {
+        if (self::$usersWithAccessToProject !== null) {
+            return self::$usersWithAccessToProject;
+        }
+
         $admins = User::role('admin')
             ->with('roles:id,name')
             ->get(['id', 'name', 'avatar'])
@@ -65,14 +72,15 @@ class PermissionService
             ->load('roles:id,name')
             ->map(fn ($user) => [...$user->toArray(), 'reason' => 'given access']);
 
-        return collect([
+        self::$usersWithAccessToProject = collect([
             ...$admins,
             ...$owners,
             ...$givenAccess,
         ])
             ->unique('id')
             ->sortBy('name')
-            ->values()
-            ->toArray();
+            ->values();
+
+        return self::$usersWithAccessToProject;
     }
 }
