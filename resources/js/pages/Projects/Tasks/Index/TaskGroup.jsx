@@ -1,5 +1,5 @@
 import { Draggable, Droppable } from "@hello-pangea/dnd";
-import { ActionIcon, Group, Text, rem } from "@mantine/core";
+import { ActionIcon, Group, Text, Tooltip, rem } from "@mantine/core";
 import { IconGripVertical, IconPlus } from "@tabler/icons-react";
 import Task from "./Task";
 import TaskGroupActions from "./TaskGroupActions";
@@ -37,12 +37,14 @@ export default function TaskGroup({ group, tasks, ...props }) {
               <TaskGroupActions group={group} className={classes.actions} />
             </Group>
             {!route().params.archived && can("create task") && (
-              <ActionIcon variant="filled" size="md" radius="xl" mr={-10}>
-                <IconPlus
-                  style={{ width: rem(18), height: rem(18) }}
-                  stroke={2}
-                />
-              </ActionIcon>
+              <Tooltip label="Add task" openDelay={1000} withArrow>
+                <ActionIcon variant="filled" size="md" radius="xl" mr={-10}>
+                  <IconPlus
+                    style={{ width: rem(18), height: rem(18) }}
+                    stroke={2}
+                  />
+                </ActionIcon>
+              </Tooltip>
             )}
           </div>
           <Droppable droppableId={`group-${group.id}-tasks`} type="task">

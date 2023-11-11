@@ -10,6 +10,7 @@ import {
   Group,
   Pill,
   Text,
+  Tooltip,
   rem,
 } from "@mantine/core";
 import { IconGripVertical } from "@tabler/icons-react";
@@ -59,16 +60,22 @@ export default function Task({ task, index }) {
             />
             {task.assigned_to_user && (
               <Link href={route("users.edit", task.assigned_to_user.id)}>
-                <Pill size="sm" className={classes.user}>
-                  {shortName(task.assigned_to_user.name)}
-                </Pill>
+                <Tooltip
+                  label={task.assigned_to_user.name}
+                  openDelay={1000}
+                  withArrow
+                >
+                  <Pill size="sm" className={classes.user}>
+                    {shortName(task.assigned_to_user.name)}
+                  </Pill>
+                </Tooltip>
               </Link>
             )}
             <Text
               key={task.id}
               size="sm"
               fw={500}
-              c={isOverdue(task) ? "red.7" : ""}
+              c={isOverdue(task) && task.completed_at === null ? "red.7" : ""}
             >
               #{task.number + ": " + task.name}
             </Text>

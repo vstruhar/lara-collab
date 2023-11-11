@@ -24,7 +24,7 @@ export default function Header() {
       <Grid.Col span="content">
         {can("create task") && (
           <Button leftSection={<IconPlus size={14} />} radius="xl">
-            Create task
+            Add task
           </Button>
         )}
       </Grid.Col>
