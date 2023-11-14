@@ -20,8 +20,8 @@ class ProjectTaskController extends Controller
 
         return Inertia::render('Projects/Tasks/Index', [
             'project' => $project,
-            'assignees' => PermissionService::usersWithAccessToProject($project),
-            'labels' => Label::all(),
+            'usersWithAccessToProject' => PermissionService::usersWithAccessToProject($project),
+            'labels' => Label::get(['id', 'name', 'color']),
             'taskGroups' => $project
                 ->taskGroups()
                 ->when($request->has('archived'), fn ($query) => $query->onlyArchived())

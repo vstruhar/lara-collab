@@ -14,7 +14,7 @@
     transition: 0.3s ease border, 0.3s ease color;
 
     @mixin hover {
-        color: var(--mantine-color-white);
+        color: light-dark(var(--mantine-color-dark-4), var(--mantine-color-white));
         border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
     }
 
@@ -29,8 +29,8 @@
     border-radius: var(--mantine-radius-md);
 
     @mixin hover {
-        color: var(--mantine-color-white);
-        background-color: var(--mantine-color-gray-9);
+        color: light-dark(var(--mantine-color-dark-4), var(--mantine-color-white));
+        background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-gray-9));
 
         .dragHandle {
             opacity: 0.1;

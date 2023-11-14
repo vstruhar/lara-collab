@@ -1,5 +1,6 @@
 import { EmptyResult } from "@/components/EmptyResult";
 import useGroupsStore from "@/hooks/store/useGroupsStore";
+import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
 import Layout from "@/layouts/MainLayout";
@@ -23,6 +24,7 @@ const TasksIndex = () => {
   const { groups, setGroups, reorderGroup } = useGroupsStore();
   const { tasks, setTasks, reorderTask, moveTask } = useTasksStore();
   const { hasUrlParams } = useTaskFiltersStore();
+  const { create } = useTaskDrawerStore();
 
   const usingFilters = hasUrlParams();
 

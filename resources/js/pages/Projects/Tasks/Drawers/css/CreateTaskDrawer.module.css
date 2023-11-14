@@ -1,0 +1,25 @@
+.inner {
+    padding: 0 rem(20);
+    display: flex;
+    column-gap: rem(30);
+}
+
+.content {
+    padding: rem(5);
+    width: 70%;
+    flex-grow: 1;
+
+    @media (max-width: $mantine-breakpoint-md) {
+        width: 100%;
+    }
+}
+
+.sidebar {
+    padding: rem(5);
+    width: 30%;
+    flex-grow: 1;
+
+    @media (max-width: $mantine-breakpoint-md) {
+        width: 100%;
+    }
+}

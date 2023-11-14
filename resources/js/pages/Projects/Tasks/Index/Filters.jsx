@@ -5,7 +5,7 @@ import { ColorSwatch, Stack, Text } from "@mantine/core";
 import FilterButton from "./Filters/FilterButton";
 
 export default function Filters() {
-  const { assignees, labels } = usePage().props;
+  const { usersWithAccessToProject, labels } = usePage().props;
 
   const { groups } = useGroupsStore();
   const { filters, toggleArrayFilter, toggleObjectFilter } =
@@ -33,13 +33,13 @@ export default function Filters() {
           </div>
         )}
 
-        {assignees.length > 0 && (
+        {usersWithAccessToProject.length > 0 && (
           <div>
             <Text fz="xs" fw={700} tt="uppercase" mb="sm">
               Assignees
             </Text>
             <Stack justify="flex-start" gap={6}>
-              {assignees.map((item) => (
+              {usersWithAccessToProject.map((item) => (
                 <FilterButton
                   key={item.id}
                   selected={filters.assignees.includes(item.id)}

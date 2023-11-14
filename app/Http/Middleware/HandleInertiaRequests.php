@@ -45,6 +45,7 @@ class HandleInertiaRequests extends Middleware
                     $user = auth()->user();
 
                     return [
+                        'id' => $user->id,
                         'name' => $user->name,
                         'email' => $user->email,
                         'avatar' => $user->avatar,

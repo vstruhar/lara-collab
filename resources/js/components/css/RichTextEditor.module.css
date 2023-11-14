@@ -1,0 +1,5 @@
+.content div {
+    min-height: 260px;
+    font-size: rem(15);
+    line-height: rem(14);
+}

@@ -15,7 +15,7 @@
     margin-bottom: var(--mantine-spacing-sm);
 
     @mixin hover {
-        color: var(--mantine-color-white);
+        color: light-dark(var(--mantine-color-dark-3), var(--mantine-color-white));
         border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 
         .actions {
