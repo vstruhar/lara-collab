@@ -11,20 +11,13 @@ class UserCreated
     use Dispatchable, SerializesModels;
 
     /**
-     * The authenticated user.
-     */
-    public User $user;
-
-    public string $password;
-
-    /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user, string $password)
-    {
-        $this->user = $user;
-        $this->password = $password;
+    public function __construct(
+        public User $user,
+        public string $password,
+    ) {
     }
 }

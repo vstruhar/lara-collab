@@ -19,6 +19,7 @@
         "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
         "overtrue/laravel-favorite": "^5.1",
+        "pusher/pusher-php-server": "^7.2",
         "spatie/eloquent-sortable": "^4.0",
         "spatie/laravel-permission": "^6.0",
         "staudenmeir/eloquent-has-many-deep": "^1.7",

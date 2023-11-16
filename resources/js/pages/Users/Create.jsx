@@ -53,7 +53,7 @@ const UserCreate = () => {
         <Grid.Col span="content"></Grid.Col>
       </Grid>
 
-      <ContainerBox maw={550}>
+      <ContainerBox maw={600}>
         <form onSubmit={submit}>
           <Grid justify="flex-start" align="flex-start" gutter="lg">
             <Grid.Col span="content">

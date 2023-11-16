@@ -10,6 +10,7 @@ import { Button, Grid } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { CreateTaskDrawer } from "./Drawers/CreateTaskDrawer";
+import { EditTaskDrawer } from "./Drawers/EditTaskDrawer";
 import Filters from "./Index/Filters";
 import Header from "./Index/Header";
 import CreateTasksGroupModal from "./Index/Modals/CreateTasksGroupModal";
@@ -24,7 +25,7 @@ const TasksIndex = () => {
   const { groups, setGroups, reorderGroup } = useGroupsStore();
   const { tasks, setTasks, reorderTask, moveTask } = useTasksStore();
   const { hasUrlParams } = useTaskFiltersStore();
-  const { create } = useTaskDrawerStore();
+  const { openEditTask } = useTaskDrawerStore();
 
   const usingFilters = hasUrlParams();
 
@@ -51,11 +52,23 @@ const TasksIndex = () => {
     }
   };
 
+  useEffect(() => {
+    const taskId = parseInt(route().params.task);
+
+    if (taskId) {
+      for (const groupId in groupedTasks) {
+        const task = groupedTasks[groupId].find((i) => i.id === taskId);
+        task && openEditTask(task);
+      }
+    }
+  }, []);
+
   return (
     <>
       <Header />
 
-      <CreateTaskDrawer />
+      {can("create task") && <CreateTaskDrawer />}
+      {can("edit task") && <EditTaskDrawer />}
 
       <Grid columns={12} gutter={50} mt="xl">
         <Grid.Col span="auto">

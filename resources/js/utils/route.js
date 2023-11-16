@@ -50,3 +50,11 @@ export const reloadWithoutQueryParams = ({exclude, keep}) => {
     }
   );
 };
+
+export const replaceUrlWithoutReload = (url) => {
+  window.history.replaceState(
+    {},
+    "",
+    url,
+  );
+};

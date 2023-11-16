@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Lacodix\LaravelModelFilter\Traits\HasFilters;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
@@ -87,8 +88,18 @@ class Task extends Model implements Sortable
         return $this->belongsTo(User::class, 'assigned_to_user_id');
     }
 
+    public function subscribedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'subscribe_task');
+    }
+
     public function labels(): BelongsToMany
     {
         return $this->belongsToMany(Label::class);
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(Attachment::class);
     }
 }

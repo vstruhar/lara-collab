@@ -18,12 +18,14 @@ import {
   rem,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
+import dayjs from "dayjs";
 import { useEffect } from "react";
 import LabelsDropdown from "./LabelsDropdown";
 import classes from "./css/TaskDrawer.module.css";
 
-export function CreateTaskDrawer() {
-  const { create, closeCreateTask } = useTaskDrawerStore();
+export function EditTaskDrawer() {
+  const { edit, closeEditTask } = useTaskDrawerStore();
+  const task = edit.task;
   const {
     usersWithAccessToProject,
     taskGroups,
@@ -32,30 +34,34 @@ export function CreateTaskDrawer() {
   } = usePage().props;
 
   const initial = {
-    group_id: create.group_id ? create.group_id.toString() : "",
-    assigned_to_user_id: "",
-    name: "",
-    description: "",
-    estimation: "",
-    due_on: "",
-    hidden_from_clients: false,
-    billable: true,
-    subscribers: [user.id.toString()],
-    labels: [],
+    group_id: task.group_id || "",
+    assigned_to_user_id: task.assigned_to_user_id || "",
+    name: task.name || "",
+    description: task.description || "",
+    estimation: task.estimation || "",
+    due_on: task.due_on ? dayjs(task.due_on) : "",
+    hidden_from_clients: task.hidden_from_clients || false,
+    billable: task.billable || true,
+    subscribers: task.subscribers || [],
+    labels: (task.labels || []).map((i) => i.id),
     attachments: [],
+    uploadedAttachments: task.attachments || [],
   };
 
   const [form, submit, updateValue] = useForm(
     "post",
-    route("projects.tasks.store", [route().params.project]),
+    route("projects.tasks.update", [task?.project_id || 0, task?.id || 0]),
     {
+      _method: "put",
       ...initial,
     },
   );
 
   useEffect(() => {
-    updateValue({ ...initial });
-  }, [create.opened]);
+    if (edit.opened) {
+      updateValue({ ...initial });
+    }
+  }, [edit.opened]);
 
   const closeDrawer = (force = false) => {
     if (
@@ -63,7 +69,7 @@ export function CreateTaskDrawer() {
       (JSON.stringify(form.data) === JSON.stringify(initial) &&
         !form.processing)
     ) {
-      closeCreateTask();
+      closeEditTask();
     } else {
       openConfirmModal({
         type: "danger",
@@ -71,18 +77,18 @@ export function CreateTaskDrawer() {
         content: `All unsaved changes will be lost.`,
         confirmLabel: "Discard",
         confirmProps: { color: "red" },
-        action: () => closeCreateTask(),
+        action: () => closeEditTask(),
       });
     }
   };
 
   return (
     <Drawer
-      opened={create.opened}
+      opened={edit.opened}
       onClose={closeDrawer}
       title={
-        <Text fz={rem(28)} fw={600} ml={25} my="sm" c="blue">
-          Add new task
+        <Text fz={rem(28)} fw={600} ml={25} my="sm">
+          #{task.number}: {task.name}
         </Text>
       }
       position="right"
@@ -148,7 +154,7 @@ export function CreateTaskDrawer() {
             </Button>
 
             <Button type="submit" w={120} loading={form.processing}>
-              Add task
+              Save
             </Button>
           </Flex>
         </div>

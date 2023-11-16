@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Task\CreateTask;
+use App\Http\Requests\Task\StoreTaskRequest;
 use App\Models\Label;
 use App\Models\Project;
 use App\Models\Task;
@@ -29,11 +31,14 @@ class ProjectTaskController extends Controller
             'groupedTasks' => Task::where('project_id', $project->id)
                 ->searchByQueryString()
                 ->filterByQueryString()
-                ->when($request->user()->role('client'), fn ($query) => $query->where('hidden_from_clients', false))
+                ->when($request->user()->hasRole('client'), fn ($query) => $query->where('hidden_from_clients', false))
                 ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                 ->with([
+                    'createdByUser:id,name',
                     'assignedToUser:id,name',
+                    'subscribedUsers:id',
                     'labels:id,name,color',
+                    'attachments',
                 ])
                 ->orderBy('completed_at')
                 ->get()
@@ -42,27 +47,13 @@ class ProjectTaskController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request, Project $project)
     {
-        //
-    }
+        (new CreateTask)->create($project, $request->validated());
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return redirect()->route('projects.tasks', $project)->success('Task added', 'A new task was successfully added.');
     }
 
     /**

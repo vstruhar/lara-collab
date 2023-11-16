@@ -64,7 +64,7 @@ const ClientCompanyCreate = () => {
         <Grid.Col span="content"></Grid.Col>
       </Grid>
 
-      <ContainerBox maw={550}>
+      <ContainerBox maw={600}>
         <form onSubmit={submit}>
           <TextInput
             label="Name"

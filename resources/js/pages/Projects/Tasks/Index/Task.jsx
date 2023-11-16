@@ -1,3 +1,4 @@
+import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
 import { isOverdue } from "@/utils/task";
 import { shortName } from "@/utils/user";
@@ -10,6 +11,7 @@ import classes from "./css/Task.module.css";
 
 export default function Task({ task, index }) {
   const { complete } = useTasksStore();
+  const { openEditTask } = useTaskDrawerStore();
 
   const toggleCompleted = (state) => {
     complete(task, state);
@@ -65,9 +67,11 @@ export default function Task({ task, index }) {
             )}
             <Text
               key={task.id}
+              className={classes.name}
               size="sm"
               fw={500}
               c={isOverdue(task) && task.completed_at === null ? "red.7" : ""}
+              onClick={() => openEditTask(task)}
             >
               #{task.number + ": " + task.name}
             </Text>

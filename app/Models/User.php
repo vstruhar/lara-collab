@@ -88,6 +88,11 @@ class User extends Authenticatable implements CanResetPasswordContract
         return $this->belongsToMany(Project::class, 'project_user_access');
     }
 
+    public function subscribedToTasks(): BelongsToMany
+    {
+        return $this->belongsToMany(Task::class, 'subscribe_task');
+    }
+
     public function hasProjectAccess(Project $project): bool
     {
         $users = PermissionService::usersWithAccessToProject($project);

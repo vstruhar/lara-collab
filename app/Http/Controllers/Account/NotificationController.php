@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class NotificationController extends Controller
 {
@@ -63,5 +64,12 @@ class NotificationController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function read(DatabaseNotification $notification)
+    {
+        $notification->markAsRead();
+
+        return response()->json();
     }
 }

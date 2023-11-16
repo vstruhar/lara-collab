@@ -42,6 +42,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('{project}/task-groups/reorder', [ProjectTaskGroupController::class, 'reorder'])->name('task-groups.reorder');
 
         Route::get('{project}/tasks', [ProjectTaskController::class, 'index'])->name('tasks');
+        Route::post('{project}/tasks', [ProjectTaskController::class, 'store'])->name('tasks.store');
+        Route::put('{project}/tasks/{task}', [ProjectTaskController::class, 'update'])->name('tasks.update');
+        Route::get('{project}/tasks/{task}/open', [ProjectTaskController::class, 'index'])->name('tasks.open');
         Route::post('{project}/tasks/{task}/complete', [ProjectTaskController::class, 'complete'])->name('tasks.complete');
         Route::post('{project}/tasks/reorder', [ProjectTaskController::class, 'reorder'])->name('tasks.reorder');
         Route::post('{project}/tasks/move', [ProjectTaskController::class, 'move'])->name('tasks.move');
@@ -89,6 +92,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::resource('profile', ProfileController::class)->except(['show']);
         Route::resource('notifications', NotificationController::class)->except(['show']);
     });
+
+    // Notifications
+    Route::put('notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
 
     Route::get('dropdown/values', DropdownValuesController::class)->name('dropdown.values');
 });

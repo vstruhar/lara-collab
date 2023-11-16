@@ -38,6 +38,10 @@
     }
 }
 
+.name {
+    cursor: pointer;
+}
+
 .itemDragging {}
 
 .dragHandle {

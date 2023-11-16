@@ -61,7 +61,7 @@ const CompanyEdit = () => {
         <Grid.Col span="content"></Grid.Col>
       </Grid>
 
-      <ContainerBox maw={550}>
+      <ContainerBox maw={600}>
         <form onSubmit={submit}>
           <Grid justify="flex-start" align="center" gutter="lg">
             <Grid.Col span="content">

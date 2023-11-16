@@ -1,0 +1,36 @@
+.file {
+    padding: var(--mantine-spacing-sm);
+    border: rem(1px) solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+    border-radius: var(--mantine-radius-md);
+
+    @mixin hover {
+        color: var(--mantine-color-white);
+        border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+
+        .remove {
+            display: block;
+        }
+
+        .icon {
+            opacity: 0;
+        }
+    }
+}
+
+.icon {
+    margin-top: rem(4);
+}
+
+.text {
+    max-width: calc(95% - 50px - var(--mantine-spacing-sm));
+}
+
+.remove {
+    display: none;
+    position: absolute;
+    width: rem(42);
+    height: rem(42);
+    color: var(--mantine-color-red-7);
+    margin-left: 5px;
+    cursor: pointer;
+}
