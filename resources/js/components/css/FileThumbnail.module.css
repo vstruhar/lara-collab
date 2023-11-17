@@ -6,31 +6,40 @@
     @mixin hover {
         color: var(--mantine-color-white);
         border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
-
-        .remove {
-            display: block;
-        }
-
-        .icon {
-            opacity: 0;
-        }
     }
-}
-
-.icon {
-    margin-top: rem(4);
 }
 
 .text {
     max-width: calc(95% - 50px - var(--mantine-spacing-sm));
 }
 
+.iconContainer {
+    position: relative;
+    width: rem(45);
+    height: rem(45);
+
+    @mixin hover {
+        .remove {
+            display: block;
+        }
+
+        .icon {
+            opacity: 0.1;
+        }
+    }
+}
+
+.icon {
+    opacity: 1;
+}
+
 .remove {
     display: none;
     position: absolute;
+    top: 2px;
+    left: 2px;
     width: rem(42);
     height: rem(42);
     color: var(--mantine-color-red-7);
-    margin-left: 5px;
     cursor: pointer;
 }

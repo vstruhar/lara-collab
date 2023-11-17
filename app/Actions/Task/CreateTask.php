@@ -6,7 +6,9 @@ use App\Events\TaskCreated;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CreateTask
 {
@@ -39,23 +41,24 @@ class CreateTask
         });
     }
 
-    private function uploadAttachments(Task $task, array $items): void
+    public function uploadAttachments(Task $task, array $items): Collection
     {
         $rows = collect($items)
             ->map(function (UploadedFile $item) use ($task) {
-                $filename = $item->getClientOriginalName();
-                $filepath = "/storage/tasks/{$task->id}/{$filename}";
+                $filename = strtolower(Str::ulid()).'.'.$item->getClientOriginalExtension();
+                $filepath = "tasks/{$task->id}/{$filename}";
 
                 $item->storeAs('public', $filepath);
 
                 return [
                     'user_id' => auth()->id(),
-                    'path' => $filepath,
+                    'name' => $item->getClientOriginalName(),
+                    'path' => "/storage/$filepath",
                     'type' => $item->getClientMimeType(),
                     'size' => $item->getSize(),
                 ];
             });
 
-        $task->attachments()->createMany($rows);
+        return $task->attachments()->createMany($rows);
     }
 }

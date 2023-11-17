@@ -3,6 +3,7 @@ import "@mantine/dates/styles.css";
 import "@mantine/dropzone/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/tiptap/styles.css";
+import "nprogress/nprogress.css";
 import "../css/app.css";
 import "./bootstrap";
 
@@ -37,7 +38,5 @@ createInertiaApp({
       </MantineProvider>,
     );
   },
-  progress: {
-    color: "#2771c2",
-  },
+  progress: false,
 });

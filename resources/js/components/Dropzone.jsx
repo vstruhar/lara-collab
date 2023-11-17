@@ -1,117 +1,19 @@
-import { Group, Image, SimpleGrid, Text, rem } from "@mantine/core";
+import { Group, SimpleGrid, Text, rem } from "@mantine/core";
 import { Dropzone as MantineDropzone } from "@mantine/dropzone";
-import {
-  IconCircleX,
-  IconFile,
-  IconFileTypeCss,
-  IconFileTypeCsv,
-  IconFileTypeDoc,
-  IconFileTypeDocx,
-  IconFileTypeHtml,
-  IconFileTypeJs,
-  IconFileTypeJsx,
-  IconFileTypePdf,
-  IconFileTypePhp,
-  IconFileTypeSql,
-  IconFileTypeSvg,
-  IconFileTypeTs,
-  IconFileTypeTxt,
-  IconFileTypeVue,
-  IconFileTypeXls,
-  IconFileTypeXml,
-  IconFileTypeZip,
-  IconFiles,
-  IconUpload,
-  IconX,
-} from "@tabler/icons-react";
-import classes from "./css/Dropzone.module.css";
+import { IconFiles, IconUpload, IconX } from "@tabler/icons-react";
+import FileThumbnail from "./FileThumbnail";
 
-export default function Dropzone({ selected, onChange, ...props }) {
-  const add = (files) => {
-    onChange([...selected, ...files]);
-  };
-
-  const remove = (index) => {
-    const files = [...selected];
-    files.splice(index, 1);
-    onChange(files);
-  };
-
-  const previews = selected.map((file, index) => {
-    const props = { width: rem(45), height: rem(45) };
-    let icon = <IconFile style={props} />;
-
-    if (file.type.includes("image")) {
-      const imageUrl = URL.createObjectURL(file);
-      icon = (
-        <Image
-          radius="md"
-          w={45}
-          h="auto"
-          src={imageUrl}
-          onLoad={() => URL.revokeObjectURL(imageUrl)}
-        />
-      );
-    } else if (file.type.includes("pdf")) {
-      icon = <IconFileTypePdf style={props} />;
-    } else if (file.type.includes("css")) {
-      icon = <IconFileTypeCss style={props} />;
-    } else if (file.type.includes("csv")) {
-      icon = <IconFileTypeCsv style={props} />;
-    } else if (file.type.includes("docx")) {
-      icon = <IconFileTypeDocx style={props} />;
-    } else if (file.type.includes("doc")) {
-      icon = <IconFileTypeDoc style={props} />;
-    } else if (file.type.includes("html")) {
-      icon = <IconFileTypeHtml style={props} />;
-    } else if (file.name.includes(".jsx")) {
-      icon = <IconFileTypeJsx style={props} />;
-    } else if (file.type.includes("javascript")) {
-      icon = <IconFileTypeJs style={props} />;
-    } else if (file.type.includes("php")) {
-      icon = <IconFileTypePhp style={props} />;
-    } else if (file.name.includes(".sql")) {
-      icon = <IconFileTypeSql style={props} />;
-    } else if (file.type.includes("image/svg")) {
-      icon = <IconFileTypeSvg style={props} />;
-    } else if (file.type.includes("application/zip")) {
-      icon = <IconFileTypeZip style={props} />;
-    } else if (file.type === "text/plain") {
-      icon = <IconFileTypeTxt style={props} />;
-    } else if (file.name.includes(".vue")) {
-      icon = <IconFileTypeVue style={props} />;
-    } else if (file.type.includes("xls")) {
-      icon = <IconFileTypeXls style={props} />;
-    } else if (file.type.includes("xml")) {
-      icon = <IconFileTypeXml style={props} />;
-    } else if (file.name.includes(".ts")) {
-      icon = <IconFileTypeTs style={props} />;
-    }
-
-    return (
-      <Group key={index} gap="sm" wrap="nowrap" className={classes.file}>
-        <div className={classes.icon}>{icon}</div>
-        <div className={classes.text}>
-          <Text fz={15} fw={400} truncate="end">
-            {file.name}
-          </Text>
-          <Text fz="xs" fw={300} c="dimmed">
-            {file.type}
-          </Text>
-        </div>
-        <IconCircleX
-          className={classes.remove}
-          stroke={1.5}
-          onClick={() => remove(index)}
-        />
-      </Group>
-    );
-  });
-
+export default function Dropzone({
+  selected,
+  onChange,
+  remove,
+  open,
+  ...props
+}) {
   return (
     <>
       <MantineDropzone
-        onDrop={(files) => add(files)}
+        onDrop={(files) => onChange([...selected, ...files])}
         onReject={(files) => console.log("rejected files", files)}
         {...props}
       >
@@ -164,7 +66,15 @@ export default function Dropzone({ selected, onChange, ...props }) {
       </MantineDropzone>
 
       <SimpleGrid cols={2} mt="lg">
-        {previews}
+        {selected.map((file, index) => (
+          <FileThumbnail
+            key={index}
+            index={index}
+            file={file}
+            remove={() => remove(index)}
+            open={() => open(file)}
+          />
+        ))}
       </SimpleGrid>
     </>
   );

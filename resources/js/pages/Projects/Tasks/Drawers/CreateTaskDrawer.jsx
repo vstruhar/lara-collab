@@ -76,12 +76,18 @@ export function CreateTaskDrawer() {
     }
   };
 
+  const removeAttachment = (index) => {
+    const files = [...form.data.attachments];
+    files.splice(index, 1);
+    updateValue("attachments", files);
+  };
+
   return (
     <Drawer
       opened={create.opened}
       onClose={closeDrawer}
       title={
-        <Text fz={rem(28)} fw={600} ml={25} my="sm" c="blue">
+        <Text fz={rem(28)} fw={600} ml={25} my="sm">
           Add new task
         </Text>
       }
@@ -121,6 +127,7 @@ export function CreateTaskDrawer() {
             mt="xl"
             selected={form.data.attachments}
             onChange={(files) => updateValue("attachments", files)}
+            remove={(index) => removeAttachment(index)}
           />
 
           <MultiSelect

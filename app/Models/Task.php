@@ -48,6 +48,7 @@ class Task extends Model implements Sortable
         'completed_at' => 'datetime',
         'hidden_from_clients' => 'boolean',
         'billable' => 'boolean',
+        'estimation' => 'float',
     ];
 
     public function filters(): Collection

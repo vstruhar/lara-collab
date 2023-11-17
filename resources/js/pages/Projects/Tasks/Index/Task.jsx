@@ -13,10 +13,6 @@ export default function Task({ task, index }) {
   const { complete } = useTasksStore();
   const { openEditTask } = useTaskDrawerStore();
 
-  const toggleCompleted = (state) => {
-    complete(task, state);
-  };
-
   return (
     <Draggable draggableId={"task-" + task.id} index={index}>
       {(provided, snapshot) => (
@@ -45,7 +41,7 @@ export default function Task({ task, index }) {
               radius="xl"
               color="green"
               checked={task.completed_at !== null}
-              onChange={(e) => toggleCompleted(e.currentTarget.checked)}
+              onChange={(e) => complete(task, e.currentTarget.checked)}
               className={
                 can("complete task")
                   ? classes.checkbox

@@ -2,7 +2,9 @@ import { openConfirmModal } from "@/components/ConfirmModal";
 import Dropzone from "@/components/Dropzone";
 import RichTextEditor from "@/components/RichTextEditor";
 import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
+import useTasksStore from "@/hooks/store/useTasksStore";
 import useForm from "@/hooks/useForm";
+import { openAttachment } from "@/utils/task";
 import { hasRoles } from "@/utils/user";
 import { usePage } from "@inertiajs/react";
 import {
@@ -10,6 +12,7 @@ import {
   Checkbox,
   Drawer,
   Flex,
+  Group,
   MultiSelect,
   NumberInput,
   Select,
@@ -25,7 +28,8 @@ import classes from "./css/TaskDrawer.module.css";
 
 export function EditTaskDrawer() {
   const { edit, closeEditTask } = useTaskDrawerStore();
-  const task = edit.task;
+  const { findTask, complete, deleteAttachment, uploadAttachments } =
+    useTasksStore();
   const {
     usersWithAccessToProject,
     taskGroups,
@@ -33,19 +37,19 @@ export function EditTaskDrawer() {
     auth: { user },
   } = usePage().props;
 
+  const task = findTask(edit.task.id);
+
   const initial = {
-    group_id: task.group_id || "",
-    assigned_to_user_id: task.assigned_to_user_id || "",
-    name: task.name || "",
-    description: task.description || "",
-    estimation: task.estimation || "",
-    due_on: task.due_on ? dayjs(task.due_on) : "",
-    hidden_from_clients: task.hidden_from_clients || false,
-    billable: task.billable || true,
-    subscribers: task.subscribers || [],
-    labels: (task.labels || []).map((i) => i.id),
-    attachments: [],
-    uploadedAttachments: task.attachments || [],
+    group_id: task?.group_id || "",
+    assigned_to_user_id: task?.assigned_to_user_id || "",
+    name: task?.name || "",
+    description: task?.description || "",
+    estimation: task?.estimation || "",
+    due_on: task?.due_on ? dayjs(task?.due_on) : "",
+    hidden_from_clients: task?.hidden_from_clients || false,
+    billable: task?.billable || true,
+    subscribers: (task?.subscribed_users || []).map((i) => i.id.toString()),
+    labels: (task?.labels || []).map((i) => i.id),
   };
 
   const [form, submit, updateValue] = useForm(
@@ -82,14 +86,41 @@ export function EditTaskDrawer() {
     }
   };
 
-  return (
+  const confirmDeleteAttachment = (index) => {
+    openConfirmModal({
+      type: "danger",
+      title: "Delete attachment",
+      content: `Are you sure you want to delete this attachment?`,
+      confirmLabel: "Delete",
+      confirmProps: { color: "red" },
+      action: () => deleteAttachment(task, index),
+    });
+  };
+
+  return task ? (
     <Drawer
       opened={edit.opened}
       onClose={closeDrawer}
       title={
-        <Text fz={rem(28)} fw={600} ml={25} my="sm">
-          #{task.number}: {task.name}
-        </Text>
+        <Group ml={25} my="sm">
+          <Checkbox
+            size="md"
+            radius="xl"
+            color="green"
+            checked={task.completed_at !== null}
+            onChange={(e) => complete(task, e.currentTarget.checked)}
+            className={
+              can("complete task") ? classes.checkbox : classes.disabledCheckbox
+            }
+          />
+          <Text
+            fz={rem(28)}
+            fw={600}
+            td={task.completed_at !== null ? "line-through" : null}
+          >
+            #{task.number}: {task.name}
+          </Text>
+        </Group>
       }
       position="right"
       size={1000}
@@ -120,27 +151,16 @@ export function EditTaskDrawer() {
           <RichTextEditor
             mt="xl"
             placeholder="Task description"
+            content={form.data.description}
             onChange={(content) => updateValue("description", content)}
           />
 
           <Dropzone
             mt="xl"
-            selected={form.data.attachments}
-            onChange={(files) => updateValue("attachments", files)}
-          />
-
-          <MultiSelect
-            label="Subscribers"
-            placeholder="Select subscribers"
-            searchable
-            mt="md"
-            value={form.data.subscribers}
-            onChange={(values) => updateValue("subscribers", values)}
-            data={usersWithAccessToProject.map((i) => ({
-              value: i.id.toString(),
-              label: i.name,
-            }))}
-            error={form.errors.subscribers}
+            selected={task.attachments}
+            onChange={(files) => uploadAttachments(task, files)}
+            remove={(index) => confirmDeleteAttachment(index)}
+            open={(file) => openAttachment(file)}
           />
 
           <Flex justify="space-between" mt="xl">
@@ -210,7 +230,7 @@ export function EditTaskDrawer() {
             mt="md"
             decimalScale={2}
             fixedDecimalScale
-            defaultValue={0}
+            value={form.data.estimation}
             min={0}
             allowNegative={false}
             step={0.5}
@@ -237,8 +257,25 @@ export function EditTaskDrawer() {
               }
             />
           )}
+
+          <MultiSelect
+            label="Subscribers"
+            placeholder={
+              !form.data.subscribers.length ? "Select subscribers" : null
+            }
+            mt="md"
+            value={form.data.subscribers}
+            onChange={(values) => updateValue("subscribers", values)}
+            data={usersWithAccessToProject.map((i) => ({
+              value: i.id.toString(),
+              label: i.name,
+            }))}
+            error={form.errors.subscribers}
+          />
         </div>
       </form>
     </Drawer>
+  ) : (
+    <></>
   );
 }

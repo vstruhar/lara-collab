@@ -23,7 +23,7 @@ const TasksIndex = () => {
   currentProject = project;
 
   const { groups, setGroups, reorderGroup } = useGroupsStore();
-  const { tasks, setTasks, reorderTask, moveTask } = useTasksStore();
+  const { tasks, findTask, setTasks, reorderTask, moveTask } = useTasksStore();
   const { hasUrlParams } = useTaskFiltersStore();
   const { openEditTask } = useTaskDrawerStore();
 
@@ -53,14 +53,8 @@ const TasksIndex = () => {
   };
 
   useEffect(() => {
-    const taskId = parseInt(route().params.task);
-
-    if (taskId) {
-      for (const groupId in groupedTasks) {
-        const task = groupedTasks[groupId].find((i) => i.id === taskId);
-        task && openEditTask(task);
-      }
-    }
+    const task = findTask(parseInt(route().params.task));
+    task && openEditTask(task);
   }, []);
 
   return (

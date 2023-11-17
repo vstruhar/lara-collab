@@ -10,6 +10,7 @@ class Attachment extends Model
     protected $fillable = [
         'task_id',
         'user_id',
+        'name',
         'path',
         'type',
         'size',

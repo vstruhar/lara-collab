@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedInteger('number');
             $table->text('description')->nullable();
             $table->date('due_on')->nullable();
-            $table->unsignedDecimal('estimation', 5, 1)->nullable();
+            $table->unsignedDecimal('estimation', 6, 2)->nullable();
             $table->boolean('hidden_from_clients')->default(false);
             $table->boolean('billable')->default(true);
             $table->unsignedInteger('order_column');

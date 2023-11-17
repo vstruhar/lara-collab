@@ -45,6 +45,8 @@
         "@tiptap/starter-kit": "^2.1.12",
         "dayjs": "^1.11.10",
         "immer": "^10.0.3",
+        "js-file-downloader": "^1.1.25",
+        "nprogress": "^0.2.0",
         "query-string": "^8.1.0",
         "zustand": "^4.4.6"
     }

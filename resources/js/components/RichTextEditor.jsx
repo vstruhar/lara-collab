@@ -7,7 +7,12 @@ import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import classes from "./css/RichTextEditor.module.css";
 
-export default function RichTextEditor({ onChange, placeholder, ...props }) {
+export default function RichTextEditor({
+  onChange,
+  placeholder,
+  content = "",
+  ...props
+}) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -16,7 +21,7 @@ export default function RichTextEditor({ onChange, placeholder, ...props }) {
       Highlight,
       Placeholder.configure({ placeholder }),
     ],
-    content: "",
+    content,
     onUpdate({ editor }) {
       onChange(editor.getHTML());
     },

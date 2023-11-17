@@ -23,3 +23,12 @@
         width: 100%;
     }
 }
+
+.checkbox input {
+    cursor: pointer;
+}
+
+.disabledCheckbox input {
+    cursor: default;
+    pointer-events: none;
+}

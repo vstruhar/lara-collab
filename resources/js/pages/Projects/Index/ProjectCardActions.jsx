@@ -39,7 +39,7 @@ export default function ProjectCardActions({ item }) {
 
   return (
     <>
-      {(can("assign users to project") ||
+      {(can("edit project user access") ||
         can("edit project") ||
         can("restore project") ||
         can("archive project")) && (
@@ -60,7 +60,7 @@ export default function ProjectCardActions({ item }) {
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
-            {can("assign users to project") && (
+            {can("edit project user access") && (
               <Menu.Item
                 leftSection={
                   <IconUsers

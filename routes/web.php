@@ -10,6 +10,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MyWork\ActivityController;
 use App\Http\Controllers\MyWork\TaskController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectTask\ProjectTaskAttachmentController;
 use App\Http\Controllers\ProjectTaskController;
 use App\Http\Controllers\ProjectTaskGroupController;
 use App\Http\Controllers\ReportController;
@@ -31,23 +32,30 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('projects', ProjectController::class)->except(['show']);
 
     Route::group(['prefix' => 'projects', 'as' => 'projects.'], function () {
+        // PROJECT
         Route::post('{projectId}/restore', [ProjectController::class, 'restore'])->name('restore');
         Route::put('{project}/favorite/toggle', [ProjectController::class, 'favoriteToggle'])->name('favorite.toggle');
         Route::post('{project}/user-access', [ProjectController::class, 'userAccess'])->name('user_access');
 
+        // TASK GROUPS
         Route::post('{project}/task-groups', [ProjectTaskGroupController::class, 'store'])->name('task-groups.store');
         Route::put('{project}/task-groups/{taskGroup}', [ProjectTaskGroupController::class, 'update'])->name('task-groups.update');
         Route::delete('{project}/task-groups/{taskGroup}', [ProjectTaskGroupController::class, 'destroy'])->name('task-groups.destroy');
         Route::post('{project}/task-groups/{taskGroupId}/restore', [ProjectTaskGroupController::class, 'restore'])->name('task-groups.restore');
         Route::post('{project}/task-groups/reorder', [ProjectTaskGroupController::class, 'reorder'])->name('task-groups.reorder');
 
+        // TASKS
         Route::get('{project}/tasks', [ProjectTaskController::class, 'index'])->name('tasks');
         Route::post('{project}/tasks', [ProjectTaskController::class, 'store'])->name('tasks.store');
         Route::put('{project}/tasks/{task}', [ProjectTaskController::class, 'update'])->name('tasks.update');
         Route::get('{project}/tasks/{task}/open', [ProjectTaskController::class, 'index'])->name('tasks.open');
+
         Route::post('{project}/tasks/{task}/complete', [ProjectTaskController::class, 'complete'])->name('tasks.complete');
         Route::post('{project}/tasks/reorder', [ProjectTaskController::class, 'reorder'])->name('tasks.reorder');
         Route::post('{project}/tasks/move', [ProjectTaskController::class, 'move'])->name('tasks.move');
+
+        Route::post('{project}/tasks/{task}/attachments/upload', [ProjectTaskAttachmentController::class, 'store'])->name('tasks.attachment.upload');
+        Route::delete('{project}/tasks/{task}/attachments/{attachment}/delete', [ProjectTaskAttachmentController::class, 'destroy'])->name('tasks.attachment.destroy');
     });
 
     // My Work
