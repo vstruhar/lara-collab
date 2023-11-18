@@ -43,8 +43,11 @@ window.axios = axios;
 
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
+window.axios.pendingRequests = 0;
+
 window.axios.interceptors.request.use(function (config) {
   config.progress === true && NProgress.start();
+  window.axios.pendingRequests++;
   return config;
 }, function (error) {
   NProgress.done();
@@ -54,11 +57,19 @@ window.axios.interceptors.request.use(function (config) {
 
 window.axios.interceptors.response.use(function (response) {
   NProgress.done();
+  window.axios.pendingRequests--;
   return response;
 }, function (error) {
   NProgress.done();
   console.error(error)
   return Promise.reject(error);
+});
+
+window.addEventListener("beforeunload", (event) => {
+  if (window.axios.pendingRequests > 0) {
+    event.preventDefault();
+    return (event.returnValue = 'There are pending requests, press "Cancel" to prevent any loss of changes.');
+  }
 });
 
 /**

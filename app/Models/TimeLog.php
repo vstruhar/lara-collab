@@ -12,7 +12,7 @@ class TimeLog extends Model
         'user_id',
         'minutes',
         'timer_start',
-        'timer_end',
+        'timer_stop',
     ];
 
     const UPDATED_AT = null;

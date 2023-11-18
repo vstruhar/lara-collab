@@ -40,7 +40,6 @@ class TaskController extends Controller
                     'subscribedUsers:id',
                     'labels:id,name,color',
                     'attachments',
-                    'timeLogs:id,minutes,task_id,user_id,created_at',
                     'timeLogs.user:id,name',
                 ])
                 ->orderBy('completed_at')

@@ -11,6 +11,27 @@ use Illuminate\Http\JsonResponse;
 
 class TimeLogController extends Controller
 {
+    public function startTimer(Project $project, Task $task): JsonResponse
+    {
+        $timeLog = $task->timeLogs()->create([
+            'user_id' => auth()->id(),
+            'minutes' => null,
+            'timer_start' => now()->timestamp,
+        ]);
+
+        return response()->json(['timeLog' => $timeLog->load(['user:id,name'])]);
+    }
+
+    public function stopTimer(Project $project, Task $task, TimeLog $timeLog): JsonResponse
+    {
+        $timeLog->update([
+            'timer_stop' => now()->timestamp,
+            'minutes' => round((now()->timestamp - $timeLog->timer_start) / 60),
+        ]);
+
+        return response()->json(['timeLog' => $timeLog->load(['user:id,name'])]);
+    }
+
     public function store(StoreTimeLogRequest $request, Project $project, Task $task): JsonResponse
     {
         $timeLog = $task->timeLogs()->create(

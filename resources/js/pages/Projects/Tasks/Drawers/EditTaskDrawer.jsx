@@ -100,7 +100,7 @@ export function EditTaskDrawer() {
     });
   };
 
-  return task ? (
+  return (
     <Drawer
       opened={edit.opened}
       onClose={closeDrawer}
@@ -110,7 +110,7 @@ export function EditTaskDrawer() {
             size="md"
             radius="xl"
             color="green"
-            checked={task.completed_at !== null}
+            checked={task?.completed_at !== null}
             onChange={(e) => complete(task, e.currentTarget.checked)}
             className={
               can("complete task") ? classes.checkbox : classes.disabledCheckbox
@@ -119,10 +119,10 @@ export function EditTaskDrawer() {
           <Text
             fz={rem(28)}
             fw={600}
-            td={task.completed_at !== null ? "line-through" : null}
+            td={task?.completed_at !== null ? "line-through" : null}
             truncate="end"
           >
-            #{task.number}: {task.name}
+            #{task?.number}: {task?.name}
           </Text>
         </Group>
       }
@@ -135,165 +135,172 @@ export function EditTaskDrawer() {
         timingFunction: "ease",
       }}
     >
-      <Breadcrumbs
-        c="dimmed"
-        ml={24}
-        mb="xs"
-        separator="I"
-        separatorMargin="sm"
-      >
-        <Text size="xs">{task.project.name}</Text>
-        <Text size="xs">Task #{task.number}</Text>
-        <Text size="xs">
-          Created by {task.created_by_user.name} on {date(task.created_at)}
-        </Text>
-      </Breadcrumbs>
-      <form
-        onSubmit={(event) =>
-          submit(event, { onSuccess: () => closeDrawer(true) })
-        }
-        className={classes.inner}
-      >
-        <div className={classes.content}>
-          <TextInput
-            label="Name"
-            placeholder="Task name"
-            required
-            value={form.data.name}
-            onChange={(e) => updateValue("name", e.target.value)}
-            error={form.errors.name}
-          />
-
-          <RichTextEditor
-            mt="xl"
-            placeholder="Task description"
-            content={form.data.description}
-            onChange={(content) => updateValue("description", content)}
-          />
-
-          <Dropzone
-            mt="xl"
-            selected={task.attachments}
-            onChange={(files) => uploadAttachments(task, files)}
-            remove={(index) => confirmDeleteAttachment(index)}
-            open={(file) => openAttachment(file)}
-          />
-
-          <Flex justify="space-between" mt="xl">
-            <Button
-              variant="transparent"
-              w={100}
-              disabled={form.processing}
-              onClick={closeDrawer}
-            >
-              Cancel
-            </Button>
-
-            <Button type="submit" w={120} loading={form.processing}>
-              Save
-            </Button>
-          </Flex>
-        </div>
-        <div className={classes.sidebar}>
-          <Select
-            label="Task group"
-            placeholder="Select task group"
-            required
-            searchable
-            value={form.data.group_id}
-            onChange={(value) => updateValue("group_id", value)}
-            data={taskGroups.map((i) => ({
-              value: i.id.toString(),
-              label: i.name,
-            }))}
-            error={form.errors.group_id}
-          />
-
-          <Select
-            label="Assignee"
-            placeholder="Select assignee"
-            searchable
-            mt="md"
-            value={form.data.assigned_to_user_id}
-            onChange={(value) => updateValue("assigned_to_user_id", value)}
-            data={usersWithAccessToProject.map((i) => ({
-              value: i.id.toString(),
-              label: i.name,
-            }))}
-            error={form.errors.assigned_to_user_id}
-          />
-
-          <DateInput
-            clearable
-            valueFormat="DD MMM YYYY"
-            minDate={new Date()}
-            mt="md"
-            label="Due date"
-            placeholder="Pick task due date"
-            value={form.data.due_on}
-            onChange={(value) => updateValue("due_on", value)}
-          />
-
-          <LabelsDropdown
-            items={labels}
-            selected={form.data.labels}
-            onChange={(values) => updateValue("labels", values)}
-            mt="md"
-          />
-
-          <NumberInput
-            label="Time estimation"
-            mt="md"
-            decimalScale={2}
-            fixedDecimalScale
-            value={form.data.estimation}
-            min={0}
-            allowNegative={false}
-            step={0.5}
-            suffix=" hours"
-            onChange={(value) => updateValue("estimation", value)}
-          />
-
-          <Timer mt="xl" task={task} />
-
-          <Checkbox
-            label="Billable"
-            mt="xl"
-            checked={form.data.billable}
-            onChange={(event) =>
-              updateValue("billable", event.currentTarget.checked)
+      {task ? (
+        <>
+          <Breadcrumbs
+            c="dimmed"
+            ml={24}
+            mb="xs"
+            separator="I"
+            separatorMargin="sm"
+          >
+            <Text size="xs">{task.project.name}</Text>
+            <Text size="xs">Task #{task.number}</Text>
+            <Text size="xs">
+              Created by {task.created_by_user.name} on {date(task.created_at)}
+            </Text>
+          </Breadcrumbs>
+          <form
+            onSubmit={(event) =>
+              submit(event, { onSuccess: () => closeDrawer(true) })
             }
-          />
+            className={classes.inner}
+          >
+            <div className={classes.content}>
+              <TextInput
+                label="Name"
+                placeholder="Task name"
+                required
+                value={form.data.name}
+                onChange={(e) => updateValue("name", e.target.value)}
+                error={form.errors.name}
+              />
 
-          {!hasRoles(user, ["client"]) && (
-            <Checkbox
-              label="Hidden from clients"
-              mt="md"
-              checked={form.data.hidden_from_clients}
-              onChange={(event) =>
-                updateValue("hidden_from_clients", event.currentTarget.checked)
-              }
-            />
-          )}
+              <RichTextEditor
+                mt="xl"
+                placeholder="Task description"
+                content={form.data.description}
+                onChange={(content) => updateValue("description", content)}
+              />
 
-          <MultiSelect
-            label="Subscribers"
-            placeholder={
-              !form.data.subscribers.length ? "Select subscribers" : null
-            }
-            mt="lg"
-            value={form.data.subscribers}
-            onChange={(values) => updateValue("subscribers", values)}
-            data={usersWithAccessToProject.map((i) => ({
-              value: i.id.toString(),
-              label: i.name,
-            }))}
-            error={form.errors.subscribers}
-          />
-        </div>
-      </form>
+              <Dropzone
+                mt="xl"
+                selected={task.attachments}
+                onChange={(files) => uploadAttachments(task, files)}
+                remove={(index) => confirmDeleteAttachment(index)}
+                open={(file) => openAttachment(file)}
+              />
+
+              <Flex justify="space-between" mt="xl">
+                <Button
+                  variant="transparent"
+                  w={100}
+                  disabled={form.processing}
+                  onClick={closeDrawer}
+                >
+                  Cancel
+                </Button>
+
+                <Button type="submit" w={120} loading={form.processing}>
+                  Save
+                </Button>
+              </Flex>
+            </div>
+            <div className={classes.sidebar}>
+              <Select
+                label="Task group"
+                placeholder="Select task group"
+                required
+                searchable
+                value={form.data.group_id}
+                onChange={(value) => updateValue("group_id", value)}
+                data={taskGroups.map((i) => ({
+                  value: i.id.toString(),
+                  label: i.name,
+                }))}
+                error={form.errors.group_id}
+              />
+
+              <Select
+                label="Assignee"
+                placeholder="Select assignee"
+                searchable
+                mt="md"
+                value={form.data.assigned_to_user_id}
+                onChange={(value) => updateValue("assigned_to_user_id", value)}
+                data={usersWithAccessToProject.map((i) => ({
+                  value: i.id.toString(),
+                  label: i.name,
+                }))}
+                error={form.errors.assigned_to_user_id}
+              />
+
+              <DateInput
+                clearable
+                valueFormat="DD MMM YYYY"
+                minDate={new Date()}
+                mt="md"
+                label="Due date"
+                placeholder="Pick task due date"
+                value={form.data.due_on}
+                onChange={(value) => updateValue("due_on", value)}
+              />
+
+              <LabelsDropdown
+                items={labels}
+                selected={form.data.labels}
+                onChange={(values) => updateValue("labels", values)}
+                mt="md"
+              />
+
+              <NumberInput
+                label="Time estimation"
+                mt="md"
+                decimalScale={2}
+                fixedDecimalScale
+                value={form.data.estimation}
+                min={0}
+                allowNegative={false}
+                step={0.5}
+                suffix=" hours"
+                onChange={(value) => updateValue("estimation", value)}
+              />
+
+              <Timer mt="xl" task={task} />
+
+              <Checkbox
+                label="Billable"
+                mt="xl"
+                checked={form.data.billable}
+                onChange={(event) =>
+                  updateValue("billable", event.currentTarget.checked)
+                }
+              />
+
+              {!hasRoles(user, ["client"]) && (
+                <Checkbox
+                  label="Hidden from clients"
+                  mt="md"
+                  checked={form.data.hidden_from_clients}
+                  onChange={(event) =>
+                    updateValue(
+                      "hidden_from_clients",
+                      event.currentTarget.checked,
+                    )
+                  }
+                />
+              )}
+
+              <MultiSelect
+                label="Subscribers"
+                placeholder={
+                  !form.data.subscribers.length ? "Select subscribers" : null
+                }
+                mt="lg"
+                value={form.data.subscribers}
+                onChange={(values) => updateValue("subscribers", values)}
+                data={usersWithAccessToProject.map((i) => ({
+                  value: i.id.toString(),
+                  label: i.name,
+                }))}
+                error={form.errors.subscribers}
+              />
+            </div>
+          </form>
+        </>
+      ) : (
+        <></>
+      )}
     </Drawer>
-  ) : (
-    <></>
   );
 }

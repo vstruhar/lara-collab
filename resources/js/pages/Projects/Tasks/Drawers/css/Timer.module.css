@@ -40,9 +40,41 @@
             color: var(--mantine-color-blue-4);
         }
     }
+
+    .row {
+        @mixin hover {
+            .delete {
+                display: block;
+            }
+        }
+    }
+
+    .delete {
+        display: none;
+        width: rem(13);
+        height: rem(13);
+        color: var(--mantine-color-red-6);
+        cursor: pointer;
+    }
 }
 
 .summary {
     letter-spacing: 2px;
     padding: 0 rem(10px);
+}
+
+.blink {
+    animation: blinkAnimation ease 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes blinkAnimation {
+    0% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

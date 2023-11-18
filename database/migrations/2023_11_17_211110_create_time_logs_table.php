@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('task_id');
             $table->foreignId('user_id');
             $table->unsignedSmallInteger('minutes')->nullable();
-            $table->timestamp('timer_start')->nullable();
-            $table->timestamp('timer_end')->nullable();
+            $table->unsignedInteger('timer_start')->nullable();
+            $table->unsignedInteger('timer_stop')->nullable();
             $table->timestamp('created_at')->nullable();
         });
     }

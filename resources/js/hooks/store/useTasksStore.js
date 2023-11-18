@@ -1,11 +1,14 @@
-import { onUploadProgress } from '@/utils/axios';
+import createTaskAttachmentsSlice from '@/hooks/store/tasks/TaskAttachmentsSlice';
+import createTaskTimeLogsSlice from '@/hooks/store/tasks/TaskTimeLogsSlice';
 import { move, reorder } from '@/utils/reorder';
-import { convertToMinutes } from '@/utils/time';
 import axios from 'axios';
 import { produce } from "immer";
 import { create } from 'zustand';
 
 const useTasksStore = create((set, get) => ({
+  ...createTaskAttachmentsSlice(set, get),
+  ...createTaskTimeLogsSlice(set, get),
+
   tasks: {},
   setTasks: (tasks) => set(() => ({ tasks: { ...tasks } })),
   findTask: (id) => {
@@ -56,65 +59,6 @@ const useTasksStore = create((set, get) => ({
       state.tasks[sourceGroupId] = result[sourceGroupId];
       state.tasks[destinationGroupId] = result[destinationGroupId];
     }));
-  },
-  uploadAttachments: async (task, files) => {
-    const index = get().tasks[task.group_id].findIndex((i) => i.id === task.id);
-
-    try {
-      const { data } = await axios.postForm(
-        route("projects.tasks.attachments.upload", [task.project_id, task.id]),
-        { attachments: files.filter(i => i.id === undefined) },
-        { onUploadProgress }
-      );
-
-      return set(produce(state => {
-        state.tasks[task.group_id][index].attachments = [
-          ...state.tasks[task.group_id][index].attachments,
-          ...data.files,
-        ];
-      }));
-    } catch (error) {
-      console.warn(error);
-      alert("Failed to upload attachments");
-    }
-  },
-  deleteAttachment: async (task, index) => {
-    const taskIndex = get().tasks[task.group_id].findIndex((i) => i.id === task.id);
-
-    try {
-      const deleteId = get().tasks[task.group_id][taskIndex].attachments[index].id;
-      await axios.delete(route("projects.tasks.attachments.destroy", [task.project_id, task.id, deleteId]), { progress: true });
-
-      return set(produce(state => {
-        state.tasks[task.group_id][taskIndex].attachments = [
-          ...state.tasks[task.group_id][taskIndex].attachments.filter(i => i.id !== deleteId)
-        ];
-      }));
-    } catch (error) {
-      console.warn(error);
-      alert("Failed to delete attachment");
-    }
-  },
-  saveTimeLog: async (task, value) => {
-    const index = get().tasks[task.group_id].findIndex((i) => i.id === task.id);
-
-    try {
-      const {data} = await axios.post(
-        route("projects.tasks.time-logs.store", [task.project_id, task.id]),
-        { minutes: convertToMinutes(value) },
-        { progress: true }
-      );
-
-      return set(produce(state => {
-        state.tasks[task.group_id][index].time_logs = [
-          ...state.tasks[task.group_id][index].time_logs,
-          data.timeLog,
-        ];
-      }));
-    } catch (error) {
-      console.warn(error);
-      alert("Failed to save time log");
-    }
   },
 }));
 
