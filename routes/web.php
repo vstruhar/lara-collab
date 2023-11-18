@@ -8,15 +8,15 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DropdownValuesController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MyWork\ActivityController;
-use App\Http\Controllers\MyWork\TaskController;
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\ProjectTask\ProjectTaskAttachmentController;
-use App\Http\Controllers\ProjectTaskController;
-use App\Http\Controllers\ProjectTaskGroupController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Settings\LabelController;
 use App\Http\Controllers\Settings\OwnerCompanyController;
 use App\Http\Controllers\Settings\RoleController;
+use App\Http\Controllers\Task\AttachmentController;
+use App\Http\Controllers\Task\GroupController;
+use App\Http\Controllers\Task\TimeLogController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,24 +38,27 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('{project}/user-access', [ProjectController::class, 'userAccess'])->name('user_access');
 
         // TASK GROUPS
-        Route::post('{project}/task-groups', [ProjectTaskGroupController::class, 'store'])->name('task-groups.store');
-        Route::put('{project}/task-groups/{taskGroup}', [ProjectTaskGroupController::class, 'update'])->name('task-groups.update');
-        Route::delete('{project}/task-groups/{taskGroup}', [ProjectTaskGroupController::class, 'destroy'])->name('task-groups.destroy');
-        Route::post('{project}/task-groups/{taskGroupId}/restore', [ProjectTaskGroupController::class, 'restore'])->name('task-groups.restore');
-        Route::post('{project}/task-groups/reorder', [ProjectTaskGroupController::class, 'reorder'])->name('task-groups.reorder');
+        Route::post('{project}/task-groups', [GroupController::class, 'store'])->name('task-groups.store');
+        Route::put('{project}/task-groups/{taskGroup}', [GroupController::class, 'update'])->name('task-groups.update');
+        Route::delete('{project}/task-groups/{taskGroup}', [GroupController::class, 'destroy'])->name('task-groups.destroy');
+        Route::post('{project}/task-groups/{taskGroupId}/restore', [GroupController::class, 'restore'])->name('task-groups.restore');
+        Route::post('{project}/task-groups/reorder', [GroupController::class, 'reorder'])->name('task-groups.reorder');
 
         // TASKS
-        Route::get('{project}/tasks', [ProjectTaskController::class, 'index'])->name('tasks');
-        Route::post('{project}/tasks', [ProjectTaskController::class, 'store'])->name('tasks.store');
-        Route::put('{project}/tasks/{task}', [ProjectTaskController::class, 'update'])->name('tasks.update');
-        Route::get('{project}/tasks/{task}/open', [ProjectTaskController::class, 'index'])->name('tasks.open');
+        Route::get('{project}/tasks', [TaskController::class, 'index'])->name('tasks');
+        Route::post('{project}/tasks', [TaskController::class, 'store'])->name('tasks.store');
+        Route::put('{project}/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+        Route::get('{project}/tasks/{task}/open', [TaskController::class, 'index'])->name('tasks.open');
 
-        Route::post('{project}/tasks/{task}/complete', [ProjectTaskController::class, 'complete'])->name('tasks.complete');
-        Route::post('{project}/tasks/reorder', [ProjectTaskController::class, 'reorder'])->name('tasks.reorder');
-        Route::post('{project}/tasks/move', [ProjectTaskController::class, 'move'])->name('tasks.move');
+        Route::post('{project}/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
+        Route::post('{project}/tasks/reorder', [TaskController::class, 'reorder'])->name('tasks.reorder');
+        Route::post('{project}/tasks/move', [TaskController::class, 'move'])->name('tasks.move');
 
-        Route::post('{project}/tasks/{task}/attachments/upload', [ProjectTaskAttachmentController::class, 'store'])->name('tasks.attachment.upload');
-        Route::delete('{project}/tasks/{task}/attachments/{attachment}/delete', [ProjectTaskAttachmentController::class, 'destroy'])->name('tasks.attachment.destroy');
+        Route::post('{project}/tasks/{task}/attachments/upload', [AttachmentController::class, 'store'])->name('tasks.attachments.upload');
+        Route::delete('{project}/tasks/{task}/attachments/{attachment}', [AttachmentController::class, 'destroy'])->name('tasks.attachments.destroy');
+
+        Route::post('{project}/tasks/{task}/time-log', [TimeLogController::class, 'store'])->name('tasks.time-logs.store');
+        Route::delete('{project}/tasks/{task}/time-log/{timeLog}', [TimeLogController::class, 'destroy'])->name('tasks.time-logs.destroy');
     });
 
     // My Work

@@ -1,5 +1,6 @@
 import { onUploadProgress } from '@/utils/axios';
 import { move, reorder } from '@/utils/reorder';
+import { convertToMinutes } from '@/utils/time';
 import axios from 'axios';
 import { produce } from "immer";
 import { create } from 'zustand';
@@ -33,7 +34,7 @@ const useTasksStore = create((set, get) => ({
     const result = reorder(get().tasks[sourceGroupId], source.index, destination.index);
 
     axios
-      .post(route("projects.tasks.reorder", [route().params.project]), { ids: result.map((i) => i.id) }, {progress: false})
+      .post(route("projects.tasks.reorder", [route().params.project]), { ids: result.map((i) => i.id) }, { progress: false })
       .catch(() => alert("Failed to save task reorder action"));
 
     return set(produce(state => { state.tasks[sourceGroupId] = result }));
@@ -48,7 +49,7 @@ const useTasksStore = create((set, get) => ({
       .post(route("projects.tasks.move", [route().params.project]), {
         group_id: destinationGroupId,
         ids: result[destinationGroupId].map((i) => i.id),
-      }, {progress: false})
+      }, { progress: false })
       .catch(() => alert("Failed to save task move action"));
 
     return set(produce(state => {
@@ -61,9 +62,9 @@ const useTasksStore = create((set, get) => ({
 
     try {
       const { data } = await axios.postForm(
-        route("projects.tasks.attachment.upload", [task.project_id, task.id]),
+        route("projects.tasks.attachments.upload", [task.project_id, task.id]),
         { attachments: files.filter(i => i.id === undefined) },
-        {onUploadProgress}
+        { onUploadProgress }
       );
 
       return set(produce(state => {
@@ -82,7 +83,7 @@ const useTasksStore = create((set, get) => ({
 
     try {
       const deleteId = get().tasks[task.group_id][taskIndex].attachments[index].id;
-      await axios.delete(route("projects.tasks.attachment.destroy", [task.project_id, task.id, deleteId]), {progress: true});
+      await axios.delete(route("projects.tasks.attachments.destroy", [task.project_id, task.id, deleteId]), { progress: true });
 
       return set(produce(state => {
         state.tasks[task.group_id][taskIndex].attachments = [
@@ -92,6 +93,27 @@ const useTasksStore = create((set, get) => ({
     } catch (error) {
       console.warn(error);
       alert("Failed to delete attachment");
+    }
+  },
+  saveTimeLog: async (task, value) => {
+    const index = get().tasks[task.group_id].findIndex((i) => i.id === task.id);
+
+    try {
+      const {data} = await axios.post(
+        route("projects.tasks.time-logs.store", [task.project_id, task.id]),
+        { minutes: convertToMinutes(value) },
+        { progress: true }
+      );
+
+      return set(produce(state => {
+        state.tasks[task.group_id][index].time_logs = [
+          ...state.tasks[task.group_id][index].time_logs,
+          data.timeLog,
+        ];
+      }));
+    } catch (error) {
+      console.warn(error);
+      alert("Failed to save time log");
     }
   },
 }));

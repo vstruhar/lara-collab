@@ -11,7 +11,7 @@ use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ProjectTaskController extends Controller
+class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,11 +34,14 @@ class ProjectTaskController extends Controller
                 ->when($request->user()->hasRole('client'), fn ($query) => $query->where('hidden_from_clients', false))
                 ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                 ->with([
+                    'project:id,name',
                     'createdByUser:id,name',
                     'assignedToUser:id,name',
                     'subscribedUsers:id',
                     'labels:id,name,color',
                     'attachments',
+                    'timeLogs:id,minutes,task_id,user_id,created_at',
+                    'timeLogs.user:id,name',
                 ])
                 ->orderBy('completed_at')
                 ->get()

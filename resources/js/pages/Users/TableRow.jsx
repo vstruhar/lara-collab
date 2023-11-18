@@ -1,6 +1,6 @@
 import RoleBadge from "@/components/RoleBadge";
 import TableRowActions from "@/components/TableRowActions";
-import { money } from "@/utils/formatCurrency";
+import { money } from "@/utils/currency";
 import { getInitials } from "@/utils/user";
 import { Avatar, Flex, Group, Table, Text } from "@mantine/core";
 

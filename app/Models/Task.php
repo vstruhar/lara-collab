@@ -103,4 +103,9 @@ class Task extends Model implements Sortable
     {
         return $this->hasMany(Attachment::class);
     }
+
+    public function timeLogs(): HasMany
+    {
+        return $this->hasMany(TimeLog::class);
+    }
 }

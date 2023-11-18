@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Task;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskGroup\StoreTaskGroupRequest;
 use App\Http\Requests\TaskGroup\UpdateTaskGroupRequest;
 use App\Models\Project;
 use App\Models\TaskGroup;
 use Illuminate\Http\Request;
 
-class ProjectTaskGroupController extends Controller
+class GroupController extends Controller
 {
     /**
      * Store the specified resource in storage.

@@ -4,10 +4,12 @@ import RichTextEditor from "@/components/RichTextEditor";
 import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
 import useForm from "@/hooks/useForm";
+import { date } from "@/utils/date";
 import { openAttachment } from "@/utils/task";
 import { hasRoles } from "@/utils/user";
 import { usePage } from "@inertiajs/react";
 import {
+  Breadcrumbs,
   Button,
   Checkbox,
   Drawer,
@@ -24,6 +26,7 @@ import { DateInput } from "@mantine/dates";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import LabelsDropdown from "./LabelsDropdown";
+import Timer from "./Timer";
 import classes from "./css/TaskDrawer.module.css";
 
 export function EditTaskDrawer() {
@@ -117,6 +120,7 @@ export function EditTaskDrawer() {
             fz={rem(28)}
             fw={600}
             td={task.completed_at !== null ? "line-through" : null}
+            truncate="end"
           >
             #{task.number}: {task.name}
           </Text>
@@ -131,6 +135,19 @@ export function EditTaskDrawer() {
         timingFunction: "ease",
       }}
     >
+      <Breadcrumbs
+        c="dimmed"
+        ml={24}
+        mb="xs"
+        separator="I"
+        separatorMargin="sm"
+      >
+        <Text size="xs">{task.project.name}</Text>
+        <Text size="xs">Task #{task.number}</Text>
+        <Text size="xs">
+          Created by {task.created_by_user.name} on {date(task.created_at)}
+        </Text>
+      </Breadcrumbs>
       <form
         onSubmit={(event) =>
           submit(event, { onSuccess: () => closeDrawer(true) })
@@ -142,7 +159,6 @@ export function EditTaskDrawer() {
             label="Name"
             placeholder="Task name"
             required
-            data-autofocus
             value={form.data.name}
             onChange={(e) => updateValue("name", e.target.value)}
             error={form.errors.name}
@@ -238,6 +254,8 @@ export function EditTaskDrawer() {
             onChange={(value) => updateValue("estimation", value)}
           />
 
+          <Timer mt="xl" task={task} />
+
           <Checkbox
             label="Billable"
             mt="xl"
@@ -263,7 +281,7 @@ export function EditTaskDrawer() {
             placeholder={
               !form.data.subscribers.length ? "Select subscribers" : null
             }
-            mt="md"
+            mt="lg"
             value={form.data.subscribers}
             onChange={(values) => updateValue("subscribers", values)}
             data={usersWithAccessToProject.map((i) => ({

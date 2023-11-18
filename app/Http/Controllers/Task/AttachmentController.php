@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\ProjectTask;
+namespace App\Http\Controllers\Task;
 
 use App\Actions\Task\CreateTask;
 use App\Http\Controllers\Controller;
@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
-class ProjectTaskAttachmentController extends Controller
+class AttachmentController extends Controller
 {
     public function store(Request $request, Project $project, Task $task): JsonResponse
     {
