@@ -29,7 +29,7 @@ class CreateTask
                 'completed_at' => null,
             ]);
 
-            $task->subscribedUsers()->attach($data['subscribers']);
+            $task->subscribedUsers()->attach($data['subscribed_users']);
 
             $task->labels()->attach($data['labels']);
 

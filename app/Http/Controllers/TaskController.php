@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Task\CreateTask;
+use App\Actions\Task\UpdateTask;
 use App\Http\Requests\Task\StoreTaskRequest;
+use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Models\Label;
 use App\Models\Project;
 use App\Models\Task;
 use App\Services\PermissionService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request, Project $project)
     {
         $this->authorize('viewAny', [Task::class, $project]);
@@ -48,9 +48,6 @@ class TaskController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreTaskRequest $request, Project $project)
     {
         (new CreateTask)->create($project, $request->validated());
@@ -58,20 +55,21 @@ class TaskController extends Controller
         return redirect()->route('projects.tasks', $project)->success('Task added', 'A new task was successfully added.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateTaskRequest $request, Project $project, Task $task): JsonResponse
     {
-        //
-    }
+        (new UpdateTask)->update($task, $request->validated());
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $task->refresh()->load([
+            'project:id,name',
+            'createdByUser:id,name',
+            'assignedToUser:id,name',
+            'subscribedUsers:id',
+            'labels:id,name,color',
+            'attachments',
+            'timeLogs.user:id,name',
+        ]);
+
+        return response()->json(['task' => $task]);
     }
 
     public function reorder(Request $request, Project $project)

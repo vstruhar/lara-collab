@@ -51,6 +51,7 @@ window.axios.interceptors.request.use(function (config) {
   return config;
 }, function (error) {
   NProgress.done();
+  window.axios.pendingRequests--;
   console.error(error)
   return Promise.reject(error);
 });
@@ -61,6 +62,7 @@ window.axios.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   NProgress.done();
+  window.axios.pendingRequests--;
   console.error(error)
   return Promise.reject(error);
 });

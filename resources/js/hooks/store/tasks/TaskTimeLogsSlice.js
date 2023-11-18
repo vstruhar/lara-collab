@@ -19,8 +19,8 @@ const createTaskTimeLogsSlice = (set, get) => ({
           data.timeLog,
         ];
       }));
-    } catch (error) {
-      console.warn(error);
+    } catch (e) {
+      console.error(e);
       alert("Failed to save time log");
     }
   },
@@ -35,8 +35,8 @@ const createTaskTimeLogsSlice = (set, get) => ({
           ...state.tasks[task.group_id][taskIndex].time_logs.filter(i => i.id !== deleteId)
         ];
       }));
-    } catch (error) {
-      console.warn(error);
+    } catch (e) {
+      console.error(e);
       alert("Failed to delete time log");
     }
   },
@@ -52,8 +52,8 @@ const createTaskTimeLogsSlice = (set, get) => ({
           data.timeLog,
         ];
       }));
-    } catch (error) {
-      console.warn(error);
+    } catch (e) {
+      console.error(e);
       alert("Failed to start timer");
     }
   },
@@ -67,8 +67,8 @@ const createTaskTimeLogsSlice = (set, get) => ({
       return set(produce(state => {
         state.tasks[task.group_id][taskIndex].time_logs[index] = {...data.timeLog};
       }));
-    } catch (error) {
-      console.warn(error);
+    } catch (e) {
+      console.error(e);
       alert("Failed to stop timer");
     }
   },

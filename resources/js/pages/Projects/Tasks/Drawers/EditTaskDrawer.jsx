@@ -3,17 +3,14 @@ import Dropzone from "@/components/Dropzone";
 import RichTextEditor from "@/components/RichTextEditor";
 import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
-import useForm from "@/hooks/useForm";
 import { date } from "@/utils/date";
 import { openAttachment } from "@/utils/task";
 import { hasRoles } from "@/utils/user";
 import { usePage } from "@inertiajs/react";
 import {
   Breadcrumbs,
-  Button,
   Checkbox,
   Drawer,
-  Flex,
   Group,
   MultiSelect,
   NumberInput,
@@ -24,15 +21,20 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import dayjs from "dayjs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import LabelsDropdown from "./LabelsDropdown";
 import Timer from "./Timer";
 import classes from "./css/TaskDrawer.module.css";
 
 export function EditTaskDrawer() {
   const { edit, closeEditTask } = useTaskDrawerStore();
-  const { findTask, complete, deleteAttachment, uploadAttachments } =
-    useTasksStore();
+  const {
+    findTask,
+    updateTask,
+    complete,
+    deleteAttachment,
+    uploadAttachments,
+  } = useTasksStore();
   const {
     usersWithAccessToProject,
     taskGroups,
@@ -42,40 +44,49 @@ export function EditTaskDrawer() {
 
   const task = findTask(edit.task.id);
 
-  const initial = {
-    group_id: task?.group_id || "",
-    assigned_to_user_id: task?.assigned_to_user_id || "",
-    name: task?.name || "",
-    description: task?.description || "",
-    estimation: task?.estimation || "",
-    due_on: task?.due_on ? dayjs(task?.due_on) : "",
-    hidden_from_clients: task?.hidden_from_clients || false,
-    billable: task?.billable || true,
-    subscribers: (task?.subscribed_users || []).map((i) => i.id.toString()),
-    labels: (task?.labels || []).map((i) => i.id),
-  };
-
-  const [form, submit, updateValue] = useForm(
-    "post",
-    route("projects.tasks.update", [task?.project_id || 0, task?.id || 0]),
-    {
-      _method: "put",
-      ...initial,
-    },
-  );
+  const [data, setData] = useState({
+    group_id: "",
+    assigned_to_user_id: "",
+    name: "",
+    description: "",
+    estimation: "",
+    due_on: "",
+    hidden_from_clients: false,
+    billable: true,
+    subscribed_users: [],
+    labels: [],
+  });
 
   useEffect(() => {
-    if (edit.opened) {
-      updateValue({ ...initial });
-    }
+    if (edit.opened)
+      setData({
+        group_id: task?.group_id || "",
+        assigned_to_user_id: task?.assigned_to_user_id || "",
+        name: task?.name || "",
+        description: task?.description || "",
+        estimation: task?.estimation || "",
+        due_on: task?.due_on ? dayjs(task?.due_on).toDate() : "",
+        hidden_from_clients: task?.hidden_from_clients || false,
+        billable: task?.billable || true,
+        subscribed_users: (task?.subscribed_users || []).map((i) =>
+          i.id.toString(),
+        ),
+        labels: (task?.labels || []).map((i) => i.id),
+      });
   }, [edit.opened]);
 
+  const updateValue = (field, value) => {
+    setData({ ...data, [field]: value });
+  };
+
+  const submit = () => {
+    if (data.name.length > 0) {
+      updateTask(task, data);
+    }
+  };
+
   const closeDrawer = (force = false) => {
-    if (
-      force ||
-      (JSON.stringify(form.data) === JSON.stringify(initial) &&
-        !form.processing)
-    ) {
+    if (force || JSON.stringify(data) === JSON.stringify(data)) {
       closeEditTask();
     } else {
       openConfirmModal({
@@ -122,7 +133,7 @@ export function EditTaskDrawer() {
             td={task?.completed_at !== null ? "line-through" : null}
             truncate="end"
           >
-            #{task?.number}: {task?.name}
+            #{task?.number}: {data.name}
           </Text>
         </Group>
       }
@@ -150,27 +161,23 @@ export function EditTaskDrawer() {
               Created by {task.created_by_user.name} on {date(task.created_at)}
             </Text>
           </Breadcrumbs>
-          <form
-            onSubmit={(event) =>
-              submit(event, { onSuccess: () => closeDrawer(true) })
-            }
-            className={classes.inner}
-          >
+          <form className={classes.inner}>
             <div className={classes.content}>
               <TextInput
                 label="Name"
                 placeholder="Task name"
-                required
-                value={form.data.name}
+                value={data.name}
                 onChange={(e) => updateValue("name", e.target.value)}
-                error={form.errors.name}
+                onBlur={submit}
+                error={data.name.length === 0}
               />
 
               <RichTextEditor
                 mt="xl"
                 placeholder="Task description"
-                content={form.data.description}
+                content={data.description}
                 onChange={(content) => updateValue("description", content)}
+                onBlur={submit}
               />
 
               <Dropzone
@@ -180,35 +187,19 @@ export function EditTaskDrawer() {
                 remove={(index) => confirmDeleteAttachment(index)}
                 open={(file) => openAttachment(file)}
               />
-
-              <Flex justify="space-between" mt="xl">
-                <Button
-                  variant="transparent"
-                  w={100}
-                  disabled={form.processing}
-                  onClick={closeDrawer}
-                >
-                  Cancel
-                </Button>
-
-                <Button type="submit" w={120} loading={form.processing}>
-                  Save
-                </Button>
-              </Flex>
             </div>
             <div className={classes.sidebar}>
               <Select
                 label="Task group"
                 placeholder="Select task group"
-                required
-                searchable
-                value={form.data.group_id}
+                allowDeselect={false}
+                value={data.group_id}
                 onChange={(value) => updateValue("group_id", value)}
+                onBlur={submit}
                 data={taskGroups.map((i) => ({
                   value: i.id.toString(),
                   label: i.name,
                 }))}
-                error={form.errors.group_id}
               />
 
               <Select
@@ -216,13 +207,13 @@ export function EditTaskDrawer() {
                 placeholder="Select assignee"
                 searchable
                 mt="md"
-                value={form.data.assigned_to_user_id}
+                value={data.assigned_to_user_id}
                 onChange={(value) => updateValue("assigned_to_user_id", value)}
+                onBlur={submit}
                 data={usersWithAccessToProject.map((i) => ({
                   value: i.id.toString(),
                   label: i.name,
                 }))}
-                error={form.errors.assigned_to_user_id}
               />
 
               <DateInput
@@ -232,14 +223,16 @@ export function EditTaskDrawer() {
                 mt="md"
                 label="Due date"
                 placeholder="Pick task due date"
-                value={form.data.due_on}
+                value={data.due_on}
                 onChange={(value) => updateValue("due_on", value)}
+                onBlur={submit}
               />
 
               <LabelsDropdown
                 items={labels}
-                selected={form.data.labels}
+                selected={data.labels}
                 onChange={(values) => updateValue("labels", values)}
+                onBlur={submit}
                 mt="md"
               />
 
@@ -248,12 +241,13 @@ export function EditTaskDrawer() {
                 mt="md"
                 decimalScale={2}
                 fixedDecimalScale
-                value={form.data.estimation}
+                value={data.estimation}
                 min={0}
                 allowNegative={false}
                 step={0.5}
                 suffix=" hours"
                 onChange={(value) => updateValue("estimation", value)}
+                onBlur={submit}
               />
 
               <Timer mt="xl" task={task} />
@@ -261,39 +255,41 @@ export function EditTaskDrawer() {
               <Checkbox
                 label="Billable"
                 mt="xl"
-                checked={form.data.billable}
+                checked={data.billable}
                 onChange={(event) =>
                   updateValue("billable", event.currentTarget.checked)
                 }
+                onBlur={submit}
               />
 
               {!hasRoles(user, ["client"]) && (
                 <Checkbox
                   label="Hidden from clients"
                   mt="md"
-                  checked={form.data.hidden_from_clients}
+                  checked={data.hidden_from_clients}
                   onChange={(event) =>
                     updateValue(
                       "hidden_from_clients",
                       event.currentTarget.checked,
                     )
                   }
+                  onBlur={submit}
                 />
               )}
 
               <MultiSelect
                 label="Subscribers"
                 placeholder={
-                  !form.data.subscribers.length ? "Select subscribers" : null
+                  !data.subscribed_users.length ? "Select subscribers" : null
                 }
                 mt="lg"
-                value={form.data.subscribers}
-                onChange={(values) => updateValue("subscribers", values)}
+                value={data.subscribed_users}
+                onChange={(values) => updateValue("subscribed_users", values)}
+                onBlur={submit}
                 data={usersWithAccessToProject.map((i) => ({
                   value: i.id.toString(),
                   label: i.name,
                 }))}
-                error={form.errors.subscribers}
               />
             </div>
           </form>

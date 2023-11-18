@@ -23,8 +23,16 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', Rule::unique('roles')->ignore($this->route('role')->id)],
-            'permissions' => ['required', 'array'],
+            'name' => ['required', 'string:255'],
+            'group_id' => ['required', 'exists:task_groups,id'],
+            'assigned_to_user_id' => ['nullable', 'exists:users,id'],
+            'description' => ['nullable'],
+            'estimation' => ['nullable'],
+            'due_on' => ['nullable'],
+            'hidden_from_clients' => ['required', 'boolean'],
+            'billable' => ['required', 'boolean'],
+            'subscribed_users' => ['array'],
+            'labels' => ['array'],
         ];
     }
 }

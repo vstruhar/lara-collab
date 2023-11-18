@@ -21,6 +21,27 @@ const useTasksStore = create((set, get) => ({
     }
     return null;
   },
+  updateTask: async (task, data) => {
+    const index = get().tasks[task.group_id].findIndex((i) => i.id === task.id);
+
+    try {
+      const response = await axios
+        .put(
+          route("projects.tasks.update", [task.project_id, task.id]),
+          data,
+          { progress: true },
+        );
+        return set(produce(state => {
+          state.tasks[task.group_id][index] = {
+            ...state.tasks[task.group_id][index],
+            ...response.data.task,
+          }
+        }));
+    } catch (e) {
+      console.error(e);
+      alert("Failed to save task changes");
+    }
+  },
   complete: (task, checked) => {
     const newState = checked ? true : null;
     const index = get().tasks[task.group_id].findIndex((i) => i.id === task.id);

@@ -108,4 +108,9 @@ class Task extends Model implements Sortable
     {
         return $this->hasMany(TimeLog::class);
     }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

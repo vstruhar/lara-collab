@@ -54,7 +54,7 @@ const TasksIndex = () => {
 
   useEffect(() => {
     const task = findTask(parseInt(route().params.task));
-    task && openEditTask(task);
+    if (task) setTimeout(() => openEditTask(task), 100);
   }, []);
 
   return (

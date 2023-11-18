@@ -19,8 +19,8 @@ const createTaskAttachmentsSlice = (set, get) => ({
           ...data.files,
         ];
       }));
-    } catch (error) {
-      console.warn(error);
+    } catch (e) {
+      console.error(e);
       alert("Failed to upload attachments");
     }
   },
@@ -36,8 +36,8 @@ const createTaskAttachmentsSlice = (set, get) => ({
           ...state.tasks[task.group_id][taskIndex].attachments.filter(i => i.id !== deleteId)
         ];
       }));
-    } catch (error) {
-      console.warn(error);
+    } catch (e) {
+      console.error(e);
       alert("Failed to delete attachment");
     }
   },

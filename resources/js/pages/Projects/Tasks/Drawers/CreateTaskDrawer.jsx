@@ -40,7 +40,7 @@ export function CreateTaskDrawer() {
     due_on: "",
     hidden_from_clients: false,
     billable: true,
-    subscribers: [user.id.toString()],
+    subscribed_users: [user.id.toString()],
     labels: [],
     attachments: [],
   };
@@ -135,13 +135,13 @@ export function CreateTaskDrawer() {
             placeholder="Select subscribers"
             searchable
             mt="md"
-            value={form.data.subscribers}
-            onChange={(values) => updateValue("subscribers", values)}
+            value={form.data.subscribed_users}
+            onChange={(values) => updateValue("subscribed_users", values)}
             data={usersWithAccessToProject.map((i) => ({
               value: i.id.toString(),
               label: i.name,
             }))}
-            error={form.errors.subscribers}
+            error={form.errors.subscribed_users}
           />
 
           <Flex justify="space-between" mt="xl">
@@ -164,7 +164,6 @@ export function CreateTaskDrawer() {
             label="Task group"
             placeholder="Select task group"
             required
-            searchable
             value={form.data.group_id}
             onChange={(value) => updateValue("group_id", value)}
             data={taskGroups.map((i) => ({
