@@ -26,7 +26,7 @@ export default function TaskGroupActions({ group, ...props }) {
       content: `Are you sure you want to archive this task group?`,
       confirmLabel: "Archive",
       confirmProps: { color: "red" },
-      action: () => archiveForm.submit({ preserveScroll: true }),
+      onConfirm: () => archiveForm.submit({ preserveScroll: true }),
     });
 
   const openRestoreModal = () =>
@@ -36,7 +36,7 @@ export default function TaskGroupActions({ group, ...props }) {
       content: `Are you sure you want to restore this task group?`,
       confirmLabel: "Restore",
       confirmProps: { color: "blue" },
-      action: () => restoreForm.submit({ preserveScroll: true }),
+      onConfirm: () => restoreForm.submit({ preserveScroll: true }),
     });
 
   const openEditModal = () => EditTasksGroupModal(group);

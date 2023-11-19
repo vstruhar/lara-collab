@@ -11,6 +11,7 @@
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.9",
+        "intervention/image": "^2.7",
         "itsgoingd/clockwork": "^5.1",
         "joelbutcher/laravel-archivable": "^1.10",
         "lacodix/laravel-model-filter": "^1.9",

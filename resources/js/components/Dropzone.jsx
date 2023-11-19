@@ -1,17 +1,49 @@
+import { isImage, isViewable } from "@/utils/file";
 import { Group, SimpleGrid, Text, rem } from "@mantine/core";
 import { Dropzone as MantineDropzone } from "@mantine/dropzone";
+import { useDisclosure } from "@mantine/hooks";
 import { IconFiles, IconUpload, IconX } from "@tabler/icons-react";
+import JsFileDownloader from "js-file-downloader";
+import { useState } from "react";
+import { openConfirmModal } from "./ConfirmModal";
 import FileThumbnail from "./FileThumbnail";
+import ImageModal from "./ImageModal";
 
-export default function Dropzone({
-  selected,
-  onChange,
-  remove,
-  open,
-  ...props
-}) {
+export default function Dropzone({ selected, onChange, remove, ...props }) {
+  const [opened, { close, open }] = useDisclosure(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const confirmDeleteAttachment = (index) => {
+    openConfirmModal({
+      type: "danger",
+      title: "Delete attachment",
+      content: `Are you sure you want to delete this attachment?`,
+      confirmLabel: "Delete",
+      confirmProps: { color: "red" },
+      onConfirm: () => remove(index),
+    });
+  };
+
+  const openFile = (file) => {
+    if (isImage(file)) {
+      setSelectedImage(file);
+      open();
+    } else if (isViewable(file)) {
+      window.open(file.path, "_blank");
+    } else {
+      new JsFileDownloader({
+        url: file.path,
+        filename: file.name,
+        contentType: file.type,
+        nativeFallbackOnError: true,
+      }).catch((error) => console.error("Failed to download file", error));
+    }
+  };
+
   return (
     <>
+      <ImageModal image={selectedImage} opened={opened} close={close} />
+
       <MantineDropzone
         onDrop={(files) => onChange([...selected, ...files])}
         onReject={(files) => console.log("rejected files", files)}
@@ -71,8 +103,8 @@ export default function Dropzone({
             key={index}
             index={index}
             file={file}
-            remove={() => remove(index)}
-            open={() => open(file)}
+            remove={() => confirmDeleteAttachment(index)}
+            open={() => openFile(file)}
           />
         ))}
       </SimpleGrid>

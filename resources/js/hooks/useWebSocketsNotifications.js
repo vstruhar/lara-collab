@@ -2,7 +2,7 @@ import { usePage } from "@inertiajs/react";
 import { showNotification } from "@mantine/notifications";
 import axios from "axios";
 
-const useWebSocketsNotifications = () => {
+export default function useWebSocketsNotifications() {
   const { auth: { user } } = usePage().props;
 
   const init = () => {
@@ -20,5 +20,3 @@ const useWebSocketsNotifications = () => {
 
   return { init };
 }
-
-export default useWebSocketsNotifications;

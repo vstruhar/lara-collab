@@ -1,7 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import upperFirst from 'lodash/upperFirst';
 
-const useRoles = () => {
+export default function useRoles() {
   const roles = usePage().props.shared.roles;
   const roleColors = {};
 
@@ -31,5 +31,3 @@ const useRoles = () => {
 
   return {getColor, getDropdownValues};
 }
-
-export default useRoles;

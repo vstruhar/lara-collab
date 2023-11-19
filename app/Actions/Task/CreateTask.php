@@ -8,7 +8,10 @@ use App\Models\Task;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
+use Throwable;
 
 class CreateTask
 {
@@ -29,11 +32,11 @@ class CreateTask
                 'completed_at' => null,
             ]);
 
-            $task->subscribedUsers()->attach($data['subscribed_users']);
+            $task->subscribedUsers()->attach($data['subscribed_users'] ?? []);
 
-            $task->labels()->attach($data['labels']);
+            $task->labels()->attach($data['labels'] ?? []);
 
-            $this->uploadAttachments($task, $data['attachments']);
+            $this->uploadAttachments($task, $data['attachments'] ?? []);
 
             TaskCreated::dispatch($task);
 
@@ -50,15 +53,39 @@ class CreateTask
 
                 $item->storeAs('public', $filepath);
 
+                $thumbFilepath = $this->generateThumb($item, $task, $filename);
+
                 return [
                     'user_id' => auth()->id(),
                     'name' => $item->getClientOriginalName(),
                     'path' => "/storage/$filepath",
+                    'thumb' => $thumbFilepath ? "/storage/$thumbFilepath" : null,
                     'type' => $item->getClientMimeType(),
                     'size' => $item->getSize(),
                 ];
             });
 
         return $task->attachments()->createMany($rows);
+    }
+
+    protected function generateThumb(UploadedFile $file, Task $task, string $filename)
+    {
+        if (in_array($file->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'])) {
+            try {
+                $thumbFilepath = "tasks/{$task->id}/thumbs/{$filename}";
+
+                $image = Image::make($file->get())
+                    ->fit(100, 100)
+                    ->encode(null, 75);
+
+                Storage::put("public/$thumbFilepath", $image);
+
+                return $thumbFilepath;
+            } catch (Throwable $e) {
+                return null;
+            }
+        }
+
+        return null;
     }
 }

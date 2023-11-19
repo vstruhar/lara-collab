@@ -71,7 +71,7 @@ export function CreateTaskDrawer() {
         content: `All unsaved changes will be lost.`,
         confirmLabel: "Discard",
         confirmProps: { color: "red" },
-        action: () => closeCreateTask(),
+        onConfirm: () => closeCreateTask(),
       });
     }
   };
@@ -102,7 +102,10 @@ export function CreateTaskDrawer() {
     >
       <form
         onSubmit={(event) =>
-          submit(event, { onSuccess: () => closeDrawer(true) })
+          submit(event, {
+            onSuccess: () => closeDrawer(true),
+            forceFormData: true,
+          })
         }
         className={classes.inner}
       >

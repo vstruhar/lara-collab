@@ -62,7 +62,7 @@ const CompanyEdit = () => {
       </Grid>
 
       <ContainerBox maw={600}>
-        <form onSubmit={submit}>
+        <form onSubmit={(e) => submit(e, { forceFormData: true })}>
           <Grid justify="flex-start" align="center" gutter="lg">
             <Grid.Col span="content">
               {item.logo || form.data.logo ? (

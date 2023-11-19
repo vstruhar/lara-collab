@@ -6,12 +6,12 @@ export const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-export const move = (tasks, sourceGroupId, destinationGroupId, source, destination) => {
+export const move = (tasks, sourceGroupId, destinationGroupId, sourceIndex, destinationIndex) => {
   const sourceClone = Array.from(tasks[sourceGroupId]);
   const destClone = Array.from(tasks[destinationGroupId] || []);
-  const [removed] = sourceClone.splice(source.index, 1);
+  const [removed] = sourceClone.splice(sourceIndex, 1);
 
-  destClone.splice(destination.index, 0, removed);
+  destClone.splice(destinationIndex, 0, removed);
 
   const result = {};
 

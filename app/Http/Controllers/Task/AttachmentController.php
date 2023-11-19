@@ -23,6 +23,7 @@ class AttachmentController extends Controller
     public function destroy(Project $project, Task $task, Attachment $attachment): JsonResponse
     {
         File::delete(public_path($attachment->path));
+        File::delete(public_path($attachment->thumb));
 
         $attachment->delete();
 

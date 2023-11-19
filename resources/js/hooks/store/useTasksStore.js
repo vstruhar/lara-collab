@@ -22,8 +22,6 @@ const useTasksStore = create((set, get) => ({
     return null;
   },
   updateTask: async (task, data) => {
-    const index = get().tasks[task.group_id].findIndex((i) => i.id === task.id);
-
     try {
       const response = await axios
         .put(
@@ -31,10 +29,25 @@ const useTasksStore = create((set, get) => ({
           data,
           { progress: true },
         );
+
         return set(produce(state => {
-          state.tasks[task.group_id][index] = {
-            ...state.tasks[task.group_id][index],
-            ...response.data.task,
+          const index = state.tasks[task.group_id].findIndex((i) => i.id === task.id);
+
+          if (task.group_id !== data.group_id) {
+            const result = move(state.tasks, task.group_id, data.group_id, index, 0);
+
+            state.tasks[task.group_id] = result[task.group_id];
+            state.tasks[data.group_id] = result[data.group_id];
+
+            state.tasks[data.group_id][0] = {
+              ...state.tasks[data.group_id][0],
+              ...response.data.task,
+            }
+          } else {
+            state.tasks[task.group_id][index] = {
+              ...state.tasks[task.group_id][index],
+              ...response.data.task,
+            }
           }
         }));
     } catch (e) {
@@ -67,7 +80,7 @@ const useTasksStore = create((set, get) => ({
     const sourceGroupId = +source.droppableId.split("-")[1];
     const destinationGroupId = +destination.droppableId.split("-")[1];
 
-    const result = move(get().tasks, sourceGroupId, destinationGroupId, source, destination);
+    const result = move(get().tasks, sourceGroupId, destinationGroupId, source.index, destination.index);
 
     axios
       .post(route("projects.tasks.move", [route().params.project]), {

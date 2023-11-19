@@ -22,7 +22,7 @@ export default function ProjectCardActions({ item }) {
       content: `Are you sure you want to archive this project? This action will prevent users from accessing it.`,
       confirmLabel: "Archive",
       confirmProps: { color: "red" },
-      action: () => archiveForm.submit({ preserveScroll: true }),
+      onConfirm: () => archiveForm.submit({ preserveScroll: true }),
     });
 
   const openRestoreModal = () =>
@@ -32,7 +32,7 @@ export default function ProjectCardActions({ item }) {
       content: `Are you sure you want to restore this project?`,
       confirmLabel: "Restore",
       confirmProps: { color: "blue" },
-      action: () => restoreForm.submit({ preserveScroll: true }),
+      onConfirm: () => restoreForm.submit({ preserveScroll: true }),
     });
 
   const openUserAccess = () => UserAccessModal(item);

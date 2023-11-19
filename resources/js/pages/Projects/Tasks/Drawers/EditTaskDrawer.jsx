@@ -1,10 +1,8 @@
-import { openConfirmModal } from "@/components/ConfirmModal";
 import Dropzone from "@/components/Dropzone";
 import RichTextEditor from "@/components/RichTextEditor";
 import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
 import { date } from "@/utils/date";
-import { openAttachment } from "@/utils/task";
 import { hasRoles } from "@/utils/user";
 import { usePage } from "@inertiajs/react";
 import {
@@ -85,36 +83,10 @@ export function EditTaskDrawer() {
     }
   };
 
-  const closeDrawer = (force = false) => {
-    if (force || JSON.stringify(data) === JSON.stringify(data)) {
-      closeEditTask();
-    } else {
-      openConfirmModal({
-        type: "danger",
-        title: "Discard changes?",
-        content: `All unsaved changes will be lost.`,
-        confirmLabel: "Discard",
-        confirmProps: { color: "red" },
-        action: () => closeEditTask(),
-      });
-    }
-  };
-
-  const confirmDeleteAttachment = (index) => {
-    openConfirmModal({
-      type: "danger",
-      title: "Delete attachment",
-      content: `Are you sure you want to delete this attachment?`,
-      confirmLabel: "Delete",
-      confirmProps: { color: "red" },
-      action: () => deleteAttachment(task, index),
-    });
-  };
-
   return (
     <Drawer
       opened={edit.opened}
-      onClose={closeDrawer}
+      onClose={closeEditTask}
       title={
         <Group ml={25} my="sm">
           <Checkbox
@@ -184,8 +156,7 @@ export function EditTaskDrawer() {
                 mt="xl"
                 selected={task.attachments}
                 onChange={(files) => uploadAttachments(task, files)}
-                remove={(index) => confirmDeleteAttachment(index)}
-                open={(file) => openAttachment(file)}
+                remove={(index) => deleteAttachment(task, index)}
               />
             </div>
             <div className={classes.sidebar}>

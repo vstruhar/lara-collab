@@ -1,6 +1,6 @@
 import { usePage } from "@inertiajs/react";
 
-const useAuthorization = () => {
+export default function useAuthorization() {
   const {auth} = usePage().props;
 
   const can = (permission) => {
@@ -8,6 +8,4 @@ const useAuthorization = () => {
   };
 
   return {can};
-};
-
-export default useAuthorization;
+}

@@ -28,7 +28,7 @@ export default function TableRowActions({
       content: archive.content,
       confirmLabel: archive.confirmLabel,
       confirmProps: { color: "red" },
-      action: () => archiveForm.submit(),
+      onConfirm: () => archiveForm.submit(),
     });
 
   const openRestoreModal = () =>
@@ -38,7 +38,7 @@ export default function TableRowActions({
       content: restore.content,
       confirmLabel: restore.confirmLabel,
       confirmProps: { color: "blue" },
-      action: () => restoreForm.submit(),
+      onConfirm: () => restoreForm.submit(),
     });
 
   return (

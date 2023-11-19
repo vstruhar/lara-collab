@@ -12,6 +12,7 @@ class Attachment extends Model
         'user_id',
         'name',
         'path',
+        'thumb',
         'type',
         'size',
     ];

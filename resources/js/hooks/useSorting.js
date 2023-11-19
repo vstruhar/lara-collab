@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useSorting = (sort) => {
+export default function useSorting(sort) {
   const [sortBy, setSortBy] = useState(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
@@ -23,6 +23,4 @@ const useSorting = (sort) => {
   }, []);
 
   return [sortBy, reverseSortDirection, setSorting];
-};
-
-export default useSorting;
+}

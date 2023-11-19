@@ -1,3 +1,4 @@
+import { isImage } from "@/utils/file";
 import { Group, Image, Text, rem } from "@mantine/core";
 import {
   IconCircleX,
@@ -28,8 +29,10 @@ export default function FileThumbnail({ file, remove, open, ...props }) {
 
   const alreadyUploaded = file.id !== undefined;
 
-  if (file.type.includes("image")) {
-    const imageUrl = alreadyUploaded ? file.path : URL.createObjectURL(file);
+  if (isImage(file)) {
+    const imageUrl = alreadyUploaded
+      ? file.thumb || file.path
+      : URL.createObjectURL(file);
     icon = (
       <Image
         radius="md"

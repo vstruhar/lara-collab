@@ -3,7 +3,7 @@ import { useInterval } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
-const useTimer = (task) => {
+export default function useTimer(task) {
   const [timerValue, setTimerValue] = useState("");
 
   const isTimerRunning = (timeLog) => {
@@ -41,5 +41,3 @@ const useTimer = (task) => {
 
   return { timerValue, setTimerValue, isTimerRunning, runningTimer };
 }
-
-export default useTimer;
