@@ -22,7 +22,7 @@ class TasksSeeder extends Seeder
             $number = 1;
 
             $project->taskGroups->each(function (TaskGroup $taskGroup, int $key) use ($project, $admin, &$number) {
-                for ($i = 0; $i < random_int(0, 4); $i++) {
+                for ($i = 0; $i < random_int(0, 8); $i++) {
                     $task = $taskGroup->tasks()->create([
                         'project_id' => $project->id,
                         'created_by_user_id' => $admin->id,

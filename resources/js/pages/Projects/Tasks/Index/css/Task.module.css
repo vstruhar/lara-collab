@@ -32,6 +32,10 @@
         color: light-dark(var(--mantine-color-dark-4), var(--mantine-color-white));
         background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-gray-9));
 
+        .actions {
+            opacity: 0.4;
+        }
+
         .dragHandle {
             opacity: 0.1;
         }
@@ -40,6 +44,11 @@
 
 .name {
     cursor: pointer;
+}
+
+.actions {
+    opacity: 0;
+    transition: 0.3s ease opacity;
 }
 
 .itemDragging {}

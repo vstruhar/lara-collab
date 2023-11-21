@@ -9,6 +9,7 @@ use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Models\Label;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\TaskGroup;
 use App\Services\PermissionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,35 +19,46 @@ use Inertia\Response;
 
 class TaskController extends Controller
 {
-    public function index(Request $request, Project $project): Response
+    public function index(Request $request, Project $project, Task $task = null): Response
     {
         $this->authorize('viewAny', [Task::class, $project]);
+
+        $groups = $project
+            ->taskGroups()
+            ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
+            ->get();
+
+        $taskRelations = [
+            'project:id,name',
+            'createdByUser:id,name',
+            'assignedToUser:id,name',
+            'subscribedUsers:id',
+            'labels:id,name,color',
+            'attachments',
+            'timeLogs.user:id,name',
+        ];
+
+        $groupedTasks = $groups->mapWithKeys(function (TaskGroup $group) use ($request, $project, $taskRelations) {
+            return [
+                $group->id => Task::where('project_id', $project->id)
+                    ->where('group_id', $group->id)
+                    ->searchByQueryString()
+                    ->filterByQueryString()
+                    ->when($request->user()->hasRole('client'), fn ($query) => $query->where('hidden_from_clients', false))
+                    ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
+                    ->when(! $request->has('status'), fn ($query) => $query->whereNull('completed_at'))
+                    ->with($taskRelations)
+                    ->get(),
+            ];
+        });
 
         return Inertia::render('Projects/Tasks/Index', [
             'project' => $project,
             'usersWithAccessToProject' => PermissionService::usersWithAccessToProject($project),
             'labels' => Label::get(['id', 'name', 'color']),
-            'taskGroups' => $project
-                ->taskGroups()
-                ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
-                ->get(),
-            'groupedTasks' => Task::where('project_id', $project->id)
-                ->searchByQueryString()
-                ->filterByQueryString()
-                ->when($request->user()->hasRole('client'), fn ($query) => $query->where('hidden_from_clients', false))
-                ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
-                ->with([
-                    'project:id,name',
-                    'createdByUser:id,name',
-                    'assignedToUser:id,name',
-                    'subscribedUsers:id',
-                    'labels:id,name,color',
-                    'attachments',
-                    'timeLogs.user:id,name',
-                ])
-                ->orderBy('completed_at')
-                ->get()
-                ->groupBy('group_id'),
+            'taskGroups' => $groups,
+            'groupedTasks' => $groupedTasks,
+            'openedTask' => $task ? $task->load($taskRelations) : null,
         ]);
     }
 

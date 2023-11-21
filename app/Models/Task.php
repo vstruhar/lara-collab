@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Filters\IsNullFilter;
+use App\Models\Filters\TaskCompletedFilter;
 use App\Models\Filters\TaskOverdueFilter;
 use App\Models\Filters\WhereHasFilter;
 use App\Models\Filters\WhereInFilter;
@@ -58,6 +59,7 @@ class Task extends Model implements Sortable
             (new WhereInFilter('assigned_to_user_id'))->setQueryName('assignees'),
             (new TaskOverdueFilter('due_on'))->setQueryName('overdue'),
             (new IsNullFilter('due_on'))->setQueryName('not_set'),
+            (new TaskCompletedFilter('completed_at'))->setQueryName('status'),
             (new WhereHasFilter('labels'))->setQueryName('labels'),
         ]);
     }

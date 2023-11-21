@@ -7,6 +7,7 @@ import {
   Input,
   Pill,
   PillsInput,
+  rem,
   useCombobox,
 } from "@mantine/core";
 
@@ -42,7 +43,7 @@ export default function LabelsDropdown({
       >
         <Combobox.DropdownTarget>
           <PillsInput pointer onClick={() => combobox.toggleDropdown()}>
-            <Pill.Group gap={15}>
+            <Pill.Group style={{ rowGap: rem(3), columnGap: rem(12) }}>
               {selected.length > 0 ? (
                 selected.map((id) => {
                   const label = items.find((i) => i.id === id);

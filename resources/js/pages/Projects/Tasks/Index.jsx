@@ -1,6 +1,5 @@
 import { EmptyResult } from "@/components/EmptyResult";
 import useGroupsStore from "@/hooks/store/useGroupsStore";
-import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
 import Layout from "@/layouts/MainLayout";
@@ -24,9 +23,8 @@ const TasksIndex = () => {
   currentProject = project;
 
   const { groups, setGroups, reorderGroup } = useGroupsStore();
-  const { tasks, findTask, setTasks, reorderTask, moveTask } = useTasksStore();
+  const { tasks, setTasks, reorderTask, moveTask } = useTasksStore();
   const { hasUrlParams } = useTaskFiltersStore();
-  const { openEditTask } = useTaskDrawerStore();
 
   const usingFilters = hasUrlParams();
 
@@ -52,11 +50,6 @@ const TasksIndex = () => {
       reorderGroup(source.index, destination.index);
     }
   };
-
-  useEffect(() => {
-    const task = findTask(parseInt(route().params.task));
-    if (task) setTimeout(() => openEditTask(task), 100);
-  }, []);
 
   return (
     <>

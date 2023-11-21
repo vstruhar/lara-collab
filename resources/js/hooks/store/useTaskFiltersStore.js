@@ -14,6 +14,7 @@ const useTaskFiltersStore = create((set, get) => ({
       not_set: params.not_set || 0,
       overdue: params.overdue || 0,
     },
+    status: params.status || 0,
     labels: params.labels || [],
   },
   hasUrlParams: (exclude = []) => {
@@ -45,6 +46,7 @@ const useTaskFiltersStore = create((set, get) => ({
           not_set: 0,
           overdue: 0,
         },
+        status: 0,
         labels: [],
       }
     }));
@@ -72,6 +74,19 @@ const useTaskFiltersStore = create((set, get) => ({
         } else {
           state.filters[field][property] = 0;
           reloadWithoutQueryParams({exclude: [property]});
+        }
+      }),
+    );
+  },
+  toggleValueFilter: (field, value) => {
+    return set(
+      produce((state) => {
+        if (!state.filters[field]) {
+          state.filters[field] = value;
+          reloadWithQuery({ [field]: value });
+        } else {
+          state.filters[field] = 0;
+          reloadWithoutQueryParams({exclude: [field]});
         }
       }),
     );

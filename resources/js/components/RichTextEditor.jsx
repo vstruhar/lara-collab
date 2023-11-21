@@ -31,7 +31,8 @@ export default function RichTextEditor({
   });
 
   useDidUpdate(() => {
-    editor.commands.setContent(content);
+    // clear editor if parent content was cleared
+    if (content.length === 0) editor.commands.setContent("");
   }, [content]);
 
   const colorScheme = useColorScheme();

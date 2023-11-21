@@ -26,7 +26,7 @@ import Timer from "./Timer";
 import classes from "./css/TaskDrawer.module.css";
 
 export function EditTaskDrawer() {
-  const { edit, closeEditTask } = useTaskDrawerStore();
+  const { edit, openEditTask, closeEditTask } = useTaskDrawerStore();
   const {
     findTask,
     updateTask,
@@ -38,10 +38,15 @@ export function EditTaskDrawer() {
     usersWithAccessToProject,
     taskGroups,
     labels,
+    openedTask,
     auth: { user },
   } = usePage().props;
 
-  const task = findTask(edit.task.id);
+  useEffect(() => {
+    if (openedTask) setTimeout(() => openEditTask(openedTask), 50);
+  }, []);
+
+  const task = findTask(edit.task.id) || openedTask;
 
   const [data, setData] = useState({
     group_id: "",

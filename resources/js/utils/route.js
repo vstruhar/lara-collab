@@ -55,6 +55,6 @@ export const replaceUrlWithoutReload = (url) => {
   window.history.replaceState(
     {},
     "",
-    url,
+    url + location.search,
   );
 };

@@ -23,8 +23,9 @@ export default function Task({ task, index }) {
           className={`${classes.task} ${
             snapshot.isDragging && classes.itemDragging
           } ${task.completed_at !== null && classes.completed}`}
+          wrap="nowrap"
         >
-          <Group gap="sm">
+          <Group gap="sm" wrap="nowrap">
             <div {...provided.dragHandleProps}>
               <IconGripVertical
                 style={{
@@ -67,20 +68,21 @@ export default function Task({ task, index }) {
               className={classes.name}
               size="sm"
               fw={500}
+              truncate="end"
               c={isOverdue(task) && task.completed_at === null ? "red.7" : ""}
               onClick={() => openEditTask(task)}
             >
               #{task.number + ": " + task.name}
             </Text>
 
-            <Group gap={12} ml={8}>
+            <Group wrap="wrap" style={{ rowGap: rem(3), columnGap: rem(12) }}>
               {task.labels.map((label) => (
                 <Label key={label.id} name={label.name} color={label.color} />
               ))}
             </Group>
 
             {(can("archive task") || can("restore task")) && (
-              <TaskActions task={task} />
+              <TaskActions task={task} className={classes.actions} />
             )}
           </Group>
         </Flex>

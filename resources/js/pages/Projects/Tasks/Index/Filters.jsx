@@ -8,7 +8,7 @@ export default function Filters() {
   const { usersWithAccessToProject, labels } = usePage().props;
 
   const { groups } = useGroupsStore();
-  const { filters, toggleArrayFilter, toggleObjectFilter } =
+  const { filters, toggleArrayFilter, toggleObjectFilter, toggleValueFilter } =
     useTaskFiltersStore();
 
   return (
@@ -68,6 +68,20 @@ export default function Filters() {
               onClick={() => toggleObjectFilter("due_date", "overdue")}
             >
               Overdue
+            </FilterButton>
+          </Stack>
+        </div>
+
+        <div>
+          <Text fz="xs" fw={700} tt="uppercase" mb="sm">
+            Status
+          </Text>
+          <Stack justify="flex-start" gap={6}>
+            <FilterButton
+              selected={filters.status === "completed"}
+              onClick={() => toggleValueFilter("status", "completed")}
+            >
+              Completed
             </FilterButton>
           </Stack>
         </div>

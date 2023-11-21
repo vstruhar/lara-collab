@@ -12,8 +12,5 @@ LaraCollab is a project management tool build with Laravel.
 
 TODO:
 
--   limit and load additional tasks when there are too many
--   always load item when opening task by url (because it could not be in the list of loaded)
--   extract comments to store
 -   notifications
 -   update task when webhook is received (also add comment if current task was updated)

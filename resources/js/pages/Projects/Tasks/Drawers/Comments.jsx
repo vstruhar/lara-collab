@@ -1,4 +1,5 @@
 import RichTextEditor from "@/components/RichTextEditor";
+import useTasksStore from "@/hooks/store/useTasksStore";
 import { dateTime, diffForHumans } from "@/utils/datetime";
 import {
   Avatar,
@@ -13,42 +14,17 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import classes from "./css/Comments.module.css";
 
 export default function Comments({ task }) {
-  const [comments, setComments] = useState([]);
+  const { comments, fetchComments, saveComment } = useTasksStore();
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState("");
 
   useEffect(() => {
-    axios
-      .get(route("projects.tasks.comments", [task.project_id, task.id]))
-      .then(({ data }) => setComments(data))
-      .finally(() => setLoading(false))
-      .catch((e) => {
-        console.error(e);
-        alert("Failed to load comments");
-      });
+    fetchComments(task, () => setLoading(false));
   }, []);
-
-  const submit = () => {
-    axios
-      .post(
-        route("projects.tasks.comments.store", [task.project_id, task.id]),
-        { content: comment },
-        { progress: true },
-      )
-      .then(({ data }) => {
-        setComment("");
-        setComments([data.comment, ...comments]);
-      })
-      .catch((e) => {
-        console.error(e);
-        alert("Failed to save comment");
-      });
-  };
 
   return (
     <Box mb="xl">
@@ -72,7 +48,7 @@ export default function Comments({ task }) {
           variant="filled"
           mt="md"
           disabled={comment.length <= 7}
-          onClick={submit}
+          onClick={() => saveComment(task, comment, () => setComment(""))}
         >
           Add comment
         </Button>
