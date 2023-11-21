@@ -123,6 +123,7 @@ export function CreateTaskDrawer() {
           <RichTextEditor
             mt="xl"
             placeholder="Task description"
+            height={260}
             onChange={(content) => updateValue("description", content)}
           />
 

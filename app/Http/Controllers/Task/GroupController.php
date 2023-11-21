@@ -59,7 +59,7 @@ class GroupController extends Controller
 
         $taskGroup->unArchive();
 
-        return redirect()->route('projects.tasks', $project)->success('Tasks group restored', 'The restoring of the tasks group was completed successfully.');
+        return redirect()->back()->success('Tasks group restored', 'The restoring of the tasks group was completed successfully.');
     }
 
     public function reorder(Request $request, Project $project)

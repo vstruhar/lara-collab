@@ -11,12 +11,14 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Services\PermissionService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TaskController extends Controller
 {
-    public function index(Request $request, Project $project)
+    public function index(Request $request, Project $project): Response
     {
         $this->authorize('viewAny', [Task::class, $project]);
 
@@ -48,8 +50,10 @@ class TaskController extends Controller
         ]);
     }
 
-    public function store(StoreTaskRequest $request, Project $project)
+    public function store(StoreTaskRequest $request, Project $project): RedirectResponse
     {
+        $this->authorize('create', [Task::class, $project]);
+
         (new CreateTask)->create($project, $request->validated());
 
         return redirect()->route('projects.tasks', $project)->success('Task added', 'A new task was successfully added.');
@@ -57,6 +61,8 @@ class TaskController extends Controller
 
     public function update(UpdateTaskRequest $request, Project $project, Task $task): JsonResponse
     {
+        $this->authorize('update', [$task, $project]);
+
         (new UpdateTask)->update($task, $request->validated());
 
         $task->refresh()->load([
@@ -72,7 +78,7 @@ class TaskController extends Controller
         return response()->json(['task' => $task]);
     }
 
-    public function reorder(Request $request, Project $project)
+    public function reorder(Request $request, Project $project): JsonResponse
     {
         $this->authorize('reorder', [Task::class, $project]);
 
@@ -81,7 +87,7 @@ class TaskController extends Controller
         return response()->json();
     }
 
-    public function move(Request $request, Project $project)
+    public function move(Request $request, Project $project): JsonResponse
     {
         $this->authorize('reorder', [Task::class, $project]);
 
@@ -92,7 +98,7 @@ class TaskController extends Controller
         return response()->json();
     }
 
-    public function complete(Request $request, Project $project, Task $task)
+    public function complete(Request $request, Project $project, Task $task): JsonResponse
     {
         $this->authorize('complete', [Task::class, $project]);
 
@@ -101,5 +107,25 @@ class TaskController extends Controller
         ]);
 
         return response()->json();
+    }
+
+    public function destroy(Project $project, Task $task): RedirectResponse
+    {
+        $this->authorize('archive task', [$task, $project]);
+
+        $task->archive();
+
+        return redirect()->back()->success('Task archived', 'The task was successfully archived.');
+    }
+
+    public function restore(Project $project, int $taskId)
+    {
+        $task = Task::withArchived()->findOrFail($taskId);
+
+        $this->authorize('restore', [$task, $project]);
+
+        $task->unArchive();
+
+        return redirect()->back()->success('Task restored', 'The restoring of the Task was completed successfully.');
     }
 }

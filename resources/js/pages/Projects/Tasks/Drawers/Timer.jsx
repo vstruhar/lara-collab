@@ -1,7 +1,7 @@
 import useTasksStore from "@/hooks/store/useTasksStore";
 import useTimer from "@/hooks/useTimer";
-import { dateTime } from "@/utils/date";
-import { humanReadableTime, isTimeValueValid } from "@/utils/time";
+import { dateTime } from "@/utils/datetime";
+import { humanReadableTime, isTimeValueValid } from "@/utils/timer";
 import { Link } from "@inertiajs/react";
 import {
   ActionIcon,
@@ -38,38 +38,43 @@ export default function Timer({ task, ...props }) {
   return (
     <Box className={classes.container} {...props}>
       <Stack>
-        <Group className={classes.timer} justify="space-between" wrap="nowrap">
-          {runningTimer ? (
-            <ActionIcon
-              size={32}
-              radius="xl"
-              variant="filled"
-              onClick={() => stopTimer(task, runningTimer.id)}
-            >
-              <IconPlayerStopFilled
-                style={{ width: rem(16), height: rem(16) }}
-              />
-            </ActionIcon>
-          ) : (
-            <ActionIcon
-              size={32}
-              radius="xl"
-              variant="filled"
-              onClick={() => startTimer(task)}
-            >
-              <IconPlayerPlayFilled
-                style={{ width: rem(16), height: rem(16) }}
-              />
-            </ActionIcon>
-          )}
+        {can("add time log") ? (
+          <Group
+            className={classes.timer}
+            justify="space-between"
+            wrap="nowrap"
+          >
+            {runningTimer ? (
+              <ActionIcon
+                size={32}
+                radius="xl"
+                variant="filled"
+                onClick={() => stopTimer(task, runningTimer.id)}
+              >
+                <IconPlayerStopFilled
+                  style={{ width: rem(16), height: rem(16) }}
+                />
+              </ActionIcon>
+            ) : (
+              <ActionIcon
+                size={32}
+                radius="xl"
+                variant="filled"
+                onClick={() => startTimer(task)}
+              >
+                <IconPlayerPlayFilled
+                  style={{ width: rem(16), height: rem(16) }}
+                />
+              </ActionIcon>
+            )}
 
-          <Group wrap="nowrap" gap={5}>
-            <TextInput
-              variant="unstyled"
-              size="sm"
-              placeholder="0:00"
-              readOnly={runningTimer !== undefined}
-              className={`
+            <Group wrap="nowrap" gap={5}>
+              <TextInput
+                variant="unstyled"
+                size="sm"
+                placeholder="0:00"
+                readOnly={runningTimer !== undefined}
+                className={`
                 ${classes.input}
                 ${runningTimer ? classes.blink : null}
                 ${
@@ -77,26 +82,34 @@ export default function Timer({ task, ...props }) {
                     ? null
                     : timerValue.length && classes.invalid
                 }`}
-              value={timerValue}
-              onChange={(event) => {
-                if (/^(\d|\.|,|:)*$/.test(event.currentTarget.value)) {
-                  setTimerValue(event.currentTarget.value);
-                }
-              }}
-            />
-          </Group>
+                value={timerValue}
+                onChange={(event) => {
+                  if (/^(\d|\.|,|:)*$/.test(event.currentTarget.value)) {
+                    setTimerValue(event.currentTarget.value);
+                  }
+                }}
+              />
+            </Group>
 
-          <ActionIcon
-            size={32}
-            radius="xl"
-            variant="filled"
-            onClick={() => saveTimeLog(task, timerValue)}
-            disabled={!isTimeValueValid(timerValue) || runningTimer}
-          >
-            <IconPlus style={{ width: rem(16), height: rem(16) }} stroke={3} />
-          </ActionIcon>
-        </Group>
-        {task.time_logs.length > 0 && (
+            <ActionIcon
+              size={32}
+              radius="xl"
+              variant="filled"
+              onClick={() => saveTimeLog(task, timerValue)}
+              disabled={!isTimeValueValid(timerValue) || runningTimer}
+            >
+              <IconPlus
+                style={{ width: rem(16), height: rem(16) }}
+                stroke={3}
+              />
+            </ActionIcon>
+          </Group>
+        ) : (
+          <Text ml={10} fz={15} fw={500}>
+            Time logs
+          </Text>
+        )}
+        {task.time_logs.length > 0 && can("view time logs") && (
           <>
             <Stack className={classes.list} gap={5}>
               {task.time_logs.map((timeLog) => (
@@ -117,11 +130,13 @@ export default function Timer({ task, ...props }) {
                     </Text>
                   ) : (
                     <Group gap={7}>
-                      <IconX
-                        className={classes.delete}
-                        stroke={1.5}
-                        onClick={() => deleteTimerLog(task, timeLog.id)}
-                      />
+                      {can("delete time log") && (
+                        <IconX
+                          className={classes.delete}
+                          stroke={1.5}
+                          onClick={() => deleteTimerLog(task, timeLog.id)}
+                        />
+                      )}
                       <Tooltip
                         label={dateTime(timeLog.created_at)}
                         openDelay={250}

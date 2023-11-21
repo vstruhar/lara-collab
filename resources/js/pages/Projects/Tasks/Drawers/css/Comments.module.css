@@ -1,0 +1,8 @@
+.comment {
+    font-size: rem(14);
+    line-height: rem(14);
+
+    p {
+        margin: 0;
+    }
+}

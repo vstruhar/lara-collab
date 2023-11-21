@@ -1,4 +1,4 @@
-import { useColorScheme } from "@mantine/hooks";
+import { useColorScheme, useDidUpdate } from "@mantine/hooks";
 import { RichTextEditor as Editor, Link } from "@mantine/tiptap";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -10,10 +10,13 @@ import classes from "./css/RichTextEditor.module.css";
 export default function RichTextEditor({
   onChange,
   placeholder,
-  content = "",
+  content,
+  height = 200,
+  readOnly = false,
   ...props
 }) {
   const editor = useEditor({
+    editable: !readOnly,
     extensions: [
       StarterKit,
       Underline,
@@ -26,6 +29,10 @@ export default function RichTextEditor({
       onChange(editor.getHTML());
     },
   });
+
+  useDidUpdate(() => {
+    editor.commands.setContent(content);
+  }, [content]);
 
   const colorScheme = useColorScheme();
 
@@ -59,6 +66,7 @@ export default function RichTextEditor({
       <Editor.Content
         bg={colorScheme === "dark" ? "dark.6" : "white"}
         className={classes.content}
+        style={{ "--rich-text-editor-height": `${height}px` }}
       />
     </Editor>
   );

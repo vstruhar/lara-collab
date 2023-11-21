@@ -82,6 +82,7 @@ window.addEventListener("beforeunload", (event) => {
 
 import Echo from 'laravel-echo';
 
+import dayjs from 'dayjs';
 import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
@@ -95,3 +96,7 @@ window.Echo = new Echo({
   forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
   enabledTransports: ['ws', 'wss'],
 });
+
+// dayjs
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);

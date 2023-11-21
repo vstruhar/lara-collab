@@ -1,5 +1,5 @@
 .content div {
-    min-height: 260px;
-    font-size: rem(15);
-    line-height: rem(14);
+    min-height: var(--rich-text-editor-height);
+    font-size: rem(14);
+    line-height: rem(18);
 }

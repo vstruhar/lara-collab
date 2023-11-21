@@ -2,7 +2,7 @@ import Dropzone from "@/components/Dropzone";
 import RichTextEditor from "@/components/RichTextEditor";
 import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
-import { date } from "@/utils/date";
+import { date } from "@/utils/datetime";
 import { hasRoles } from "@/utils/user";
 import { usePage } from "@inertiajs/react";
 import {
@@ -20,6 +20,7 @@ import {
 import { DateInput } from "@mantine/dates";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import Comments from "./Comments";
 import LabelsDropdown from "./LabelsDropdown";
 import Timer from "./Timer";
 import classes from "./css/TaskDrawer.module.css";
@@ -142,22 +143,29 @@ export function EditTaskDrawer() {
                 onChange={(e) => updateValue("name", e.target.value)}
                 onBlur={submit}
                 error={data.name.length === 0}
+                readOnly={!can("edit task")}
               />
 
               <RichTextEditor
                 mt="xl"
                 placeholder="Task description"
                 content={data.description}
+                height={260}
                 onChange={(content) => updateValue("description", content)}
                 onBlur={submit}
+                readOnly={!can("edit task")}
               />
 
-              <Dropzone
-                mt="xl"
-                selected={task.attachments}
-                onChange={(files) => uploadAttachments(task, files)}
-                remove={(index) => deleteAttachment(task, index)}
-              />
+              {can("edit task") && (
+                <Dropzone
+                  mt="xl"
+                  selected={task.attachments}
+                  onChange={(files) => uploadAttachments(task, files)}
+                  remove={(index) => deleteAttachment(task, index)}
+                />
+              )}
+
+              {can("view comments") && <Comments task={task} />}
             </div>
             <div className={classes.sidebar}>
               <Select
@@ -171,6 +179,7 @@ export function EditTaskDrawer() {
                   value: i.id.toString(),
                   label: i.name,
                 }))}
+                readOnly={!can("edit task")}
               />
 
               <Select
@@ -185,6 +194,7 @@ export function EditTaskDrawer() {
                   value: i.id.toString(),
                   label: i.name,
                 }))}
+                readOnly={!can("edit task")}
               />
 
               <DateInput
@@ -197,6 +207,7 @@ export function EditTaskDrawer() {
                 value={data.due_on}
                 onChange={(value) => updateValue("due_on", value)}
                 onBlur={submit}
+                readOnly={!can("edit task")}
               />
 
               <LabelsDropdown
@@ -219,9 +230,12 @@ export function EditTaskDrawer() {
                 suffix=" hours"
                 onChange={(value) => updateValue("estimation", value)}
                 onBlur={submit}
+                readOnly={!can("edit task")}
               />
 
-              <Timer mt="xl" task={task} />
+              {(can("view time logs") || can("add time log")) && (
+                <Timer mt="xl" task={task} />
+              )}
 
               <Checkbox
                 label="Billable"
@@ -231,6 +245,7 @@ export function EditTaskDrawer() {
                   updateValue("billable", event.currentTarget.checked)
                 }
                 onBlur={submit}
+                disabled={!can("edit task")}
               />
 
               {!hasRoles(user, ["client"]) && (
@@ -245,6 +260,7 @@ export function EditTaskDrawer() {
                     )
                   }
                   onBlur={submit}
+                  disabled={!can("edit task")}
                 />
               )}
 
@@ -261,6 +277,7 @@ export function EditTaskDrawer() {
                   value: i.id.toString(),
                   label: i.name,
                 }))}
+                readOnly={!can("edit task")}
               />
             </div>
           </form>

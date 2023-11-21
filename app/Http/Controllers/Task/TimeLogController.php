@@ -13,6 +13,8 @@ class TimeLogController extends Controller
 {
     public function startTimer(Project $project, Task $task): JsonResponse
     {
+        $this->authorize('create', [TimeLog::class, $project]);
+
         $timeLog = $task->timeLogs()->create([
             'user_id' => auth()->id(),
             'minutes' => null,
@@ -24,6 +26,8 @@ class TimeLogController extends Controller
 
     public function stopTimer(Project $project, Task $task, TimeLog $timeLog): JsonResponse
     {
+        $this->authorize('create', [TimeLog::class, $project]);
+
         $timeLog->update([
             'timer_stop' => now()->timestamp,
             'minutes' => round((now()->timestamp - $timeLog->timer_start) / 60),
@@ -34,6 +38,8 @@ class TimeLogController extends Controller
 
     public function store(StoreTimeLogRequest $request, Project $project, Task $task): JsonResponse
     {
+        $this->authorize('create', [TimeLog::class, $project]);
+
         $timeLog = $task->timeLogs()->create(
             $request->validated() + ['user_id' => auth()->id()]
         );
@@ -43,6 +49,8 @@ class TimeLogController extends Controller
 
     public function destroy(Project $project, Task $task, TimeLog $timeLog): JsonResponse
     {
+        $this->authorize('delete', [$timeLog, $project]);
+
         $timeLog->delete();
 
         return response()->json();

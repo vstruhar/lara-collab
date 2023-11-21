@@ -2,21 +2,22 @@
 
 namespace App\Events;
 
-use App\Models\User;
+use App\Models\Comment;
+use App\Models\Task;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class UserCreated
+class CommentCreated
 {
     use Dispatchable;
 
+    public Task $task;
+
     /**
      * Create a new event instance.
-     *
-     * @return void
      */
     public function __construct(
-        public User $user,
-        public string $password,
+        public Comment $comment,
     ) {
+        $this->task = $comment->task;
     }
 }

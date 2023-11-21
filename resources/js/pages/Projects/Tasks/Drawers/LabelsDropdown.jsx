@@ -38,6 +38,7 @@ export default function LabelsDropdown({
         store={combobox}
         onOptionSubmit={handleValueSelect}
         withinPortal={false}
+        disabled={!can("edit task")}
       >
         <Combobox.DropdownTarget>
           <PillsInput pointer onClick={() => combobox.toggleDropdown()}>

@@ -61,6 +61,7 @@ function ModalForm({ item }) {
           <MultiSelect
             label="Users"
             placeholder="Select users"
+            searchable
             value={requestPending ? [] : form.data.users}
             onChange={(values) => updateValue("users", values)}
             data={users}
@@ -70,6 +71,7 @@ function ModalForm({ item }) {
           <MultiSelect
             label="Clients"
             placeholder="Select clients"
+            searchable
             mt="md"
             value={requestPending ? [] : form.data.clients}
             onChange={(values) => updateValue("clients", values)}

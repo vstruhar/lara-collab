@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\CommentCreated;
+use App\Events\TaskCreated;
 use App\Events\UserCreated;
 use App\Listeners\NotifyTaskSubscribers;
 use App\Listeners\SendEmailWithCredentials;
@@ -20,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
             SendEmailWithCredentials::class,
         ],
         TaskCreated::class => [
+            NotifyTaskSubscribers::class,
+        ],
+        CommentCreated::class => [
             NotifyTaskSubscribers::class,
         ],
     ];

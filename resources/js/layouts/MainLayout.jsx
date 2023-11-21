@@ -4,11 +4,16 @@ import useWebSocketsNotifications from "@/hooks/useWebSocketsNotifications";
 import NavBarNested from "@/layouts/NavBarNested";
 import { Head } from "@inertiajs/react";
 import { AppShell } from "@mantine/core";
+import { useEffect } from "react";
 
 export default function MainLayout({ children, title }) {
   window.can = useAuthorization().can;
 
-  useWebSocketsNotifications().init();
+  const { init } = useWebSocketsNotifications();
+
+  useEffect(() => {
+    init();
+  }, []);
 
   return (
     <AppShell

@@ -39,6 +39,13 @@ class Handler extends ExceptionHandler
         /** @var \Symfony\Component\HttpFoundation\Response */
         $response = parent::render($request, $e);
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'trace' => $e->getTrace(),
+            ], $response->status());
+        }
+
         if (! app()->environment(['local', 'testing']) && in_array($response->status(), [500, 503, 404])) {
             return Inertia::render('Error', ['status' => $response->status()])
                 ->toResponse($request)

@@ -3,17 +3,17 @@
 namespace App\Notifications;
 
 use App\Enums\Queue;
-use App\Models\Task;
+use App\Models\Comment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TaskCreatedNotification extends Notification implements ShouldQueue
+class CommentCreatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public Task $task)
+    public function __construct(public Comment $comment)
     {
     }
 
@@ -59,7 +59,7 @@ class TaskCreatedNotification extends Notification implements ShouldQueue
         if ($channel === 'mail') {
             return $notifiable
                 ->unreadNotifications()
-                ->whereJsonContains('data->id', $this->task->id)
+                ->whereJsonContains('data->id', $this->comment->id)
                 ->exists();
         }
 
@@ -72,10 +72,10 @@ class TaskCreatedNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("[{$this->task->project->name}] Task {$this->task->name} was created")
-            ->greeting("{$this->task->createdByUser->name} created a new task")
-            ->action('Open task', route('projects.tasks.open', ['project' => $this->task->project_id, 'task' => $this->task->id]))
-            ->line($this->task->description);
+            ->subject("[{$this->comment->task->project->name}] {$this->comment->user->name} commented on {$this->comment->task->name} task")
+            ->greeting("{$this->comment->user->name} commented on {$this->comment->task->name} task")
+            ->line($this->comment->content)
+            ->action('Open task', route('projects.tasks.open', ['project' => $this->comment->task->project_id, 'task' => $this->comment->task->id]));
     }
 
     /**
@@ -87,9 +87,12 @@ class TaskCreatedNotification extends Notification implements ShouldQueue
     {
         return [
             'payload' => [
-                'id' => $this->task->id,
-                'name' => $this->task->name,
-                'created_by' => $this->task->createdByUser->name,
+                'id' => $this->comment->id,
+                'created_by' => $this->comment->user->name,
+                'task' => [
+                    'id' => $this->comment->task->id,
+                    'name' => $this->comment->task->name,
+                ],
             ],
         ];
     }

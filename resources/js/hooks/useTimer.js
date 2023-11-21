@@ -1,4 +1,4 @@
-import { humanReadableTime } from "@/utils/time";
+import { humanReadableTime } from "@/utils/timer";
 import { useInterval } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";

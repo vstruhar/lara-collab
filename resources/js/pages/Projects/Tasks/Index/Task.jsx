@@ -7,6 +7,7 @@ import { Link } from "@inertiajs/react";
 import { Checkbox, Flex, Group, Pill, Text, Tooltip, rem } from "@mantine/core";
 import { IconGripVertical } from "@tabler/icons-react";
 import { Label } from "./../../../../components/Label";
+import TaskActions from "./TaskActions";
 import classes from "./css/Task.module.css";
 
 export default function Task({ task, index }) {
@@ -77,6 +78,10 @@ export default function Task({ task, index }) {
                 <Label key={label.id} name={label.name} color={label.color} />
               ))}
             </Group>
+
+            {(can("archive task") || can("restore task")) && (
+              <TaskActions task={task} />
+            )}
           </Group>
         </Flex>
       )}

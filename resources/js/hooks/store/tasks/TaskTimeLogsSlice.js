@@ -1,4 +1,4 @@
-import { convertToMinutes } from '@/utils/time';
+import { convertToMinutes } from '@/utils/timer';
 import axios from 'axios';
 import { produce } from "immer";
 

@@ -7,3 +7,7 @@ export const date = (date) => {
 export const dateTime = (datetime) => {
   return dayjs(datetime).format("D. MMM YYYY H:mm") + 'h';
 };
+
+export const diffForHumans = (datetime) => {
+  return dayjs(datetime).fromNow();
+};

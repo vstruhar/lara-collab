@@ -11,6 +11,7 @@ import { IconPlus } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { CreateTaskDrawer } from "./Drawers/CreateTaskDrawer";
 import { EditTaskDrawer } from "./Drawers/EditTaskDrawer";
+import ArchivedItems from "./Index/Archive/ArchivedItems";
 import Filters from "./Index/Filters";
 import Header from "./Index/Header";
 import CreateTasksGroupModal from "./Index/Modals/CreateTasksGroupModal";
@@ -62,62 +63,67 @@ const TasksIndex = () => {
       <Header />
 
       {can("create task") && <CreateTaskDrawer />}
-      {can("edit task") && <EditTaskDrawer />}
+      <EditTaskDrawer />
 
       <Grid columns={12} gutter={50} mt="xl">
-        <Grid.Col span="auto">
-          {groups.length ? (
-            <>
-              <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable
-                  droppableId="groups"
-                  direction="vertical"
-                  type="group"
-                >
-                  {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
-                      {groups
-                        .filter(
-                          (group) =>
-                            !usingFilters ||
-                            route().params.archived ||
-                            (usingFilters && tasks[group.id]?.length > 0),
-                        )
-                        .map((group, index) => (
-                          <TaskGroup
-                            key={group.id}
-                            index={index}
-                            group={group}
-                            tasks={tasks[group.id] || []}
-                          />
-                        ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
+        {!route().params.archived ? (
+          <Grid.Col span="auto">
+            {groups.length ? (
+              <>
+                <DragDropContext onDragEnd={onDragEnd}>
+                  <Droppable
+                    droppableId="groups"
+                    direction="vertical"
+                    type="group"
+                  >
+                    {(provided) => (
+                      <div {...provided.droppableProps} ref={provided.innerRef}>
+                        {groups
+                          .filter(
+                            (group) =>
+                              !usingFilters ||
+                              (usingFilters && tasks[group.id]?.length > 0),
+                          )
+                          .map((group, index) => (
+                            <TaskGroup
+                              key={group.id}
+                              index={index}
+                              group={group}
+                              tasks={tasks[group.id] || []}
+                            />
+                          ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
 
-              {!route().params.archived && can("create task group") && (
-                <Button
-                  leftSection={<IconPlus size={14} />}
-                  variant="transparent"
-                  size="sm"
-                  mt="md"
-                  m={4}
-                  radius="xl"
-                  onClick={CreateTasksGroupModal}
-                >
-                  Add tasks group
-                </Button>
-              )}
-            </>
-          ) : (
-            <EmptyResult
-              title="No tasks found"
-              subtitle="or none match your search criteria"
-            />
-          )}
-        </Grid.Col>
+                {!route().params.archived && can("create task group") && (
+                  <Button
+                    leftSection={<IconPlus size={14} />}
+                    variant="transparent"
+                    size="sm"
+                    mt="md"
+                    m={4}
+                    radius="xl"
+                    onClick={CreateTasksGroupModal}
+                  >
+                    Add tasks group
+                  </Button>
+                )}
+              </>
+            ) : (
+              <EmptyResult
+                title="No tasks found"
+                subtitle="or none match your search criteria"
+              />
+            )}
+          </Grid.Col>
+        ) : (
+          <Grid.Col span="auto">
+            <ArchivedItems groups={groups} tasks={tasks} />
+          </Grid.Col>
+        )}
         <Grid.Col span={3}>
           <Filters />
         </Grid.Col>
