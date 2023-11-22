@@ -29,7 +29,7 @@ const useTasksStore = create((set, get) => ({
         .put(
           route("projects.tasks.update", [task.project_id, task.id]),
           data,
-          { progress: true },
+          { progress: false },
         );
 
         return set(produce(state => {

@@ -31,7 +31,11 @@ const LabelEdit = () => {
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor href="#" onClick={redirectTo("settings.labels.index")} fz={14}>
+        <Anchor
+          href="#"
+          onClick={() => redirectTo("settings.labels.index")}
+          fz={14}
+        >
           Labels
         </Anchor>
         <div>Edit</div>

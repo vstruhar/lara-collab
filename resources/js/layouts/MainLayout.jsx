@@ -1,8 +1,10 @@
 import FlashNotification from "@/components/FlashNotification";
+import useNotificationsStore from "@/hooks/store/useNotificationsStore";
 import useAuthorization from "@/hooks/useAuthorization";
 import useWebSocketsNotifications from "@/hooks/useWebSocketsNotifications";
 import NavBarNested from "@/layouts/NavBarNested";
-import { Head } from "@inertiajs/react";
+import Notifications from "@/layouts/Notifications";
+import { Head, usePage } from "@inertiajs/react";
 import { AppShell } from "@mantine/core";
 import { useEffect } from "react";
 
@@ -10,9 +12,12 @@ export default function MainLayout({ children, title }) {
   window.can = useAuthorization().can;
 
   const { init } = useWebSocketsNotifications();
+  const { notifications } = usePage().props.auth;
+  const { setNotifications } = useNotificationsStore();
 
   useEffect(() => {
     init();
+    setNotifications(notifications);
   }, []);
 
   return (
@@ -23,6 +28,8 @@ export default function MainLayout({ children, title }) {
       <Head title={title} />
 
       <FlashNotification />
+
+      <Notifications />
 
       <AppShell.Navbar>
         <NavBarNested></NavBarNested>

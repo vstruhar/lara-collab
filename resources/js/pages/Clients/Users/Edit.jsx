@@ -45,7 +45,11 @@ const ClientEdit = () => {
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor href="#" onClick={redirectTo("clients.users.index")} fz={14}>
+        <Anchor
+          href="#"
+          onClick={() => redirectTo("clients.users.index")}
+          fz={14}
+        >
           Clients
         </Anchor>
         <div>Edit</div>

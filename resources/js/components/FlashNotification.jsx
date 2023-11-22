@@ -15,12 +15,12 @@ const iconProps = { style: { width: rem(50), height: rem(50) }, stroke: 2 };
 const types = {
   info: {
     color: "blue",
-    timeout: 10000,
+    timeout: 8000,
     icon: <IconInfoCircle {...iconProps} />,
   },
   success: {
     color: "green",
-    timeout: 5000,
+    timeout: 4000,
     icon: <IconCircleCheck {...iconProps} />,
   },
   warning: {

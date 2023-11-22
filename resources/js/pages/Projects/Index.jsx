@@ -27,7 +27,7 @@ const ProjectsIndex = () => {
             <Button
               leftSection={<IconPlus size={14} />}
               radius="xl"
-              onClick={redirectTo("projects.create")}
+              onClick={() => redirectTo("projects.create")}
             >
               Create
             </Button>

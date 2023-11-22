@@ -47,7 +47,7 @@ export default function TableRowActions({
         <ActionIcon
           variant="subtle"
           color="blue"
-          onClick={redirectTo(editRoute, item.id)}
+          onClick={() => redirectTo(editRoute, item.id)}
         >
           <IconPencil
             style={{ width: rem(16), height: rem(16) }}

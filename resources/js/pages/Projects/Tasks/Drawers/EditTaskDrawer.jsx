@@ -127,7 +127,7 @@ export function EditTaskDrawer() {
       {task ? (
         <>
           <Breadcrumbs
-            c="dimmed"
+            c="dark.3"
             ml={24}
             mb="xs"
             separator="I"

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -54,6 +55,7 @@ class HandleInertiaRequests extends Middleware
                         'permissions' => $user->getAllPermissions()->pluck('name'),
                     ];
                 },
+                'notifications' => NotificationService::getLatest(6),
             ],
             'shared' => [
                 'roles' => fn () => Role::orderBy('name')->get(['id', 'name'])->toArray(),

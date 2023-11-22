@@ -51,7 +51,7 @@ const ClientCompanyEdit = () => {
       <Breadcrumbs fz={14} mb={30}>
         <Anchor
           href="#"
-          onClick={redirectTo("clients.companies.index")}
+          onClick={() => redirectTo("clients.companies.index")}
           fz={14}
         >
           Companies

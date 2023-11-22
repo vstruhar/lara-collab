@@ -47,7 +47,7 @@ const RolesIndex = () => {
             <Button
               leftSection={<IconPlus size={14} />}
               radius="xl"
-              onClick={redirectTo("settings.roles.create")}
+              onClick={() => redirectTo("settings.roles.create")}
             >
               Create
             </Button>

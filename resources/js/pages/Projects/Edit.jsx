@@ -33,7 +33,7 @@ const ProjectEdit = ({ dropdowns: { companies } }) => {
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor href="#" onClick={redirectTo("projects.index")} fz={14}>
+        <Anchor href="#" onClick={() => redirectTo("projects.index")} fz={14}>
           Projects
         </Anchor>
         <div>Edit</div>

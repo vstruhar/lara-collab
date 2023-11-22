@@ -3,8 +3,12 @@ import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import queryString from 'query-string';
 
-export const redirectTo = (routeName, params = {}) => () => {
+export const redirectTo = (routeName, params = {}) => {
   router.get(route(routeName, params));
+};
+
+export const redirectToUrl = (url) => {
+  router.get(url);
 };
 
 export const currentUrl = () => {

@@ -1,6 +1,6 @@
+import { redirectTo } from "@/utils/route";
 import { Button } from "@mantine/core";
 import { IconChevronLeft } from "@tabler/icons-react";
-import { redirectTo } from "@/utils/route";
 
 export default function BackButton({ route }) {
   return (
@@ -9,7 +9,7 @@ export default function BackButton({ route }) {
       radius="xl"
       variant="transparent"
       size="sm"
-      onClick={redirectTo(route)}
+      onClick={() => redirectTo(route)}
     >
       Back
     </Button>

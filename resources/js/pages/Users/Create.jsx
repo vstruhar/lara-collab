@@ -40,7 +40,7 @@ const UserCreate = () => {
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor href="#" onClick={redirectTo("users.index")} fz={14}>
+        <Anchor href="#" onClick={() => redirectTo("users.index")} fz={14}>
           Users
         </Anchor>
         <div>Create</div>

@@ -49,7 +49,7 @@ const UsersIndex = () => {
             <Button
               leftSection={<IconPlus size={14} />}
               radius="xl"
-              onClick={redirectTo("users.create")}
+              onClick={() => redirectTo("users.create")}
             >
               Create
             </Button>

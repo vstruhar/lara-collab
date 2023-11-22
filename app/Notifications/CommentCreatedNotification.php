@@ -86,13 +86,19 @@ class CommentCreatedNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
+            'read_at' => $notifiable->read_at,
+            'created_at' => $notifiable->created_at,
             'payload' => [
-                'id' => $this->comment->id,
-                'created_by' => $this->comment->user->name,
                 'task' => [
                     'id' => $this->comment->task->id,
                     'name' => $this->comment->task->name,
                 ],
+                'project' => [
+                    'id' => $this->comment->task->project->id,
+                    'name' => $this->comment->task->project->name,
+                ],
+                'created_by' => $this->comment->user->name,
+                'link' => route('projects.tasks.open', [$this->comment->task->project_id, $this->comment->task->id]),
             ],
         ];
     }

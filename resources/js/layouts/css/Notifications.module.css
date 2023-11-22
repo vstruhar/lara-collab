@@ -1,0 +1,8 @@
+.indicator div {
+    font-weight: 700;
+    font-size: 11px;
+}
+
+.icon {
+    color: var(--mantine-color-blue-7);
+}

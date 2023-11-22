@@ -21,7 +21,7 @@ class TaskPolicy
      */
     public function create(User $user, Project $project): bool
     {
-        return $user->hasPermissionTo('create tasks') && $user->hasProjectAccess($project);
+        return $user->hasPermissionTo('create task') && $user->hasProjectAccess($project);
     }
 
     /**

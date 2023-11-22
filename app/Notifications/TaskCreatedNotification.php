@@ -86,10 +86,19 @@ class TaskCreatedNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
+            'read_at' => $notifiable->read_at,
+            'created_at' => $notifiable->created_at,
             'payload' => [
-                'id' => $this->task->id,
-                'name' => $this->task->name,
+                'task' => [
+                    'id' => $this->task->id,
+                    'name' => $this->task->name,
+                ],
+                'project' => [
+                    'id' => $this->task->project->id,
+                    'name' => $this->task->project->name,
+                ],
                 'created_by' => $this->task->createdByUser->name,
+                'link' => route('projects.tasks.open', [$this->task->project_id, $this->task->id]),
             ],
         ];
     }

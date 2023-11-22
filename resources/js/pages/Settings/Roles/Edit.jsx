@@ -41,7 +41,11 @@ const RoleEdit = () => {
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor href="#" onClick={redirectTo("settings.roles.index")} fz={14}>
+        <Anchor
+          href="#"
+          onClick={() => redirectTo("settings.roles.index")}
+          fz={14}
+        >
           Roles
         </Anchor>
         <div>Edit</div>

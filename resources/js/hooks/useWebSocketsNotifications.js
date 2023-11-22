@@ -1,21 +1,22 @@
+import { getMessage } from '@/utils/notification';
 import { usePage } from "@inertiajs/react";
-import axios from "axios";
+import { showNotification } from "@mantine/notifications";
+import useNotificationsStore from "./store/useNotificationsStore";
 
 export default function useWebSocketsNotifications() {
   const { auth: { user } } = usePage().props;
+  const {addNotification} = useNotificationsStore();
 
   const init = () => {
     window.Echo.private(`App.Models.User.${user.id}`).notification((notification) => {
       console.log('Notification received', notification);
 
-      // showNotification({
-      //   title: 'New task',
-      //   message: `"${notification.payload.name}" was added by ${notification.payload.created_by}`,
-      //   autoClose: 6000,
-      // });
+      addNotification(notification);
 
-      axios.put(route('notifications.read', notification.id))
-        .catch(() => console.warn('Failed to set notification as seen'));
+      showNotification({
+        ...getMessage(notification),
+        autoClose: 8000,
+      });
     });
   };
 
