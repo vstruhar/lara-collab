@@ -7,6 +7,7 @@ use App\Models\Filters\TaskCompletedFilter;
 use App\Models\Filters\TaskOverdueFilter;
 use App\Models\Filters\WhereHasFilter;
 use App\Models\Filters\WhereInFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -52,6 +53,16 @@ class Task extends Model implements Sortable
         'estimation' => 'float',
     ];
 
+    public array $defaultWith = [
+        'project:id,name',
+        'createdByUser:id,name',
+        'assignedToUser:id,name',
+        'subscribedUsers:id',
+        'labels:id,name,color',
+        'attachments',
+        'timeLogs.user:id,name',
+    ];
+
     public function filters(): Collection
     {
         return collect([
@@ -69,6 +80,16 @@ class Task extends Model implements Sortable
         static::addGlobalScope('ordered', function ($query) {
             $query->ordered();
         });
+    }
+
+    public function scopeWithDefault(Builder $query)
+    {
+        $query->with($this->defaultWith);
+    }
+
+    public function loadDefault()
+    {
+        return $this->load($this->defaultWith);
     }
 
     public function project(): BelongsTo

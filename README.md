@@ -12,6 +12,5 @@ LaraCollab is a project management tool build with Laravel.
 
 TODO:
 
--   notifications
 -   update task when webhook is received (also add comment if current task was updated)
 -   list all notifications

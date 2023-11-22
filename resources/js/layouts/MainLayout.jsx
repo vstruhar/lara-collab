@@ -1,7 +1,7 @@
 import FlashNotification from "@/components/FlashNotification";
 import useNotificationsStore from "@/hooks/store/useNotificationsStore";
 import useAuthorization from "@/hooks/useAuthorization";
-import useWebSocketsNotifications from "@/hooks/useWebSocketsNotifications";
+import useWebSockets from "@/hooks/useWebSockets";
 import NavBarNested from "@/layouts/NavBarNested";
 import Notifications from "@/layouts/Notifications";
 import { Head, usePage } from "@inertiajs/react";
@@ -11,12 +11,12 @@ import { useEffect } from "react";
 export default function MainLayout({ children, title }) {
   window.can = useAuthorization().can;
 
-  const { init } = useWebSocketsNotifications();
+  const { initUserWebSocket } = useWebSockets();
   const { notifications } = usePage().props.auth;
   const { setNotifications } = useNotificationsStore();
 
   useEffect(() => {
-    init();
+    initUserWebSocket();
     setNotifications(notifications);
   }, []);
 

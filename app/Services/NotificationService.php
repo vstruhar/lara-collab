@@ -22,7 +22,6 @@ class NotificationService
                     ...$notification->data,
                     'id' => $notification->id,
                     'read_at' => $notification->read_at,
-                    'type' => $notification->type,
                 ];
             });
     }

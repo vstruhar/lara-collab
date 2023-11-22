@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\CommentCreated;
-use App\Events\TaskCreated;
+use App\Events\Task\TaskCreated;
 use App\Models\User;
 use App\Notifications\CommentCreatedNotification;
 use App\Notifications\TaskCreatedNotification;

@@ -2,6 +2,7 @@
 
 namespace App\Actions\Task;
 
+use App\Events\Task\TaskUpdated;
 use App\Models\Task;
 
 class UpdateTask
@@ -22,6 +23,8 @@ class UpdateTask
         $task->subscribedUsers()->sync($data['subscribed_users']);
 
         $task->labels()->sync($data['labels']);
+
+        TaskUpdated::dispatch($task);
 
         return $success;
     }

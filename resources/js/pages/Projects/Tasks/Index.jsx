@@ -2,6 +2,7 @@ import { EmptyResult } from "@/components/EmptyResult";
 import useGroupsStore from "@/hooks/store/useGroupsStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
+import useWebSockets from "@/hooks/useWebSockets";
 import Layout from "@/layouts/MainLayout";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { usePage } from "@inertiajs/react";
@@ -25,6 +26,7 @@ const TasksIndex = () => {
   const { groups, setGroups, reorderGroup } = useGroupsStore();
   const { tasks, setTasks, reorderTask, moveTask } = useTasksStore();
   const { hasUrlParams } = useTaskFiltersStore();
+  const { initProjectWebSocket } = useWebSockets();
 
   const usingFilters = hasUrlParams();
 
@@ -32,6 +34,10 @@ const TasksIndex = () => {
     setGroups(taskGroups);
     setTasks(groupedTasks);
   }, [taskGroups, groupedTasks]);
+
+  useEffect(() => {
+    initProjectWebSocket(project);
+  }, []);
 
   const onDragEnd = ({ source, destination }) => {
     if (!destination) {

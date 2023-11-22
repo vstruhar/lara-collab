@@ -1,11 +1,10 @@
 import useNotificationsStore from "@/hooks/store/useNotificationsStore";
 import { dateTime } from "@/utils/datetime";
-import { getMessage } from "@/utils/notification";
 import { redirectToUrl } from "@/utils/route";
 import {
   ActionIcon,
   Affix,
-  Flex,
+  Center,
   Group,
   Indicator,
   Menu,
@@ -13,7 +12,7 @@ import {
   UnstyledButton,
   rem,
 } from "@mantine/core";
-import { IconBellFilled, IconMessage } from "@tabler/icons-react";
+import { IconBellFilled, IconMessage, IconRocket } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import classes from "./css/Notifications.module.css";
 
@@ -23,16 +22,12 @@ export default function Notifications() {
 
   const open = (notification) => {
     if (notification.read_at === null) markAsRead(notification);
-    redirectToUrl(notification.payload.link);
+    redirectToUrl(notification.link);
   };
 
   useEffect(() => {
     setUnreadCount(notifications.filter((i) => i.read_at === null).length);
   }, [notifications]);
-
-  const getText = (notification) => {
-    return getMessage(notification).title;
-  };
 
   return (
     <Affix position={{ top: 20, right: 20 }}>
@@ -63,9 +58,11 @@ export default function Notifications() {
                 <Text c="white" fz="md" fw={600}>
                   Notifications
                 </Text>
-                <UnstyledButton fz={11} c="dimmed" onClick={markAllAsRead}>
-                  Mark all as read
-                </UnstyledButton>
+                {unreadCount > 0 && (
+                  <UnstyledButton fz={11} c="dimmed" onClick={markAllAsRead}>
+                    Mark all as read
+                  </UnstyledButton>
+                )}
               </Group>
             </Menu.Label>
 
@@ -83,9 +80,9 @@ export default function Notifications() {
                       className={notification.read_at ? null : classes.icon}
                     />
                     <div>
-                      <Text fz={13}>{getText(notification)}</Text>
+                      <Text fz={13}>{notification.title}</Text>
                       <Text fz={11} c="dimmed">
-                        {`${notification.payload.project.name} ${dateTime(
+                        {`${notification.subtitle}, ${dateTime(
                           notification.created_at,
                         )}`}
                       </Text>
@@ -94,21 +91,19 @@ export default function Notifications() {
                 </Menu.Item>
               ))
             ) : (
-              <Flex
-                mih={100}
-                gap={2}
-                justify="center"
-                align="center"
-                direction="column"
-                wrap="nowrap"
-              >
-                <Text size="lg" fw={600} ta="center" c="dimmed">
-                  All caught up!
-                </Text>
-                <Text fz={13} ta="center" c="dimmed" opacity={0.5}>
-                  No pending notifications
-                </Text>
-              </Flex>
+              <Center mih={100}>
+                <Group>
+                  <IconRocket style={{ width: rem(35), height: rem(35) }} />
+                  <div>
+                    <Text size="lg" fw={600} c="dimmed">
+                      All caught up!
+                    </Text>
+                    <Text fz={13} c="dimmed" opacity={0.5}>
+                      No pending notifications
+                    </Text>
+                  </div>
+                </Group>
+              </Center>
             )}
           </Menu.Dropdown>
         </Indicator>

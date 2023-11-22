@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\Task\CreateTask;
 use App\Actions\Task\UpdateTask;
+use App\Events\Task\TaskDeleted;
+use App\Events\Task\TaskRestored;
+use App\Events\Task\TaskUpdated;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Models\Label;
@@ -28,29 +31,22 @@ class TaskController extends Controller
             ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
             ->get();
 
-        $taskRelations = [
-            'project:id,name',
-            'createdByUser:id,name',
-            'assignedToUser:id,name',
-            'subscribedUsers:id',
-            'labels:id,name,color',
-            'attachments',
-            'timeLogs.user:id,name',
-        ];
-
-        $groupedTasks = $groups->mapWithKeys(function (TaskGroup $group) use ($request, $project, $taskRelations) {
-            return [
-                $group->id => Task::where('project_id', $project->id)
-                    ->where('group_id', $group->id)
-                    ->searchByQueryString()
-                    ->filterByQueryString()
-                    ->when($request->user()->hasRole('client'), fn ($query) => $query->where('hidden_from_clients', false))
-                    ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
-                    ->when(! $request->has('status'), fn ($query) => $query->whereNull('completed_at'))
-                    ->with($taskRelations)
-                    ->get(),
-            ];
-        });
+        $groupedTasks = $project
+            ->taskGroups()
+            ->get()
+            ->mapWithKeys(function (TaskGroup $group) use ($request, $project) {
+                return [
+                    $group->id => Task::where('project_id', $project->id)
+                        ->where('group_id', $group->id)
+                        ->searchByQueryString()
+                        ->filterByQueryString()
+                        ->when($request->user()->hasRole('client'), fn ($query) => $query->where('hidden_from_clients', false))
+                        ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
+                        ->when(! $request->has('status'), fn ($query) => $query->whereNull('completed_at'))
+                        ->withDefault()
+                        ->get(),
+                ];
+            });
 
         return Inertia::render('Projects/Tasks/Index', [
             'project' => $project,
@@ -58,7 +54,7 @@ class TaskController extends Controller
             'labels' => Label::get(['id', 'name', 'color']),
             'taskGroups' => $groups,
             'groupedTasks' => $groupedTasks,
-            'openedTask' => $task ? $task->load($taskRelations) : null,
+            'openedTask' => $task ? $task->loadDefault() : null,
         ]);
     }
 
@@ -118,6 +114,8 @@ class TaskController extends Controller
             'completed_at' => ($request->completed === true) ? now() : null,
         ]);
 
+        TaskUpdated::dispatch($task);
+
         return response()->json();
     }
 
@@ -126,6 +124,8 @@ class TaskController extends Controller
         $this->authorize('archive task', [$task, $project]);
 
         $task->archive();
+
+        TaskDeleted::dispatch($task->id, $task->project_id);
 
         return redirect()->back()->success('Task archived', 'The task was successfully archived.');
     }
@@ -137,6 +137,8 @@ class TaskController extends Controller
         $this->authorize('restore', [$task, $project]);
 
         $task->unArchive();
+
+        TaskRestored::dispatch($task);
 
         return redirect()->back()->success('Task restored', 'The restoring of the Task was completed successfully.');
     }

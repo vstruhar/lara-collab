@@ -1,6 +1,7 @@
 import createTaskAttachmentsSlice from '@/hooks/store/tasks/TaskAttachmentsSlice';
 import createTaskCommentsSlice from '@/hooks/store/tasks/TaskCommentsSlice';
 import createTaskTimeLogsSlice from '@/hooks/store/tasks/TaskTimeLogsSlice';
+import createTaskWebSocketUpdatesSlice from '@/hooks/store/tasks/TaskWebSocketUpdatesSlice';
 import { move, reorder } from '@/utils/reorder';
 import axios from 'axios';
 import { produce } from "immer";
@@ -10,6 +11,7 @@ const useTasksStore = create((set, get) => ({
   ...createTaskAttachmentsSlice(set, get),
   ...createTaskTimeLogsSlice(set, get),
   ...createTaskCommentsSlice(set, get),
+  ...createTaskWebSocketUpdatesSlice(set, get),
 
   tasks: {},
   setTasks: (tasks) => set(() => ({ tasks: { ...tasks } })),
@@ -32,26 +34,26 @@ const useTasksStore = create((set, get) => ({
           { progress: false },
         );
 
-        return set(produce(state => {
-          const index = state.tasks[task.group_id].findIndex((i) => i.id === task.id);
+      return set(produce(state => {
+        const index = state.tasks[task.group_id].findIndex((i) => i.id === task.id);
 
-          if (task.group_id !== data.group_id) {
-            const result = move(state.tasks, task.group_id, data.group_id, index, 0);
+        if (task.group_id !== data.group_id) {
+          const result = move(state.tasks, task.group_id, data.group_id, index, 0);
 
-            state.tasks[task.group_id] = result[task.group_id];
-            state.tasks[data.group_id] = result[data.group_id];
+          state.tasks[task.group_id] = result[task.group_id];
+          state.tasks[data.group_id] = result[data.group_id];
 
-            state.tasks[data.group_id][0] = {
-              ...state.tasks[data.group_id][0],
-              ...response.data.task,
-            }
-          } else {
-            state.tasks[task.group_id][index] = {
-              ...state.tasks[task.group_id][index],
-              ...response.data.task,
-            }
+          state.tasks[data.group_id][0] = {
+            ...state.tasks[data.group_id][0],
+            ...response.data.task,
           }
-        }));
+        } else {
+          state.tasks[task.group_id][index] = {
+            ...state.tasks[task.group_id][index],
+            ...response.data.task,
+          }
+        }
+      }));
     } catch (e) {
       console.error(e);
       alert("Failed to save task changes");

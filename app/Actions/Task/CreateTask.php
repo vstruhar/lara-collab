@@ -2,7 +2,7 @@
 
 namespace App\Actions\Task;
 
-use App\Events\TaskCreated;
+use App\Events\Task\TaskCreated;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\UploadedFile;
