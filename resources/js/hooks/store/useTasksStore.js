@@ -74,8 +74,15 @@ const useTasksStore = create((set, get) => ({
 
     const result = reorder(get().tasks[sourceGroupId], source.index, destination.index);
 
+    const data = {
+      ids: result.map((i) => i.id),
+      group_id: sourceGroupId,
+      from_index: source.index,
+      to_index: destination.index,
+    };
+
     axios
-      .post(route("projects.tasks.reorder", [route().params.project]), { ids: result.map((i) => i.id) }, { progress: false })
+      .post(route("projects.tasks.reorder", [route().params.project]), data, { progress: false })
       .catch(() => alert("Failed to save task reorder action"));
 
     return set(produce(state => { state.tasks[sourceGroupId] = result }));
@@ -86,11 +93,16 @@ const useTasksStore = create((set, get) => ({
 
     const result = move(get().tasks, sourceGroupId, destinationGroupId, source.index, destination.index);
 
+    const data = {
+      ids: result[destinationGroupId].map((i) => i.id),
+      from_group_id: sourceGroupId,
+      to_group_id: destinationGroupId,
+      from_index: source.index,
+      to_index: destination.index,
+    };
+
     axios
-      .post(route("projects.tasks.move", [route().params.project]), {
-        group_id: destinationGroupId,
-        ids: result[destinationGroupId].map((i) => i.id),
-      }, { progress: false })
+      .post(route("projects.tasks.move", [route().params.project]), data, { progress: false })
       .catch(() => alert("Failed to save task move action"));
 
     return set(produce(state => {

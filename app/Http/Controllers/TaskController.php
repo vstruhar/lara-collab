@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Actions\Task\CreateTask;
 use App\Actions\Task\UpdateTask;
 use App\Events\Task\TaskDeleted;
+use App\Events\Task\TaskGroupChanged;
+use App\Events\Task\TaskOrderChanged;
 use App\Events\Task\TaskRestored;
 use App\Events\Task\TaskUpdated;
 use App\Http\Requests\Task\StoreTaskRequest;
@@ -83,6 +85,13 @@ class TaskController extends Controller
 
         Task::setNewOrder($request->ids);
 
+        TaskOrderChanged::dispatch(
+            $project->id,
+            $request->group_id,
+            $request->from_index,
+            $request->to_index,
+        );
+
         return response()->json();
     }
 
@@ -91,7 +100,15 @@ class TaskController extends Controller
         $this->authorize('reorder', [Task::class, $project]);
 
         Task::setNewOrder($request->ids);
-        Task::whereIn('id', $request->ids)->update(['group_id' => $request->group_id]);
+        Task::whereIn('id', $request->ids)->update(['group_id' => $request->to_group_id]);
+
+        TaskGroupChanged::dispatch(
+            $project->id,
+            $request->from_group_id,
+            $request->to_group_id,
+            $request->from_index,
+            $request->to_index,
+        );
 
         return response()->json();
     }

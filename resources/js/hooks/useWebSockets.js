@@ -7,8 +7,8 @@ export default function useWebSockets() {
   const { auth: { user } } = usePage().props;
   const { addNotification } = useNotificationsStore();
   const {
-    addTaskLocally, updateTaskLocally, removeTaskLocally, restoreTaskLocally, addCommentLocally,
-    addAttachmentsLocally, removeAttachmentLocally, addTimeLogLocally, removeTimeLogLocally,
+    addTaskLocally, updateTaskLocally, removeTaskLocally, restoreTaskLocally, addCommentLocally, addAttachmentsLocally,
+    removeAttachmentLocally, addTimeLogLocally, removeTimeLogLocally, reorderTaskLocally, moveTaskLocally,
   } = useTasksStore();
 
   const initUserWebSocket = () => {
@@ -33,7 +33,9 @@ export default function useWebSockets() {
       .listen('Task\\AttachmentsUploaded', (e) => addAttachmentsLocally(e.attachments))
       .listen('Task\\AttachmentDeleted', (e) => removeAttachmentLocally(e.taskId, e.attachmentId))
       .listen('Task\\TimeLogCreated', (e) => addTimeLogLocally(e.timeLog))
-      .listen('Task\\TimeLogDeleted', (e) => removeTimeLogLocally(e.taskId, e.timeLogId));
+      .listen('Task\\TimeLogDeleted', (e) => removeTimeLogLocally(e.taskId, e.timeLogId))
+      .listen('Task\\TaskOrderChanged', (e) => reorderTaskLocally(e.groupId, e.fromIndex, e.toIndex))
+      .listen('Task\\TaskGroupChanged', (e) => moveTaskLocally(e.fromGroupId, e.toGroupId, e.fromIndex, e.toIndex));
 
     return () => window.Echo.leave(`App.Models.Project.${project.id}`);
   };
