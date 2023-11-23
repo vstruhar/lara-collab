@@ -15,7 +15,9 @@ class NotifyTaskSubscribers
      */
     public function handle($event): void
     {
-        $event->task
+        $task = $event->task ?? $event->comment->task;
+
+        $task
             ->subscribedUsers
             ->reject(fn (User $user) => $user->id === auth()->id())
             ->each(function (User $user) use ($event) {

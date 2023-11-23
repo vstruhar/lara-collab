@@ -72,16 +72,7 @@ class TaskController extends Controller
         $this->authorize('update', [$task, $project]);
 
         (new UpdateTask)->update($task, $request->validated());
-
-        $task->refresh()->load([
-            'project:id,name',
-            'createdByUser:id,name',
-            'assignedToUser:id,name',
-            'subscribedUsers:id',
-            'labels:id,name,color',
-            'attachments',
-            'timeLogs.user:id,name',
-        ]);
+        $task->refresh()->loadDefault();
 
         return response()->json(['task' => $task]);
     }
@@ -100,7 +91,6 @@ class TaskController extends Controller
         $this->authorize('reorder', [Task::class, $project]);
 
         Task::setNewOrder($request->ids);
-
         Task::whereIn('id', $request->ids)->update(['group_id' => $request->group_id]);
 
         return response()->json();
@@ -113,7 +103,6 @@ class TaskController extends Controller
         $task->update([
             'completed_at' => ($request->completed === true) ? now() : null,
         ]);
-
         TaskUpdated::dispatch($task);
 
         return response()->json();
@@ -124,7 +113,6 @@ class TaskController extends Controller
         $this->authorize('archive task', [$task, $project]);
 
         $task->archive();
-
         TaskDeleted::dispatch($task->id, $task->project_id);
 
         return redirect()->back()->success('Task archived', 'The task was successfully archived.');
@@ -137,7 +125,6 @@ class TaskController extends Controller
         $this->authorize('restore', [$task, $project]);
 
         $task->unArchive();
-
         TaskRestored::dispatch($task);
 
         return redirect()->back()->success('Task restored', 'The restoring of the Task was completed successfully.');

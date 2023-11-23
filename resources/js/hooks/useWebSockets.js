@@ -5,13 +5,14 @@ import useTasksStore from "./store/useTasksStore";
 
 export default function useWebSockets() {
   const { auth: { user } } = usePage().props;
-  const {addNotification} = useNotificationsStore();
-  const {findTask, updateTaskLocally, archiveTaskLocally, restoreTaskLocally} = useTasksStore();
+  const { addNotification } = useNotificationsStore();
+  const {
+    addTaskLocally, updateTaskLocally, removeTaskLocally, restoreTaskLocally, addCommentLocally,
+    addAttachmentsLocally, removeAttachmentLocally, addTimeLogLocally, removeTimeLogLocally,
+  } = useTasksStore();
 
   const initUserWebSocket = () => {
     window.Echo.private(`App.Models.User.${user.id}`).notification((notification) => {
-      console.log('Notification received', notification);
-
       addNotification(notification);
 
       showNotification({
@@ -24,18 +25,25 @@ export default function useWebSockets() {
 
   const initProjectWebSocket = (project) => {
     window.Echo.private(`App.Models.Project.${project.id}`)
-      .listen('Task\\TaskUpdated', (event) => {
-        updateTaskLocally(findTask(event.task.id), event.task);
-      })
-      .listen('Task\\TaskDeleted', (event) => {
-        archiveTaskLocally(
-          findTask(event.taskId)
-        );
-      })
-      .listen('Task\\TaskRestored', (event) => {
-        restoreTaskLocally(event.groupId, event.task);
-      });
+      .listen('Task\\TaskCreated', (e) => addTaskLocally(e.task))
+      .listen('Task\\TaskUpdated', (e) => updateTaskLocally(e.task))
+      .listen('Task\\TaskDeleted', (e) => removeTaskLocally(e.taskId))
+      .listen('Task\\TaskRestored', (e) => restoreTaskLocally(e.groupId, e.task))
+      .listen('Task\\CommentCreated', (e) => addCommentLocally(e.comment))
+      .listen('Task\\AttachmentsUploaded', (e) => addAttachmentsLocally(e.attachments))
+      .listen('Task\\AttachmentDeleted', (e) => removeAttachmentLocally(e.taskId, e.attachmentId))
+      .listen('Task\\TimeLogCreated', (e) => addTimeLogLocally(e.timeLog))
+      .listen('Task\\TimeLogDeleted', (e) => removeTimeLogLocally(e.taskId, e.timeLogId));
+
+    return () => window.Echo.leave(`App.Models.Project.${project.id}`);
   };
 
-  return {initUserWebSocket, initProjectWebSocket};
+  const initTaskWebSocket = (task) => {
+    window.Echo.private(`App.Models.Task.${task.id}`)
+      .listen('Task\\CommentCreated', (e) => addCommentLocally(e.comment));
+
+    return () => window.Echo.leave(`App.Models.Task.${task.id}`);
+  };
+
+  return { initUserWebSocket, initProjectWebSocket, initTaskWebSocket };
 }

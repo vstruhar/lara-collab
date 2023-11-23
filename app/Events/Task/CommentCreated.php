@@ -2,25 +2,25 @@
 
 namespace App\Events\Task;
 
-use App\Models\Task;
+use App\Models\Comment;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TaskUpdated implements ShouldBroadcast
+class CommentCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Task $task;
+    public Comment $comment;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Task $task)
+    public function __construct(Comment $comment)
     {
-        $this->task = $task->loadDefault();
+        $this->comment = $comment->load('user:id,name,avatar,job_title');
 
         $this->dontBroadcastToCurrentUser();
     }
@@ -33,7 +33,7 @@ class TaskUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel("App.Models.Project.{$this->task->project_id}"),
+            new PrivateChannel("App.Models.Task.{$this->comment->task_id}"),
         ];
     }
 }

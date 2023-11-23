@@ -36,7 +36,7 @@ const TasksIndex = () => {
   }, [taskGroups, groupedTasks]);
 
   useEffect(() => {
-    initProjectWebSocket(project);
+    return initProjectWebSocket(project);
   }, []);
 
   const onDragEnd = ({ source, destination }) => {

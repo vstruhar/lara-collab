@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Task;
 
-use App\Events\CommentCreated;
+use App\Events\Task\CommentCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Comment\StoreCommentRequest;
 use App\Models\Comment;

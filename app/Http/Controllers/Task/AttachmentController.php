@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Task;
 
 use App\Actions\Task\CreateTask;
+use App\Events\Task\AttachmentDeleted;
 use App\Http\Controllers\Controller;
 use App\Models\Attachment;
 use App\Models\Project;
@@ -26,6 +27,8 @@ class AttachmentController extends Controller
         File::delete(public_path($attachment->thumb));
 
         $attachment->delete();
+
+        AttachmentDeleted::dispatch($task, $attachment->id);
 
         return response()->json();
     }

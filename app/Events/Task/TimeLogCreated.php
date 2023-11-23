@@ -3,25 +3,27 @@
 namespace App\Events\Task;
 
 use App\Models\Task;
+use App\Models\TimeLog;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TaskUpdated implements ShouldBroadcast
+class TimeLogCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Task $task;
+    public TimeLog $timeLog;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Task $task)
-    {
-        $this->task = $task->loadDefault();
-
+    public function __construct(
+        private Task $task,
+        TimeLog $timeLog,
+    ) {
+        $this->timeLog = $timeLog->load(['user:id,name']);
         $this->dontBroadcastToCurrentUser();
     }
 

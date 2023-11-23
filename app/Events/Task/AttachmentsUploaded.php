@@ -8,20 +8,19 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
-class TaskUpdated implements ShouldBroadcast
+class AttachmentsUploaded implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public Task $task;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Task $task)
-    {
-        $this->task = $task->loadDefault();
-
+    public function __construct(
+        private Task $task,
+        public Collection $attachments,
+    ) {
         $this->dontBroadcastToCurrentUser();
     }
 

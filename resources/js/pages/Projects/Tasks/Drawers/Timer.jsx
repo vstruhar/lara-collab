@@ -2,7 +2,7 @@ import useTasksStore from "@/hooks/store/useTasksStore";
 import useTimer from "@/hooks/useTimer";
 import { dateTime } from "@/utils/datetime";
 import { humanReadableTime, isTimeValueValid } from "@/utils/timer";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import {
   ActionIcon,
   Box,
@@ -24,6 +24,9 @@ import { useEffect, useState } from "react";
 import classes from "./css/Timer.module.css";
 
 export default function Timer({ task, ...props }) {
+  const {
+    auth: { user },
+  } = usePage().props;
   const [totalMinutes, setTotalMinutes] = useState(0);
   const { timerValue, setTimerValue, isTimerRunning, runningTimer } =
     useTimer(task);
@@ -130,13 +133,14 @@ export default function Timer({ task, ...props }) {
                     </Text>
                   ) : (
                     <Group gap={7}>
-                      {can("delete time log") && (
-                        <IconX
-                          className={classes.delete}
-                          stroke={1.5}
-                          onClick={() => deleteTimerLog(task, timeLog.id)}
-                        />
-                      )}
+                      {can("delete time log") &&
+                        timeLog.user_id === user.id && (
+                          <IconX
+                            className={classes.delete}
+                            stroke={1.5}
+                            onClick={() => deleteTimerLog(task, timeLog.id)}
+                          />
+                        )}
                       <Tooltip
                         label={dateTime(timeLog.created_at)}
                         openDelay={250}

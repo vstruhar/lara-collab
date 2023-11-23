@@ -2,6 +2,7 @@
 
 namespace App\Actions\Task;
 
+use App\Events\Task\AttachmentsUploaded;
 use App\Events\Task\TaskCreated;
 use App\Models\Project;
 use App\Models\Task;
@@ -31,6 +32,8 @@ class CreateTask
                 'billable' => $data['billable'],
                 'completed_at' => null,
             ]);
+
+            $task->moveToStart();
 
             $task->subscribedUsers()->attach($data['subscribed_users'] ?? []);
 
@@ -65,7 +68,11 @@ class CreateTask
                 ];
             });
 
-        return $task->attachments()->createMany($rows);
+        $attachments = $task->attachments()->createMany($rows);
+
+        AttachmentsUploaded::dispatch($task, $attachments);
+
+        return $attachments;
     }
 
     protected function generateThumb(UploadedFile $file, Task $task, string $filename)

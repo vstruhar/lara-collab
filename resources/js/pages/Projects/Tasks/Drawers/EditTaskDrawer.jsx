@@ -2,6 +2,7 @@ import Dropzone from "@/components/Dropzone";
 import RichTextEditor from "@/components/RichTextEditor";
 import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
+import useWebSockets from "@/hooks/useWebSockets";
 import { date } from "@/utils/datetime";
 import { hasRoles } from "@/utils/user";
 import { usePage } from "@inertiajs/react";
@@ -27,6 +28,7 @@ import classes from "./css/TaskDrawer.module.css";
 
 export function EditTaskDrawer() {
   const { edit, openEditTask, closeEditTask } = useTaskDrawerStore();
+  const { initTaskWebSocket } = useWebSockets();
   const {
     findTask,
     updateTask,
@@ -62,7 +64,13 @@ export function EditTaskDrawer() {
   });
 
   useEffect(() => {
-    if (edit.opened)
+    if (edit.opened) {
+      return initTaskWebSocket(task);
+    }
+  }, [edit.opened]);
+
+  useEffect(() => {
+    if (edit.opened) {
       setData({
         group_id: task?.group_id || "",
         assigned_to_user_id: task?.assigned_to_user_id || "",
@@ -70,14 +78,17 @@ export function EditTaskDrawer() {
         description: task?.description || "",
         estimation: task?.estimation || "",
         due_on: task?.due_on ? dayjs(task?.due_on).toDate() : "",
-        hidden_from_clients: task?.hidden_from_clients || false,
-        billable: task?.billable || true,
+        hidden_from_clients: task?.hidden_from_clients
+          ? task.hidden_from_clients
+          : false,
+        billable: task?.billable ? task.billable : true,
         subscribed_users: (task?.subscribed_users || []).map((i) =>
           i.id.toString(),
         ),
         labels: (task?.labels || []).map((i) => i.id),
       });
-  }, [edit.opened]);
+    }
+  }, [edit.opened, task]);
 
   const updateValue = (field, value) => {
     setData({ ...data, [field]: value });
@@ -177,7 +188,7 @@ export function EditTaskDrawer() {
                 label="Task group"
                 placeholder="Select task group"
                 allowDeselect={false}
-                value={data.group_id}
+                value={data.group_id.toString()}
                 onChange={(value) => updateValue("group_id", value)}
                 onBlur={submit}
                 data={taskGroups.map((i) => ({
@@ -192,7 +203,7 @@ export function EditTaskDrawer() {
                 placeholder="Select assignee"
                 searchable
                 mt="md"
-                value={data.assigned_to_user_id}
+                value={data.assigned_to_user_id.toString()}
                 onChange={(value) => updateValue("assigned_to_user_id", value)}
                 onBlur={submit}
                 data={usersWithAccessToProject.map((i) => ({
