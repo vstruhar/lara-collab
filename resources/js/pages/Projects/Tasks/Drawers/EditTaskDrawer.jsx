@@ -43,7 +43,7 @@ export function EditTaskDrawer() {
     if (openedTask) setTimeout(() => openEditTask(openedTask), 50);
   }, []);
 
-  const task = findTask(edit.task.id) || openedTask;
+  const task = findTask(edit.task.id);
 
   const [data, setData] = useState({
     group_id: "",
@@ -101,7 +101,7 @@ export function EditTaskDrawer() {
     }
   };
 
-  const submit = (property) => {
+  const onBlurUpdate = (property) => {
     if (data.name.length > 0) {
       updateTaskProperty(task, property, data[property]);
     }
@@ -156,7 +156,7 @@ export function EditTaskDrawer() {
                 placeholder="Task name"
                 value={data.name}
                 onChange={(e) => updateValue("name", e.target.value)}
-                onBlur={() => submit("name")}
+                onBlur={() => onBlurUpdate("name")}
                 error={data.name.length === 0}
                 readOnly={!can("edit task")}
               />
@@ -165,9 +165,10 @@ export function EditTaskDrawer() {
                 mt="xl"
                 placeholder="Task description"
                 content={data.description}
+                changingContent={task?.description}
                 height={260}
                 onChange={(content) => updateValue("description", content)}
-                onBlur={() => submit("description")}
+                onBlur={() => onBlurUpdate("description")}
                 readOnly={!can("edit task")}
               />
 

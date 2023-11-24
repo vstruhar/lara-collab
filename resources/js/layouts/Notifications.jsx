@@ -12,7 +12,7 @@ import {
   UnstyledButton,
   rem,
 } from "@mantine/core";
-import { IconBellFilled, IconMessage, IconRocket } from "@tabler/icons-react";
+import { IconBellFilled, IconMessage } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import classes from "./css/Notifications.module.css";
 
@@ -82,24 +82,22 @@ export default function Notifications() {
                     <div>
                       <Text fz={13}>{notification.title}</Text>
                       <Text fz={11} c="dimmed">
-                        {`${notification.subtitle}, ${dateTime(
-                          notification.created_at,
-                        )}`}
+                        {`${notification.subtitle}, ${dateTime(notification.created_at)}`}
                       </Text>
                     </div>
                   </Group>
                 </Menu.Item>
               ))
             ) : (
-              <Center mih={100}>
+              <Center mih={100} opacity={0.75}>
                 <Group>
-                  <IconRocket style={{ width: rem(35), height: rem(35) }} />
+                  <IconMessage style={{ width: rem(35), height: rem(35) }} />
                   <div>
                     <Text size="lg" fw={600} c="dimmed">
-                      All caught up!
+                      No notifications
                     </Text>
                     <Text fz={13} c="dimmed" opacity={0.5}>
-                      No pending notifications
+                      List of recent notifications
                     </Text>
                   </div>
                 </Group>

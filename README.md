@@ -10,7 +10,4 @@ LaraCollab is a project management tool build with Laravel.
 2. Create "OAuth Client ID", select Web application when asked for type ([link](https://console.cloud.google.com/apis/credentials)).
 3. Use generated "Client ID" and "Client secret" in the `.env` (`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`).
 
-TODO:
-
--   update task when webhook is received (also add comment if current task was updated)
 -   list all notifications

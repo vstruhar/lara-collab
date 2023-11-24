@@ -11,19 +11,14 @@ export default function RichTextEditor({
   onChange,
   placeholder,
   content,
+  changingContent,
   height = 200,
   readOnly = false,
   ...props
 }) {
   const editor = useEditor({
     editable: !readOnly,
-    extensions: [
-      StarterKit,
-      Underline,
-      Link,
-      Highlight,
-      Placeholder.configure({ placeholder }),
-    ],
+    extensions: [StarterKit, Underline, Link, Highlight, Placeholder.configure({ placeholder })],
     content,
     onUpdate({ editor }) {
       onChange(editor.getHTML());
@@ -31,9 +26,8 @@ export default function RichTextEditor({
   });
 
   useDidUpdate(() => {
-    // clear editor if parent content was cleared
-    if (content.length === 0) editor.commands.setContent("");
-  }, [content]);
+    editor.commands.setContent(changingContent);
+  }, [changingContent]);
 
   const colorScheme = useColorScheme();
 

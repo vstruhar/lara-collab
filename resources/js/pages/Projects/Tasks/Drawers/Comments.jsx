@@ -41,6 +41,7 @@ export default function Comments({ task }) {
         placeholder="Write a comment"
         height={100}
         content={comment}
+        changingContent={comment}
         onChange={(content) => setComment(content)}
       />
       <Flex justify="flex-end">
@@ -74,11 +75,7 @@ export default function Comments({ task }) {
                     </Text>
                   </div>
                 </Group>
-                <Tooltip
-                  label={dateTime(comment.created_at)}
-                  openDelay={250}
-                  withArrow
-                >
+                <Tooltip label={dateTime(comment.created_at)} openDelay={250} withArrow>
                   <Text size="xs" c="dimmed">
                     {diffForHumans(comment.created_at)}
                   </Text>
