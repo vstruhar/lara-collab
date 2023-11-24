@@ -1,6 +1,7 @@
 .indicator div {
     font-weight: 700;
     font-size: 11px;
+    pointer-events: none;
 }
 
 .icon {

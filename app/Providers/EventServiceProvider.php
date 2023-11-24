@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\CommentCreated;
+use App\Events\Task\CommentCreated;
 use App\Events\Task\TaskCreated;
 use App\Events\UserCreated;
 use App\Listeners\NotifyTaskSubscribers;

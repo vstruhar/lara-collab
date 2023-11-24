@@ -1,6 +1,6 @@
 import useNotificationsStore from "@/hooks/store/useNotificationsStore";
 import { dateTime } from "@/utils/datetime";
-import { redirectToUrl } from "@/utils/route";
+import { redirectTo, redirectToUrl } from "@/utils/route";
 import {
   ActionIcon,
   Affix,
@@ -52,10 +52,10 @@ export default function Notifications() {
             </ActionIcon>
           </Menu.Target>
 
-          <Menu.Dropdown miw={340}>
+          <Menu.Dropdown miw={340} maw={400}>
             <Menu.Label>
               <Group justify="space-between">
-                <Text c="white" fz="md" fw={600}>
+                <Text c="white" fz={20} fw={600}>
                   Notifications
                 </Text>
                 {unreadCount > 0 && (
@@ -67,6 +67,7 @@ export default function Notifications() {
             </Menu.Label>
 
             <Menu.Divider />
+
             {notifications.length ? (
               notifications.map((notification) => (
                 <Menu.Item
@@ -74,13 +75,15 @@ export default function Notifications() {
                   onClick={() => open(notification)}
                   opacity={notification.read_at ? 0.4 : 1}
                 >
-                  <Group>
+                  <Group wrap="nowrap">
                     <IconMessage
-                      style={{ width: rem(30), height: rem(30) }}
+                      style={{ width: rem(30), height: rem(30), flexShrink: 0 }}
                       className={notification.read_at ? null : classes.icon}
                     />
                     <div>
-                      <Text fz={13}>{notification.title}</Text>
+                      <Text fz={13} lh={rem(16)}>
+                        {notification.title}
+                      </Text>
                       <Text fz={11} c="dimmed">
                         {`${notification.subtitle}, ${dateTime(notification.created_at)}`}
                       </Text>
@@ -103,6 +106,10 @@ export default function Notifications() {
                 </Group>
               </Center>
             )}
+            <Menu.Divider />
+            <Menu.Item fz={13} onClick={() => redirectTo("notifications")}>
+              View all my notifications
+            </Menu.Item>
           </Menu.Dropdown>
         </Indicator>
       </Menu>

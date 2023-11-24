@@ -118,10 +118,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Account
     Route::group(['prefix' => 'account', 'as' => 'account.'], function () {
         Route::resource('profile', ProfileController::class)->except(['show']);
-        Route::resource('notifications', NotificationController::class)->except(['show']);
     });
 
     // Notifications
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::put('notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
     Route::put('notifications/read/all', [NotificationController::class, 'readAll'])->name('notifications.read.all');
 

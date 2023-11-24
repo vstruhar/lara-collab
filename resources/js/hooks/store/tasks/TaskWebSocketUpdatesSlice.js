@@ -59,7 +59,6 @@ const createTaskWebSocketUpdatesSlice = (set, get) => ({
   },
   addTimeLogLocally: (timeLog) => {
     return set(produce(state => {
-      console.log(timeLog);
       const task = get().findTask(timeLog.task_id);
       const index = state.tasks[task.group_id].findIndex(i => i.id === task.id);
 

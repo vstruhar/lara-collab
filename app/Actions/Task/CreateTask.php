@@ -39,7 +39,9 @@ class CreateTask
 
             $task->labels()->attach($data['labels'] ?? []);
 
-            $this->uploadAttachments($task, $data['attachments'] ?? []);
+            if (! empty($data['attachments'])) {
+                $this->uploadAttachments($task, $data['attachments'], false);
+            }
 
             TaskCreated::dispatch($task);
 
@@ -47,7 +49,7 @@ class CreateTask
         });
     }
 
-    public function uploadAttachments(Task $task, array $items): Collection
+    public function uploadAttachments(Task $task, array $items, $dispatchEvent = true): Collection
     {
         $rows = collect($items)
             ->map(function (UploadedFile $item) use ($task) {
@@ -70,7 +72,9 @@ class CreateTask
 
         $attachments = $task->attachments()->createMany($rows);
 
-        AttachmentsUploaded::dispatch($task, $attachments);
+        if ($dispatchEvent) {
+            AttachmentsUploaded::dispatch($task, $attachments);
+        }
 
         return $attachments;
     }
