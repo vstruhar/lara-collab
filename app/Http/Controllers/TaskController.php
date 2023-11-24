@@ -74,9 +74,8 @@ class TaskController extends Controller
         $this->authorize('update', [$task, $project]);
 
         (new UpdateTask)->update($task, $request->validated());
-        $task->refresh()->loadDefault();
 
-        return response()->json(['task' => $task]);
+        return response()->json();
     }
 
     public function reorder(Request $request, Project $project): JsonResponse
@@ -120,7 +119,7 @@ class TaskController extends Controller
         $task->update([
             'completed_at' => ($request->completed === true) ? now() : null,
         ]);
-        TaskUpdated::dispatch($task);
+        TaskUpdated::dispatch($task, 'completed_at');
 
         return response()->json();
     }

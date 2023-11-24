@@ -7,26 +7,20 @@ const createTaskWebSocketUpdatesSlice = (set, get) => ({
       state.tasks[task.group_id] = [task, ...state.tasks[task.group_id]];
     }));
   },
-  updateTaskLocally: (newTask) => {
+  updateTaskLocally: (taskId, property, value) => {
     return set(produce(state => {
-      const task = get().findTask(newTask.id);
+      const task = get().findTask(taskId);
       const index = state.tasks[task.group_id].findIndex((i) => i.id === task.id);
 
-      if (task.group_id !== newTask.group_id) {
-        const result = move(state.tasks, task.group_id, newTask.group_id, index, 0);
+      if (property === 'group_id' && task.group_id !== value) {
+        const result = move(state.tasks, task.group_id, value, index, 0);
 
         state.tasks[task.group_id] = result[task.group_id];
-        state.tasks[newTask.group_id] = result[newTask.group_id];
+        state.tasks[value] = result[value];
 
-        state.tasks[newTask.group_id][0] = {
-          ...state.tasks[newTask.group_id][0],
-          ...newTask,
-        }
+        state.tasks[value][0][property] = value;
       } else {
-        state.tasks[task.group_id][index] = {
-          ...state.tasks[task.group_id][index],
-          ...newTask,
-        }
+        state.tasks[task.group_id][index][property] = value;
       }
     }));
   },
@@ -87,9 +81,11 @@ const createTaskWebSocketUpdatesSlice = (set, get) => ({
   moveTaskLocally: (fromGroupId, toGroupId, fromIndex, toIndex) => {
     const result = move(get().tasks, fromGroupId, toGroupId, fromIndex, toIndex);
 
+
     return set(produce(state => {
       state.tasks[fromGroupId] = result[fromGroupId];
       state.tasks[toGroupId] = result[toGroupId];
+      state.tasks[toGroupId][toIndex] = {...state.tasks[toGroupId][toIndex], group_id: toGroupId};
     }));
   },
 });

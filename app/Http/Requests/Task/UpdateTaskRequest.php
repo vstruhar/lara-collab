@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Task;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -23,14 +22,14 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string:255'],
-            'group_id' => ['required', 'exists:task_groups,id'],
+            'name' => ['string:255'],
+            'group_id' => ['exists:task_groups,id'],
             'assigned_to_user_id' => ['nullable', 'exists:users,id'],
             'description' => ['nullable'],
             'estimation' => ['nullable'],
             'due_on' => ['nullable'],
-            'hidden_from_clients' => ['required', 'boolean'],
-            'billable' => ['required', 'boolean'],
+            'hidden_from_clients' => ['boolean'],
+            'billable' => ['boolean'],
             'subscribed_users' => ['array'],
             'labels' => ['array'],
         ];

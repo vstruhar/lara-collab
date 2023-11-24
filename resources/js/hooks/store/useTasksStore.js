@@ -15,6 +15,15 @@ const useTasksStore = create((set, get) => ({
 
   tasks: {},
   setTasks: (tasks) => set(() => ({ tasks: { ...tasks } })),
+  addTask: (task) => {
+    return set(produce(state => {
+      const index = state.tasks[task.group_id].findIndex((i) => i.id === task.id);
+
+      if (index === -1) {
+        state.tasks[task.group_id] = [...state.tasks[task.group_id], task];
+      }
+    }));
+  },
   findTask: (id) => {
     for (const groupId in get().tasks) {
       const task = get().tasks[groupId].find((i) => i.id === id);
@@ -25,38 +34,32 @@ const useTasksStore = create((set, get) => ({
     }
     return null;
   },
-  updateTask: async (task, data) => {
+  updateTaskProperty: async (task, property, value, options = null) => {
     try {
-      const response = await axios
+      await axios
         .put(
           route("projects.tasks.update", [task.project_id, task.id]),
-          data,
+          { [property]: value },
           { progress: false },
         );
 
       return set(produce(state => {
         const index = state.tasks[task.group_id].findIndex((i) => i.id === task.id);
 
-        if (task.group_id !== data.group_id) {
-          const result = move(state.tasks, task.group_id, data.group_id, index, 0);
+        if (property === 'group_id' && task.group_id !== value) {
+          const result = move(state.tasks, task.group_id, value, index, 0);
 
           state.tasks[task.group_id] = result[task.group_id];
-          state.tasks[data.group_id] = result[data.group_id];
+          state.tasks[value] = result[value];
 
-          state.tasks[data.group_id][0] = {
-            ...state.tasks[data.group_id][0],
-            ...response.data.task,
-          }
+          state.tasks[value][0][property] = value;
         } else {
-          state.tasks[task.group_id][index] = {
-            ...state.tasks[task.group_id][index],
-            ...response.data.task,
-          }
+          state.tasks[task.group_id][index][property] = options || value;
         }
       }));
     } catch (e) {
       console.error(e);
-      alert("Failed to save task changes");
+      alert("Failed to save task property change");
     }
   },
   complete: (task, checked) => {

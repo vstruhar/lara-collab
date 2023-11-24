@@ -49,12 +49,7 @@ export default function Dropzone({ selected, onChange, remove, ...props }) {
         onReject={(files) => console.log("rejected files", files)}
         {...props}
       >
-        <Group
-          justify="center"
-          gap="md"
-          mih={50}
-          style={{ pointerEvents: "none" }}
-        >
+        <Group justify="center" gap="md" mih={50} style={{ pointerEvents: "none" }}>
           <MantineDropzone.Accept>
             <IconUpload
               style={{
@@ -88,7 +83,7 @@ export default function Dropzone({ selected, onChange, remove, ...props }) {
 
           <div>
             <Text size="md" inline>
-              Drag files here or click to select files
+              Drag files here or click to select
             </Text>
             <Text size="xs" c="dimmed" inline mt={7}>
               Files of any type will be accepted

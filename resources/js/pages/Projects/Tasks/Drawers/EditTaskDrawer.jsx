@@ -29,13 +29,8 @@ import classes from "./css/TaskDrawer.module.css";
 export function EditTaskDrawer() {
   const { edit, openEditTask, closeEditTask } = useTaskDrawerStore();
   const { initTaskWebSocket } = useWebSockets();
-  const {
-    findTask,
-    updateTask,
-    complete,
-    deleteAttachment,
-    uploadAttachments,
-  } = useTasksStore();
+  const { findTask, updateTaskProperty, complete, deleteAttachment, uploadAttachments } =
+    useTasksStore();
   const {
     usersWithAccessToProject,
     taskGroups,
@@ -55,7 +50,7 @@ export function EditTaskDrawer() {
     assigned_to_user_id: "",
     name: "",
     description: "",
-    estimation: "",
+    estimation: 0,
     due_on: "",
     hidden_from_clients: false,
     billable: true,
@@ -76,15 +71,12 @@ export function EditTaskDrawer() {
         assigned_to_user_id: task?.assigned_to_user_id || "",
         name: task?.name || "",
         description: task?.description || "",
-        estimation: task?.estimation || "",
+        estimation: task?.estimation || 0,
         due_on: task?.due_on ? dayjs(task?.due_on).toDate() : "",
-        hidden_from_clients: task?.hidden_from_clients
-          ? task.hidden_from_clients
-          : false,
-        billable: task?.billable ? task.billable : true,
-        subscribed_users: (task?.subscribed_users || []).map((i) =>
-          i.id.toString(),
-        ),
+        hidden_from_clients:
+          task?.hidden_from_clients !== undefined ? task.hidden_from_clients : false,
+        billable: task?.billable !== undefined ? task.billable : true,
+        subscribed_users: (task?.subscribed_users || []).map((i) => i.id.toString()),
         labels: (task?.labels || []).map((i) => i.id),
       });
     }
@@ -92,11 +84,26 @@ export function EditTaskDrawer() {
 
   const updateValue = (field, value) => {
     setData({ ...data, [field]: value });
+
+    const dropdowns = ["labels", "subscribed_users"];
+    const onBlurInputs = ["name", "description"];
+
+    if (dropdowns.includes(field)) {
+      const options = {
+        labels: value.map((id) => labels.find((i) => i.id === id)),
+        subscribed_users: value.map((id) =>
+          usersWithAccessToProject.find((i) => i.id.toString() === id),
+        ),
+      };
+      updateTaskProperty(task, field, value, options[field]);
+    } else if (!onBlurInputs.includes(field)) {
+      updateTaskProperty(task, field, value);
+    }
   };
 
-  const submit = () => {
+  const submit = (property) => {
     if (data.name.length > 0) {
-      updateTask(task, data);
+      updateTaskProperty(task, property, data[property]);
     }
   };
 
@@ -112,9 +119,7 @@ export function EditTaskDrawer() {
             color="green"
             checked={task?.completed_at !== null}
             onChange={(e) => complete(task, e.currentTarget.checked)}
-            className={
-              can("complete task") ? classes.checkbox : classes.disabledCheckbox
-            }
+            className={can("complete task") ? classes.checkbox : classes.disabledCheckbox}
           />
           <Text
             fz={rem(28)}
@@ -137,13 +142,7 @@ export function EditTaskDrawer() {
     >
       {task ? (
         <>
-          <Breadcrumbs
-            c="dark.3"
-            ml={24}
-            mb="xs"
-            separator="I"
-            separatorMargin="sm"
-          >
+          <Breadcrumbs c="dark.3" ml={24} mb="xs" separator="I" separatorMargin="sm">
             <Text size="xs">{task.project.name}</Text>
             <Text size="xs">Task #{task.number}</Text>
             <Text size="xs">
@@ -157,7 +156,7 @@ export function EditTaskDrawer() {
                 placeholder="Task name"
                 value={data.name}
                 onChange={(e) => updateValue("name", e.target.value)}
-                onBlur={submit}
+                onBlur={() => submit("name")}
                 error={data.name.length === 0}
                 readOnly={!can("edit task")}
               />
@@ -168,7 +167,7 @@ export function EditTaskDrawer() {
                 content={data.description}
                 height={260}
                 onChange={(content) => updateValue("description", content)}
-                onBlur={submit}
+                onBlur={() => submit("description")}
                 readOnly={!can("edit task")}
               />
 
@@ -190,7 +189,6 @@ export function EditTaskDrawer() {
                 allowDeselect={false}
                 value={data.group_id.toString()}
                 onChange={(value) => updateValue("group_id", value)}
-                onBlur={submit}
                 data={taskGroups.map((i) => ({
                   value: i.id.toString(),
                   label: i.name,
@@ -205,7 +203,6 @@ export function EditTaskDrawer() {
                 mt="md"
                 value={data.assigned_to_user_id.toString()}
                 onChange={(value) => updateValue("assigned_to_user_id", value)}
-                onBlur={submit}
                 data={usersWithAccessToProject.map((i) => ({
                   value: i.id.toString(),
                   label: i.name,
@@ -222,7 +219,6 @@ export function EditTaskDrawer() {
                 placeholder="Pick task due date"
                 value={data.due_on}
                 onChange={(value) => updateValue("due_on", value)}
-                onBlur={submit}
                 readOnly={!can("edit task")}
               />
 
@@ -230,7 +226,6 @@ export function EditTaskDrawer() {
                 items={labels}
                 selected={data.labels}
                 onChange={(values) => updateValue("labels", values)}
-                onBlur={submit}
                 mt="md"
               />
 
@@ -245,22 +240,16 @@ export function EditTaskDrawer() {
                 step={0.5}
                 suffix=" hours"
                 onChange={(value) => updateValue("estimation", value)}
-                onBlur={submit}
                 readOnly={!can("edit task")}
               />
 
-              {(can("view time logs") || can("add time log")) && (
-                <Timer mt="xl" task={task} />
-              )}
+              {(can("view time logs") || can("add time log")) && <Timer mt="xl" task={task} />}
 
               <Checkbox
                 label="Billable"
                 mt="xl"
                 checked={data.billable}
-                onChange={(event) =>
-                  updateValue("billable", event.currentTarget.checked)
-                }
-                onBlur={submit}
+                onChange={(event) => updateValue("billable", event.currentTarget.checked)}
                 disabled={!can("edit task")}
               />
 
@@ -270,25 +259,18 @@ export function EditTaskDrawer() {
                   mt="md"
                   checked={data.hidden_from_clients}
                   onChange={(event) =>
-                    updateValue(
-                      "hidden_from_clients",
-                      event.currentTarget.checked,
-                    )
+                    updateValue("hidden_from_clients", event.currentTarget.checked)
                   }
-                  onBlur={submit}
                   disabled={!can("edit task")}
                 />
               )}
 
               <MultiSelect
                 label="Subscribers"
-                placeholder={
-                  !data.subscribed_users.length ? "Select subscribers" : null
-                }
+                placeholder={!data.subscribed_users.length ? "Select subscribers" : null}
                 mt="lg"
                 value={data.subscribed_users}
                 onChange={(values) => updateValue("subscribed_users", values)}
-                onBlur={submit}
                 data={usersWithAccessToProject.map((i) => ({
                   value: i.id.toString(),
                   label: i.name,

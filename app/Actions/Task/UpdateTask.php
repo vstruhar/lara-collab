@@ -7,25 +7,26 @@ use App\Models\Task;
 
 class UpdateTask
 {
-    public function update(Task $task, array $data): bool
+    public function update(Task $task, array $data): void
     {
-        $success = $task->update([
-            'group_id' => $data['group_id'],
-            'assigned_to_user_id' => $data['assigned_to_user_id'],
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'due_on' => $data['due_on'],
-            'estimation' => $data['estimation'],
-            'hidden_from_clients' => $data['hidden_from_clients'],
-            'billable' => $data['billable'],
-        ]);
+        $updateField = key($data);
 
-        $task->subscribedUsers()->sync($data['subscribed_users']);
+        if (! in_array($updateField, ['subscribed_users', 'labels'])) {
+            $task->update($data);
 
-        $task->labels()->sync($data['labels']);
+            if ($updateField === 'group_id') {
+                $task->update(['order_column' => 0]);
+            }
+        }
 
-        TaskUpdated::dispatch($task);
+        if ($updateField === 'subscribed_users') {
+            $task->subscribedUsers()->sync($data['subscribed_users']);
+        }
 
-        return $success;
+        if ($updateField === 'labels') {
+            $task->labels()->sync($data['labels']);
+        }
+
+        TaskUpdated::dispatch($task, $updateField);
     }
 }

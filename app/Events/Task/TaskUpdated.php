@@ -13,14 +13,26 @@ class TaskUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Task $task;
+    private Task $task;
+
+    public int $taskId;
+
+    public string $property;
+
+    public mixed $value;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Task $task)
-    {
+    public function __construct(
+        Task $task,
+        string $updateField,
+    ) {
         $this->task = $task->loadDefault();
+
+        $this->taskId = $task->id;
+        $this->property = $updateField;
+        $this->value = $this->task->toArray()[$updateField];
 
         $this->dontBroadcastToCurrentUser();
     }

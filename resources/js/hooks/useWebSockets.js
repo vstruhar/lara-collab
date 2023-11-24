@@ -26,7 +26,7 @@ export default function useWebSockets() {
   const initProjectWebSocket = (project) => {
     window.Echo.private(`App.Models.Project.${project.id}`)
       .listen('Task\\TaskCreated', (e) => addTaskLocally(e.task))
-      .listen('Task\\TaskUpdated', (e) => updateTaskLocally(e.task))
+      .listen('Task\\TaskUpdated', (e) => updateTaskLocally(e.taskId, e.property, e.value))
       .listen('Task\\TaskDeleted', (e) => removeTaskLocally(e.taskId))
       .listen('Task\\TaskRestored', (e) => restoreTaskLocally(e.groupId, e.task))
       .listen('Task\\CommentCreated', (e) => addCommentLocally(e.comment))

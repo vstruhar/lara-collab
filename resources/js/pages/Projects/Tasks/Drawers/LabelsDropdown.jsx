@@ -11,26 +11,16 @@ import {
   useCombobox,
 } from "@mantine/core";
 
-export default function LabelsDropdown({
-  items,
-  selected,
-  onChange,
-  ...props
-}) {
+export default function LabelsDropdown({ items, selected, onChange, ...props }) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
   });
 
   const handleValueSelect = (val) =>
-    onChange(
-      selected.includes(val)
-        ? selected.filter((v) => v !== val)
-        : [...selected, val],
-    );
+    onChange(selected.includes(val) ? selected.filter((v) => v !== val) : [...selected, val]);
 
-  const handleValueRemove = (val) =>
-    onChange(selected.filter((v) => v !== val));
+  const handleValueRemove = (val) => onChange(selected.filter((v) => v !== val));
 
   return (
     <Box {...props}>
@@ -81,11 +71,7 @@ export default function LabelsDropdown({
         <Combobox.Dropdown>
           <Combobox.Options>
             {items.map((label) => (
-              <Combobox.Option
-                value={label.id}
-                key={label.id}
-                active={selected.includes(label.id)}
-              >
+              <Combobox.Option value={label.id} key={label.id} active={selected.includes(label.id)}>
                 <Group gap="sm">
                   {selected.includes(label.id) ? <CheckIcon size={12} /> : null}
                   <Group gap={7}>

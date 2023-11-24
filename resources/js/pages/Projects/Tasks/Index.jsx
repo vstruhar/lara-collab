@@ -20,11 +20,11 @@ import TaskGroup from "./Index/TaskGroup";
 let currentProject = null;
 
 const TasksIndex = () => {
-  const { project, taskGroups, groupedTasks } = usePage().props;
+  const { project, taskGroups, groupedTasks, openedTask } = usePage().props;
   currentProject = project;
 
   const { groups, setGroups, reorderGroup } = useGroupsStore();
-  const { tasks, setTasks, reorderTask, moveTask } = useTasksStore();
+  const { tasks, setTasks, addTask, reorderTask, moveTask } = useTasksStore();
   const { hasUrlParams } = useTaskFiltersStore();
   const { initProjectWebSocket } = useWebSockets();
 
@@ -33,6 +33,7 @@ const TasksIndex = () => {
   useEffect(() => {
     setGroups(taskGroups);
     setTasks(groupedTasks);
+    if (openedTask) addTask(openedTask);
   }, [taskGroups, groupedTasks]);
 
   useEffect(() => {
