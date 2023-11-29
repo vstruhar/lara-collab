@@ -2,12 +2,7 @@ import { redirectTo } from "@/utils/route";
 import { getInitials } from "@/utils/user";
 import { router, usePage } from "@inertiajs/react";
 import { Avatar, Group, Menu, Text, UnstyledButton, rem } from "@mantine/core";
-import {
-  IconBell,
-  IconChevronRight,
-  IconLogout,
-  IconUser,
-} from "@tabler/icons-react";
+import { IconBell, IconChevronRight, IconLogout, IconUser } from "@tabler/icons-react";
 import classes from "./css/UserButton.module.css";
 
 export default function UserButton() {
@@ -38,10 +33,7 @@ export default function UserButton() {
               </Text>
             </div>
 
-            <IconChevronRight
-              style={{ width: rem(14), height: rem(14) }}
-              stroke={1.5}
-            />
+            <IconChevronRight style={{ width: rem(14), height: rem(14) }} stroke={1.5} />
           </Group>
         </UnstyledButton>
       </Menu.Target>
@@ -50,11 +42,13 @@ export default function UserButton() {
         <Menu.Label>Account</Menu.Label>
         <Menu.Item
           leftSection={<IconUser style={{ width: rem(14), height: rem(14) }} />}
+          onClick={() => redirectTo("account.profile.edit")}
         >
           My Profile
         </Menu.Item>
         <Menu.Item
           leftSection={<IconBell style={{ width: rem(14), height: rem(14) }} />}
+          onClick={() => redirectTo("notifications")}
         >
           Notifications
         </Menu.Item>
@@ -63,9 +57,7 @@ export default function UserButton() {
 
         <Menu.Item
           color="red"
-          leftSection={
-            <IconLogout style={{ width: rem(14), height: rem(14) }} />
-          }
+          leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
           onClick={logout}
         >
           Logout

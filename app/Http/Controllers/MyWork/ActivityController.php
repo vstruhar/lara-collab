@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\MyWork;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Resources\Activity\ActivityGroupedByDateCollection;
+use App\Models\Activity;
+use App\Models\Project;
+use App\Services\PermissionService;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,54 +18,29 @@ class ActivityController extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('MyWork/Activity/Index', []);
-    }
+        /** @var \App\Models\User */
+        $user = auth()->user();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $projects = PermissionService::projectsThatUserCanAccess($user);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return Inertia::render('MyWork/Activity/Index', [
+            'groupedActivities' => new ActivityGroupedByDateCollection(
+                Activity::whereIn('project_id', $projects->pluck('id'))
+                    ->filterByQueryString()
+                    ->with([
+                        'activityCapable',
+                        'project',
+                    ])
+                    ->latest()
+                    ->limit(100)
+                    ->get()
+            ),
+            'dropdowns' => [
+                'projects' => Arr::prepend(
+                    Project::dropdownValues(),
+                    ['value' => '0', 'label' => 'All projects']
+                ),
+            ],
+        ]);
     }
 }

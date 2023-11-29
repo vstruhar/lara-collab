@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Notification\NotificationGroupedByDateCollection;
 use Illuminate\Notifications\DatabaseNotification;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -11,7 +12,15 @@ class NotificationController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Notifications/Index', []);
+        return Inertia::render('Account/Notifications/Index', [
+            'groups' => new NotificationGroupedByDateCollection(
+                auth()
+                    ->user()
+                    ->notifications()
+                    ->latest()
+                    ->get()
+            ),
+        ]);
     }
 
     public function read(DatabaseNotification $notification)

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\ClientCompany;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -86,7 +88,7 @@ class PermissionService
             ->load('roles:id,name')
             ->map(fn ($user) => [...$user->toArray(), 'reason' => 'given access']);
 
-        self::$usersWithAccessToProject = collect([
+        return self::$usersWithAccessToProject = collect([
             ...$admins,
             ...$owners,
             ...$givenAccess,
@@ -94,7 +96,30 @@ class PermissionService
             ->unique('id')
             ->sortBy('name')
             ->values();
+    }
 
-        return self::$usersWithAccessToProject;
+    private static $projectsThatUserCanAccess = null;
+
+    public static function projectsThatUserCanAccess(User $user): Collection
+    {
+        if (self::$projectsThatUserCanAccess !== null) {
+            return self::$projectsThatUserCanAccess;
+        }
+        if ($user->hasRole('admin')) {
+            return Project::all();
+        }
+        $projects = collect($user->projects->toArray());
+        $user->load('clientCompanies.projects');
+
+        return self::$projectsThatUserCanAccess = $projects
+            ->merge(
+                $user
+                    ->clientCompanies
+                    ->map(fn (ClientCompany $company) => $company->projects->toArray())
+                    ->collapse()
+            )
+            ->unique('id')
+            ->sortBy('name')
+            ->values();
     }
 }

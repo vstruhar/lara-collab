@@ -16,11 +16,13 @@ use Lacodix\LaravelModelFilter\Traits\IsSortable;
 use Laravel\Sanctum\HasApiTokens;
 use LaravelArchivable\Archivable;
 use Overtrue\LaravelFavorite\Traits\Favoriter;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements CanResetPasswordContract
+class User extends Authenticatable implements AuditableContract, CanResetPasswordContract
 {
-    use Archivable, CanResetPassword, Favoriter, HasApiTokens, HasFactory, HasRoles, IsSearchable, IsSortable, Notifiable;
+    use Archivable, Auditable, CanResetPassword, Favoriter, HasApiTokens, HasFactory, HasRoles, IsSearchable, IsSortable, Notifiable;
 
     protected static function booted(): void
     {

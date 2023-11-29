@@ -95,8 +95,7 @@ export default function Sidebar() {
       label: "Settings",
       icon: IconSettings,
       active: route().current("settings.*"),
-      visible:
-        can("view owner company") || can("view roles") || can("view labels"),
+      visible: can("view owner company") || can("view roles") || can("view labels"),
       links: [
         {
           label: "Company",

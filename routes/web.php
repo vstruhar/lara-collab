@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DropdownValuesController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MyWork\ActivityController;
+use App\Http\Controllers\MyWork\MyWorkTaskController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Settings\LabelController;
@@ -80,7 +81,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // My Work
     Route::group(['prefix' => 'my-work', 'as' => 'my-work.'], function () {
-        Route::resource('tasks', TaskController::class)->except(['show']);
+        Route::get('tasks', [MyWorkTaskController::class, 'index'])->name('tasks.index');
         Route::get('activity', [ActivityController::class, 'index'])->name('activity.index');
     });
 
@@ -117,7 +118,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Account
     Route::group(['prefix' => 'account', 'as' => 'account.'], function () {
-        Route::resource('profile', ProfileController::class)->except(['show']);
+        Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
     });
 
     // Notifications

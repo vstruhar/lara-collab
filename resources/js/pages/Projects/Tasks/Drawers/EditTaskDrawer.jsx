@@ -202,7 +202,7 @@ export function EditTaskDrawer() {
                 placeholder="Select assignee"
                 searchable
                 mt="md"
-                value={data.assigned_to_user_id.toString()}
+                value={data.assigned_to_user_id?.toString()}
                 onChange={(value) => updateValue("assigned_to_user_id", value)}
                 data={usersWithAccessToProject.map((i) => ({
                   value: i.id.toString(),

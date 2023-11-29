@@ -13,16 +13,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
 use Lacodix\LaravelModelFilter\Traits\HasFilters;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use LaravelArchivable\Archivable;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
-class Task extends Model implements Sortable
+class Task extends Model implements AuditableContract, Sortable
 {
-    use Archivable, HasFactory, HasFilters, IsSearchable, SortableTrait;
+    use Archivable, Auditable, HasFactory, HasFilters, IsSearchable, SortableTrait;
 
     protected $fillable = [
         'project_id',
@@ -51,6 +54,11 @@ class Task extends Model implements Sortable
         'hidden_from_clients' => 'boolean',
         'billable' => 'boolean',
         'estimation' => 'float',
+    ];
+
+    protected $observables = [
+        'archived',
+        'unArchived',
     ];
 
     public array $defaultWith = [
@@ -135,5 +143,10 @@ class Task extends Model implements Sortable
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function activities(): MorphMany
+    {
+        return $this->morphMany(Activity::class, 'activity_capable');
     }
 }

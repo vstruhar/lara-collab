@@ -7,6 +7,12 @@ use App\Events\Task\TaskCreated;
 use App\Events\UserCreated;
 use App\Listeners\NotifyTaskSubscribers;
 use App\Listeners\SendEmailWithCredentials;
+use App\Models\Comment;
+use App\Models\Project;
+use App\Models\Task;
+use App\Observers\CommentObserver;
+use App\Observers\ProjectObserver;
+use App\Observers\TaskObserver;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -27,6 +33,17 @@ class EventServiceProvider extends ServiceProvider
         CommentCreated::class => [
             NotifyTaskSubscribers::class,
         ],
+    ];
+
+    /**
+     * The model observers for your application.
+     *
+     * @var array
+     */
+    protected $observers = [
+        Project::class => [ProjectObserver::class],
+        Task::class => [TaskObserver::class],
+        Comment::class => [CommentObserver::class],
     ];
 
     /**

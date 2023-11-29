@@ -4,10 +4,14 @@ export const date = (date) => {
   return dayjs(date).format("D. MMM YYYY");
 };
 
+export const day = (date) => {
+  return dayjs(date).format("dddd");
+};
+
 export const dateTime = (datetime) => {
   return dayjs(datetime).format("D. MMM YYYY H:mm") + 'h';
 };
 
-export const diffForHumans = (datetime) => {
-  return dayjs(datetime).fromNow();
+export const diffForHumans = (datetime, withoutSuffix = false) => {
+  return dayjs(datetime).fromNow(withoutSuffix);
 };

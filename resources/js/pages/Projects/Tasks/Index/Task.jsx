@@ -20,9 +20,9 @@ export default function Task({ task, index }) {
         <Flex
           {...provided.draggableProps}
           ref={provided.innerRef}
-          className={`${classes.task} ${
-            snapshot.isDragging && classes.itemDragging
-          } ${task.completed_at !== null && classes.completed}`}
+          className={`${classes.task} ${snapshot.isDragging && classes.itemDragging} ${
+            task.completed_at !== null && classes.completed
+          }`}
           wrap="nowrap"
         >
           <Group gap="sm" wrap="nowrap">
@@ -44,19 +44,11 @@ export default function Task({ task, index }) {
               color="green"
               checked={task.completed_at !== null}
               onChange={(e) => complete(task, e.currentTarget.checked)}
-              className={
-                can("complete task")
-                  ? classes.checkbox
-                  : classes.disabledCheckbox
-              }
+              className={can("complete task") ? classes.checkbox : classes.disabledCheckbox}
             />
             {task.assigned_to_user && (
               <Link href={route("users.edit", task.assigned_to_user.id)}>
-                <Tooltip
-                  label={task.assigned_to_user.name}
-                  openDelay={1000}
-                  withArrow
-                >
+                <Tooltip label={task.assigned_to_user.name} openDelay={1000} withArrow>
                   <Pill size="sm" className={classes.user}>
                     {shortName(task.assigned_to_user.name)}
                   </Pill>
@@ -64,7 +56,6 @@ export default function Task({ task, index }) {
               </Link>
             )}
             <Text
-              key={task.id}
               className={classes.name}
               size="sm"
               fw={500}

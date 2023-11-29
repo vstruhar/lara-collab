@@ -72,6 +72,13 @@ class CreateTask
 
         $attachments = $task->attachments()->createMany($rows);
 
+        $task->activities()->create([
+            'project_id' => $task->project_id,
+            'user_id' => auth()->id(),
+            'title' => ($attachments->count() > 1 ? 'Attachments where' : 'Attachment was').' uploaded',
+            'subtitle' => "to \"{$task->name}\" by ".auth()->user()->name,
+        ]);
+
         if ($dispatchEvent) {
             AttachmentsUploaded::dispatch($task, $attachments);
         }

@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
-class OwnerCompany extends Model
+class OwnerCompany extends Model implements AuditableContract
 {
+    use Auditable;
+
     protected $table = 'owner_company';
 
     public $timestamps = false;
