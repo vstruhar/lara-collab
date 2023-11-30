@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -26,6 +27,11 @@ class DatabaseSeeder extends Seeder
                 OwnerCompanySeeder::class,
                 ClientSeeder::class,
                 ClientCompanySeeder::class,
+            ]);
+
+            auth()->setUser(User::role('admin')->first());
+
+            $this->call([
                 ProjectSeeder::class,
                 TaskGroupSeeder::class,
                 TasksSeeder::class,

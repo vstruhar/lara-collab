@@ -24,7 +24,7 @@ class PermissionService
                 'view time logs', 'view comments',
             ],
             'Invoices' => ['view invoices'],
-            'Reports' => ['view reports'],
+            'Reports' => ['view logged time sum report', 'view daily logged time report'],
             'Activities' => ['view activities'],
         ],
         'manager' => [
@@ -35,7 +35,7 @@ class PermissionService
                 'view tasks', 'create task', 'edit task', 'archive task', 'restore task', 'reorder task', 'complete task', 'add time log', 'delete time log',
                 'view time logs', 'view comments',
             ],
-            'Reports' => ['view reports'],
+            'Reports' => ['view logged time sum report', 'view daily logged time report'],
         ],
         'developer' => [
             'Project' => ['view projects', 'view project'],

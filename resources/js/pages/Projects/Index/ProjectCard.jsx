@@ -13,13 +13,7 @@ export default function ProjectCard({ item }) {
       className={classes.link}
       onClick={stopOnIgnoreLink}
     >
-      <Card
-        withBorder
-        padding="xl"
-        radius="md"
-        w={350}
-        className={classes.card}
-      >
+      <Card withBorder padding="xl" radius="md" w={350} className={classes.card}>
         <Group justify="space-between">
           <Text size="xl" fw={700} className={classes.title}>
             {item.name}
@@ -31,9 +25,11 @@ export default function ProjectCard({ item }) {
           {item.client_company?.name}
         </Text>
 
-        <Text fz="sm" c="dimmed" mt="lg">
-          {item.description}
-        </Text>
+        {item.description?.length > 0 && (
+          <Text fz="sm" c="dimmed" mt="lg">
+            {item.description}
+          </Text>
+        )}
 
         <Text c="dimmed" fz="sm" mt="md">
           Tasks completed:{" "}
@@ -42,20 +38,12 @@ export default function ProjectCard({ item }) {
           </Text>
         </Text>
 
-        <Progress
-          value={(item.completed_tasks_count / item.all_tasks_count) * 100}
-          mt={5}
-        />
+        <Progress value={(item.completed_tasks_count / item.all_tasks_count) * 100} mt={5} />
 
         <Group justify="space-between" mt="md">
           <Avatar.Group spacing="sm">
             {item.users_with_access.slice(0, 4).map((user) => (
-              <Tooltip
-                key={user.id}
-                label={user.name}
-                openDelay={300}
-                withArrow
-              >
+              <Tooltip key={user.id} label={user.name} openDelay={300} withArrow>
                 <Avatar
                   src={user.avatar}
                   radius="xl"

@@ -12,7 +12,7 @@ const TasksIndex = () => {
   let opened = projects.filter((i) => i.favorite).map((i) => i.id.toString());
 
   if (opened.length === 0) {
-    opened = projects[0].id.toString();
+    opened = projects[0]?.id.toString() || "";
   }
 
   return (

@@ -5,7 +5,6 @@ import Layout from "@/layouts/MainLayout";
 import { usePage } from "@inertiajs/react";
 import {
   Box,
-  Breadcrumbs,
   Fieldset,
   FileInput,
   Grid,
@@ -24,39 +23,31 @@ const CompanyEdit = () => {
     dropdowns: { countries, currencies },
   } = usePage().props;
 
-  const [form, submit, updateValue] = useForm(
-    "post",
-    route("settings.company.update"),
-    {
-      _method: "put",
-      logo: null,
-      name: item.name || "",
-      address: item.address || "",
-      postal_code: item.postal_code || "",
-      city: item.city || "",
-      country_id: item.country_id || "",
-      currency_id: item.currency_id || "",
-      email: item.email || "",
-      phone: item.phone || "",
-      web: item.web || "",
-      iban: item.iban || "",
-      swift: item.swift || "",
-      business_id: item.business_id || "",
-      tax_id: item.tax_id || "",
-      vat: item.vat || "",
-      tax: item.tax || 0,
-    },
-  );
+  const [form, submit, updateValue] = useForm("post", route("settings.company.update"), {
+    _method: "put",
+    logo: null,
+    name: item.name || "",
+    address: item.address || "",
+    postal_code: item.postal_code || "",
+    city: item.city || "",
+    country_id: item.country_id || "",
+    currency_id: item.currency_id || "",
+    email: item.email || "",
+    phone: item.phone || "",
+    web: item.web || "",
+    iban: item.iban || "",
+    swift: item.swift || "",
+    business_id: item.business_id || "",
+    tax_id: item.tax_id || "",
+    vat: item.vat || "",
+    tax: item.tax || 0,
+  });
 
   return (
     <>
-      <Breadcrumbs fz={14} mb={30}>
-        <div>Company</div>
-      </Breadcrumbs>
-
-      <Grid justify="space-between" align="flex-end" gutter="xl" mb="lg">
+      <Grid justify="space-between" align="flex-end" gutter="xl" mb={35}>
         <Grid.Col span="auto">
-          <Title order={1}>Edit company</Title>
+          <Title order={1}>My company</Title>
         </Grid.Col>
         <Grid.Col span="content"></Grid.Col>
       </Grid>
@@ -67,23 +58,12 @@ const CompanyEdit = () => {
             <Grid.Col span="content">
               {item.logo || form.data.logo ? (
                 <Image
-                  src={
-                    form.data.logo === null
-                      ? item.logo
-                      : URL.createObjectURL(form.data.logo)
-                  }
+                  src={form.data.logo === null ? item.logo : URL.createObjectURL(form.data.logo)}
                   w={240}
                   h={64}
                 />
               ) : (
-                <Box
-                  w={240}
-                  h={64}
-                  bg="#25262b"
-                  align="center"
-                  pt="lg"
-                  opacity={0.6}
-                >
+                <Box w={240} h={64} bg="#25262b" align="center" pt="lg" opacity={0.6}>
                   Company logo
                 </Box>
               )}

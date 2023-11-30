@@ -92,7 +92,7 @@ export default function Notifications() {
                     <Text size="lg" fw={600} c="dimmed">
                       No notifications
                     </Text>
-                    <Text fz={13} c="dimmed" opacity={0.5}>
+                    <Text size="xs" c="dimmed" opacity={0.5}>
                       List of recent notifications
                     </Text>
                   </div>

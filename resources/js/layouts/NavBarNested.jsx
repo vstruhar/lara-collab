@@ -87,9 +87,22 @@ export default function Sidebar() {
     {
       label: "Reports",
       icon: IconReportAnalytics,
-      link: route("reports.index"),
       active: route().current("reports.*"),
-      visible: can("view reports"),
+      visible: can("view logged time sum report") || can("view daily logged time report"),
+      links: [
+        {
+          label: "Logged time sum",
+          link: route("reports.logged-time.sum"),
+          active: route().current("reports.logged-time.sum"),
+          visible: can("view logged time sum report"),
+        },
+        {
+          label: "Daily logged time",
+          link: route("reports.logged-time.daily"),
+          active: route().current("reports.logged-time.daily"),
+          visible: can("view daily logged time report"),
+        },
+      ],
     },
     {
       label: "Settings",

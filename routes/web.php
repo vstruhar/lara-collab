@@ -102,7 +102,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('invoices', InvoiceController::class)->except(['show']);
 
     // Reports
-    Route::resource('reports', ReportController::class)->except(['show']);
+    Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {
+        Route::get('logged-time/sum', [ReportController::class, 'loggedTimeSum'])->name('logged-time.sum');
+        Route::get('logged-time/daily', [ReportController::class, 'dailyLoggedTime'])->name('logged-time.daily');
+    });
 
     // Settings
     Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
