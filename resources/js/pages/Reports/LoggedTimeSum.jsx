@@ -5,7 +5,6 @@ import { money } from "@/utils/currency";
 import { currentUrlParams } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import {
-  Accordion,
   Box,
   Breadcrumbs,
   Button,
@@ -34,7 +33,7 @@ const LoggedTimeSum = () => {
     dateRange:
       params.dateRange && params.dateRange[0] && params.dateRange[1]
         ? [dayjs(params.dateRange[0]).toDate(), dayjs(params.dateRange[1]).toDate()]
-        : [],
+        : [dayjs().subtract(1, "week").toDate(), dayjs().toDate()],
     completed: params.completed !== undefined ? params.completed : true,
     billable: params.billable !== undefined ? params.billable : true,
   });
@@ -109,44 +108,33 @@ const LoggedTimeSum = () => {
 
       <Box mt="xl">
         {Object.keys(projects).length ? (
-          <Accordion
-            variant="separated"
-            radius="md"
-            multiple
-            defaultValue={Object.keys(projects).map((i) => i.toString())}
-          >
-            {Object.keys(projects).map((projectId) => (
-              <Accordion.Item key={projectId} value={projectId.toString()}>
-                <Accordion.Control>
-                  <Text fz={20} fw={600}>
-                    {projects[projectId][0].project_name}
-                  </Text>
-                </Accordion.Control>
-                <Accordion.Panel>
-                  <Table horizontalSpacing="xl" verticalSpacing="md" striped highlightOnHover>
-                    <Table.Thead>
-                      <Table.Tr>
-                        <Table.Th>User</Table.Th>
-                        <Table.Th>Rate</Table.Th>
-                        <Table.Th>Logged time</Table.Th>
-                        <Table.Th>Expense</Table.Th>
-                      </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>
-                      {projects[projectId].map((row) => (
-                        <Table.Tr key={row.user_id}>
-                          <Table.Td>{row.user_name}</Table.Td>
-                          <Table.Td>{money(row.user_rate)}</Table.Td>
-                          <Table.Td>{round(row.total_hours, 2).toFixed(2)} h</Table.Td>
-                          <Table.Td>{money(row.total_hours * row.user_rate)}</Table.Td>
-                        </Table.Tr>
-                      ))}
-                    </Table.Tbody>
-                  </Table>
-                </Accordion.Panel>
-              </Accordion.Item>
-            ))}
-          </Accordion>
+          Object.keys(projects).map((projectId) => (
+            <ContainerBox key={projectId} px={35} py={15}>
+              <Text fz={20} fw={600}>
+                {projects[projectId][0].project_name}
+              </Text>
+              <Table horizontalSpacing="xl" verticalSpacing="md" striped highlightOnHover>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>User</Table.Th>
+                    <Table.Th>Rate</Table.Th>
+                    <Table.Th>Logged time</Table.Th>
+                    <Table.Th>Expense</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {projects[projectId].map((row) => (
+                    <Table.Tr key={row.user_id}>
+                      <Table.Td>{row.user_name}</Table.Td>
+                      <Table.Td>{money(row.user_rate)}</Table.Td>
+                      <Table.Td>{round(row.total_hours, 2).toFixed(2)} h</Table.Td>
+                      <Table.Td>{money(row.total_hours * row.user_rate)}</Table.Td>
+                    </Table.Tr>
+                  ))}
+                </Table.Tbody>
+              </Table>
+            </ContainerBox>
+          ))
         ) : (
           <Center mih={300}>
             <Group gap={20}>

@@ -27,12 +27,15 @@ class ReportController extends Controller
                 ->join('users', 'time_logs.user_id', '=', 'users.id')
                 ->when($request->projects, fn ($query) => $query->whereIn('projects.id', $request->projects))
                 ->when($request->users, fn ($query) => $query->whereIn('time_logs.user_id', $request->users))
-                ->when($request->dateRange, function ($query) use ($request) {
-                    $query->whereBetween('time_logs.created_at', [
-                        Carbon::parse($request->dateRange[0])->startOfDay(),
-                        Carbon::parse($request->dateRange[1])->endOfDay(),
-                    ]);
-                })
+                ->when($request->dateRange,
+                    function ($query) use ($request) {
+                        $query->whereBetween('time_logs.created_at', [
+                            Carbon::parse($request->dateRange[0])->startOfDay(),
+                            Carbon::parse($request->dateRange[1])->endOfDay(),
+                        ]);
+                    },
+                    fn ($query) => $query->where('time_logs.created_at', '>', now()->subWeek())
+                )
                 ->{$completed ? 'whereNotNull' : 'whereNull'}('tasks.completed_at')
                 ->where('billable', $request->get('billable', 'true') === 'true')
                 ->groupBy(['time_logs.user_id'])
@@ -63,12 +66,15 @@ class ReportController extends Controller
             ->join('users', 'time_logs.user_id', '=', 'users.id')
             ->when($request->projects, fn ($query) => $query->whereIn('projects.id', $request->projects))
             ->when($request->users, fn ($query) => $query->whereIn('time_logs.user_id', $request->users))
-            ->when($request->dateRange, function ($query) use ($request) {
-                $query->whereBetween('time_logs.created_at', [
-                    Carbon::parse($request->dateRange[0])->startOfDay(),
-                    Carbon::parse($request->dateRange[1])->endOfDay(),
-                ]);
-            })
+            ->when($request->dateRange,
+                function ($query) use ($request) {
+                    $query->whereBetween('time_logs.created_at', [
+                        Carbon::parse($request->dateRange[0])->startOfDay(),
+                        Carbon::parse($request->dateRange[1])->endOfDay(),
+                    ]);
+                },
+                fn ($query) => $query->where('time_logs.created_at', '>', now()->subWeek())
+            )
             ->{$completed ? 'whereNotNull' : 'whereNull'}('tasks.completed_at')
             ->where('billable', $request->get('billable', 'true') === 'true')
             ->groupBy(['time_logs.user_id', 'date'])

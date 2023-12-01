@@ -20,13 +20,14 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Comments from "./Comments";
 import LabelsDropdown from "./LabelsDropdown";
 import Timer from "./Timer";
 import classes from "./css/TaskDrawer.module.css";
 
 export function EditTaskDrawer() {
+  const editorRef = useRef(null);
   const { edit, openEditTask, closeEditTask } = useTaskDrawerStore();
   const { initTaskWebSocket } = useWebSockets();
   const { findTask, updateTaskProperty, complete, deleteAttachment, uploadAttachments } =
@@ -79,6 +80,7 @@ export function EditTaskDrawer() {
         subscribed_users: (task?.subscribed_users || []).map((i) => i.id.toString()),
         labels: (task?.labels || []).map((i) => i.id),
       });
+      editorRef.current?.setContent(task?.description || "");
     }
   }, [edit.opened, task]);
 
@@ -162,10 +164,10 @@ export function EditTaskDrawer() {
               />
 
               <RichTextEditor
+                ref={editorRef}
                 mt="xl"
                 placeholder="Task description"
                 content={data.description}
-                changingContent={task?.description}
                 height={260}
                 onChange={(content) => updateValue("description", content)}
                 onBlur={() => onBlurUpdate("description")}

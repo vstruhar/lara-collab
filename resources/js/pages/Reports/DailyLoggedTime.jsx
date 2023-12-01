@@ -32,7 +32,7 @@ const DailyLoggedTime = () => {
     dateRange:
       params.dateRange && params.dateRange[0] && params.dateRange[1]
         ? [dayjs(params.dateRange[0]).toDate(), dayjs(params.dateRange[1]).toDate()]
-        : [],
+        : [dayjs().subtract(1, "week").toDate(), dayjs().toDate()],
     completed: params.completed !== undefined ? params.completed : true,
     billable: params.billable !== undefined ? params.billable : true,
   });

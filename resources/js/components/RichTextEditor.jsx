@@ -1,21 +1,17 @@
-import { useColorScheme, useDidUpdate } from "@mantine/hooks";
+import { useColorScheme } from "@mantine/hooks";
 import { RichTextEditor as Editor, Link } from "@mantine/tiptap";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { forwardRef, useImperativeHandle } from "react";
 import classes from "./css/RichTextEditor.module.css";
 
-export default function RichTextEditor({
-  onChange,
-  placeholder,
-  content,
-  changingContent,
-  height = 200,
-  readOnly = false,
-  ...props
-}) {
+const RichTextEditor = forwardRef(function RichTextEditor(
+  { onChange, placeholder, content, height = 200, readOnly = false, ...props },
+  ref,
+) {
   const editor = useEditor({
     editable: !readOnly,
     extensions: [StarterKit, Underline, Link, Highlight, Placeholder.configure({ placeholder })],
@@ -25,9 +21,11 @@ export default function RichTextEditor({
     },
   });
 
-  useDidUpdate(() => {
-    editor.commands.setContent(changingContent);
-  }, [changingContent]);
+  useImperativeHandle(ref, () => ({
+    setContent(content) {
+      editor.commands.setContent(content);
+    },
+  }));
 
   const colorScheme = useColorScheme();
 
@@ -65,4 +63,6 @@ export default function RichTextEditor({
       />
     </Editor>
   );
-}
+});
+
+export default RichTextEditor;

@@ -14,13 +14,14 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import classes from "./css/Comments.module.css";
 
 export default function Comments({ task }) {
   const { comments, fetchComments, saveComment } = useTasksStore();
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState("");
+  const editorRef = useRef(null);
 
   useEffect(() => {
     fetchComments(task, () => setLoading(false));
@@ -37,11 +38,11 @@ export default function Comments({ task }) {
         )}
       </Title>
       <RichTextEditor
+        ref={editorRef}
         mt="md"
         placeholder="Write a comment"
         height={100}
         content={comment}
-        changingContent={comment}
         onChange={(content) => setComment(content)}
       />
       <Flex justify="flex-end">
@@ -49,7 +50,7 @@ export default function Comments({ task }) {
           variant="filled"
           mt="md"
           disabled={comment.length <= 7}
-          onClick={() => saveComment(task, comment, () => setComment(""))}
+          onClick={() => saveComment(task, comment, () => editorRef.current.setContent(""))}
         >
           Add comment
         </Button>
