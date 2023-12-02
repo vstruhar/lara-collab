@@ -12,7 +12,11 @@ const useNotificationsStore = create((set) => ({
   },
   addNotification: (notification) => {
     return set(produce(state => {
-      state.notifications = [notification, ...state.notifications];
+      const oldNotifications = state.notifications.length >= 6
+        ? state.notifications.slice(0, state.notifications.length - 1)
+        : state.notifications;
+
+      state.notifications = [notification, ...oldNotifications];
     }));
   },
   markAsRead: async (notification) => {

@@ -1,12 +1,16 @@
 import { useColorScheme } from "@mantine/hooks";
 import { RichTextEditor as Editor, Link } from "@mantine/tiptap";
 import Highlight from "@tiptap/extension-highlight";
+import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { forwardRef, useImperativeHandle } from "react";
+import suggestion from "./RichTextEditor/Mention/suggestion.js";
 import classes from "./css/RichTextEditor.module.css";
+
+suggestion.init(route().params.project);
 
 const RichTextEditor = forwardRef(function RichTextEditor(
   { onChange, placeholder, content, height = 200, readOnly = false, ...props },
@@ -14,7 +18,19 @@ const RichTextEditor = forwardRef(function RichTextEditor(
 ) {
   const editor = useEditor({
     editable: !readOnly,
-    extensions: [StarterKit, Underline, Link, Highlight, Placeholder.configure({ placeholder })],
+    extensions: [
+      StarterKit,
+      Underline,
+      Link,
+      Highlight,
+      Placeholder.configure({ placeholder }),
+      Mention.configure({
+        HTMLAttributes: {
+          class: "mention",
+        },
+        suggestion,
+      }),
+    ],
     content,
     onUpdate({ editor }) {
       onChange(editor.getHTML());

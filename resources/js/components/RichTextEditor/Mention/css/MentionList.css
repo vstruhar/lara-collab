@@ -1,0 +1,32 @@
+.items {
+    color: light-dark(var(--mantine-color-dark-6), var(--mantine-color-white));
+    background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-4));
+    border-radius: var(--mantine-radius-md);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0px 10px 20px rgba(0, 0, 0, 0.1);
+    font-size: rem(14px);
+    overflow: hidden;
+    padding: rem(5px);
+    position: relative;
+}
+
+.item {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.4rem;
+    display: block;
+    margin: 0;
+    padding: rem(3px) rem(8px);
+    text-align: left;
+    width: 100%;
+}
+
+.item.is-selected {
+    border: 1px solid light-dark(var(--mantine-color-gray-4), var(--mantine-color-gray-7));
+    background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-3));
+}
+
+.mention {
+    color: var(--mantine-color-blue-8);
+    box-decoration-break: clone;
+    padding: 0 rem(1px);
+}

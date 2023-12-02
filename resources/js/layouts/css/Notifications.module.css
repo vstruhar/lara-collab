@@ -5,6 +5,8 @@
 }
 
 .notification {
+    margin: rem(5px) 0;
+
     @mixin hover {
         opacity: 1 !important;
     }
