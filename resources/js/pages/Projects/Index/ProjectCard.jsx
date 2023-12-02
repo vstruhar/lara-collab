@@ -7,6 +7,9 @@ import ProjectCardActions from "./ProjectCardActions";
 import classes from "./css/ProjectCard.module.css";
 
 export default function ProjectCard({ item }) {
+  const completedPercent = (item.completed_tasks_count / item.all_tasks_count) * 100;
+  const overduePercent = (item.overdue_tasks_count / item.all_tasks_count) * 100;
+
   return (
     <Link
       href={route("projects.tasks", item.id)}
@@ -15,7 +18,7 @@ export default function ProjectCard({ item }) {
     >
       <Card withBorder padding="xl" radius="md" w={350} className={classes.card}>
         <Group justify="space-between">
-          <Text size="xl" fw={700} className={classes.title}>
+          <Text fz={23} fw={700} className={classes.title}>
             {item.name}
           </Text>
           <ToggleFavorite item={item} />
@@ -32,13 +35,21 @@ export default function ProjectCard({ item }) {
         )}
 
         <Text c="dimmed" fz="sm" mt="md">
-          Tasks completed:{" "}
+          Completed tasks:{" "}
           <Text span fw={500} c="bright">
             {item.completed_tasks_count} / {item.all_tasks_count}
           </Text>
         </Text>
 
-        <Progress value={(item.completed_tasks_count / item.all_tasks_count) * 100} mt={5} />
+        <Progress.Root value={item.all_tasks_count} mt={10} radius="xl">
+          <Tooltip label={`Completed: ${item.completed_tasks_count}`} withArrow>
+            <Progress.Section value={completedPercent} color="blue" />
+          </Tooltip>
+          <Tooltip label={`Overdue: ${item.overdue_tasks_count}`} withArrow>
+            <Progress.Section value={overduePercent} color="red" />
+          </Tooltip>
+          <Progress.Section value={100 - (completedPercent + overduePercent)} color="gray" />
+        </Progress.Root>
 
         <Group justify="space-between" mt="md">
           <Avatar.Group spacing="sm">

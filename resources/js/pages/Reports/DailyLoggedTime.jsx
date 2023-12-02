@@ -128,6 +128,20 @@ const DailyLoggedTime = () => {
                     ))}
                   </Table.Tr>
                 ))}
+                <Table.Tr fw={800}>
+                  <Table.Td>SUM</Table.Td>
+                  {Object.keys(users).map((userId) => (
+                    <Table.Td key={userId}>
+                      {Object.keys(items)
+                        .reduce(
+                          (acc, date) => acc + Number(items[date][userId]?.total_hours || 0),
+                          0,
+                        )
+                        .toFixed(2)}{" "}
+                      h
+                    </Table.Td>
+                  ))}
+                </Table.Tr>
               </Table.Tbody>
             </Table>
           </ContainerBox>

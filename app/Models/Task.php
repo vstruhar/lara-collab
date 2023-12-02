@@ -40,6 +40,7 @@ class Task extends Model implements AuditableContract, Sortable
         'hidden_from_clients',
         'billable',
         'order_column',
+        'assigned_at',
         'completed_at',
     ];
 

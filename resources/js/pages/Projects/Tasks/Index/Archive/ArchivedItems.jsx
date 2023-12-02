@@ -12,9 +12,7 @@ export default function ArchivedItems({ groups, tasks }) {
             Tasks
           </Text>
           {Object.keys(tasks).map((key) =>
-            tasks[key].map((task) => (
-              <ArchivedTask key={`task-${task.id}`} task={task} />
-            )),
+            tasks[key].map((task) => <ArchivedTask key={`task-${task.id}`} task={task} />),
           )}
         </>
       )}
@@ -30,9 +28,6 @@ export default function ArchivedItems({ groups, tasks }) {
       )}
     </>
   ) : (
-    <EmptyResult
-      title="No tasks or groups found"
-      subtitle="or none match your search criteria"
-    />
+    <EmptyResult title="No tasks or groups found" subtitle="or none match your search criteria" />
   );
 }

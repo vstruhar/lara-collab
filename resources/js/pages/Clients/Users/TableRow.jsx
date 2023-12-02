@@ -8,13 +8,7 @@ export default function TableRow({ item }) {
     <Table.Tr key={item.id}>
       <Table.Td>
         <Group gap="sm">
-          <Avatar
-            src={item.avatar}
-            size={40}
-            radius={40}
-            color="blue"
-            alt={item.name}
-          >
+          <Avatar src={item.avatar} size={40} radius={40} color="blue" alt={item.name}>
             {getInitials(item.name)}
           </Avatar>
           <div>
@@ -37,16 +31,14 @@ export default function TableRow({ item }) {
         <Group gap="sm">
           {item.companies.map((item) => (
             <Link href={route("clients.companies.edit", item.id)} key={item.id}>
-              <Badge variant="light" tt="unset">
+              <Badge variant="light" color="grape" tt="unset">
                 {item.name}
               </Badge>
             </Link>
           ))}
         </Group>
       </Table.Td>
-      {(can("edit client user") ||
-        can("archive client user") ||
-        can("restore client user")) && (
+      {(can("edit client user") || can("archive client user") || can("restore client user")) && (
         <Table.Td>
           <TableRowActions
             item={item}

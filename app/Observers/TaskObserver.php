@@ -17,6 +17,10 @@ class TaskObserver
             'title' => 'New task',
             'subtitle' => "\"{$task->name}\" was created by ".auth()->user()->name,
         ]);
+
+        if ($task->assigned_to_user_id !== null) {
+            $task->update(['assigned_at' => now()]);
+        }
     }
 
     /**
@@ -49,6 +53,8 @@ class TaskObserver
                     ? "\"{$task->name}\" was assigned to {$task->assignedToUser->name} by ".auth()->user()->name
                     : "on task \"{$task->name}\" by ".auth()->user()->name,
             ]);
+
+            $task->update(['assigned_at' => now()]);
         }
         if ($task->isDirty('due_on')) {
             $task->activities()->create([

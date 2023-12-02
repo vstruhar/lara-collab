@@ -4,34 +4,18 @@ import useForm from "@/hooks/useForm";
 import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
 import { redirectTo } from "@/utils/route";
-import {
-  Anchor,
-  Breadcrumbs,
-  ColorInput,
-  Grid,
-  Group,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Anchor, Breadcrumbs, ColorInput, Grid, Group, TextInput, Title } from "@mantine/core";
 
 const LabelCreate = () => {
-  const [form, submit, updateValue] = useForm(
-    "post",
-    route("settings.labels.store"),
-    {
-      name: "",
-      color: "",
-    },
-  );
+  const [form, submit, updateValue] = useForm("post", route("settings.labels.store"), {
+    name: "",
+    color: "",
+  });
 
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor
-          href="#"
-          onClick={() => redirectTo("settings.labels.index")}
-          fz={14}
-        >
+        <Anchor href="#" onClick={() => redirectTo("settings.labels.index")} fz={14}>
           Labels
         </Anchor>
         <div>Create</div>
@@ -50,7 +34,6 @@ const LabelCreate = () => {
             label="Name"
             placeholder="Label name"
             required
-            mt="md"
             value={form.data.name}
             onChange={(e) => updateValue("name", e.target.value)}
             error={form.errors.name}

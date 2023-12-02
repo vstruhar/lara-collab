@@ -18,6 +18,7 @@ import {
   IconActivity,
   IconArchive,
   IconCalendarMonth,
+  IconCheck,
   IconClock,
   IconEdit,
   IconMessage,
@@ -57,6 +58,9 @@ const ActivityIndex = () => {
     }
     if (title.includes("Estimation was set")) {
       return <IconClock size={18} />;
+    }
+    if (title.includes("was completed")) {
+      return <IconCheck size={18} />;
     }
     if (title === "New task" || title === "New project") {
       return <IconPlus size={18} />;

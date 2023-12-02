@@ -29,8 +29,6 @@ class ProjectController extends Controller
         return Inertia::render('Projects/Index', [
             'items' => ProjectResource::collection(
                 Project::searchByQueryString()
-                    ->orderBy('favorite', 'desc')
-                    ->orderBy('name', 'asc')
                     ->when($request->user()->isNotAdmin(), function ($query) {
                         $query->whereHas('clientCompany.clients', fn ($query) => $query->where('users.id', auth()->id()))
                             ->orWhereHas('users', fn ($query) => $query->where('id', auth()->id()));
@@ -44,8 +42,11 @@ class ProjectController extends Controller
                     ->withCount([
                         'tasks AS all_tasks_count',
                         'tasks AS completed_tasks_count' => fn ($query) => $query->whereNotNull('completed_at'),
+                        'tasks AS overdue_tasks_count' => fn ($query) => $query->whereNull('completed_at')->whereDate('due_on', '<', now()),
                     ])
                     ->withExists('favoritedByAuthUser AS favorite')
+                    ->orderBy('favorite', 'desc')
+                    ->orderBy('name', 'asc')
                     ->get()
             ),
         ]);

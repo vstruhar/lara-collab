@@ -22,10 +22,6 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('mail', function () {
-//     return (new App\Notifications\UserCreatedNotification('secret'))->toMail(App\Models\User::first());
-// });
-
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

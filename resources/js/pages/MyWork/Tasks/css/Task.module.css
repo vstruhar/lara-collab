@@ -1,12 +1,3 @@
-.checkbox input {
-    cursor: pointer;
-}
-
-.disabledCheckbox input {
-    cursor: default;
-    pointer-events: none;
-}
-
 .user {
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
     border-radius: var(--mantine-radius-xl);

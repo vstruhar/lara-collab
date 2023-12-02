@@ -1,0 +1,7 @@
+.card {
+    transition: 0.3s ease all;
+
+    @mixin hover {
+        border: 1px solid light-dark(var(--mantine-color-gray-4), var(--mantine-color-gray-7));
+    }
+}

@@ -20,7 +20,7 @@ export default function TableRow({ item }) {
         <Group gap="sm">
           {item.clients.map((item) => (
             <Link href={route("clients.users.edit", item.id)} key={item.id}>
-              <Badge variant="light" tt="unset">
+              <Badge variant="light" color="orange" tt="unset">
                 {item.name}
               </Badge>
             </Link>

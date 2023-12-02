@@ -5,37 +5,21 @@ import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
 import { redirectTo } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
-import {
-  Anchor,
-  Breadcrumbs,
-  ColorInput,
-  Grid,
-  Group,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Anchor, Breadcrumbs, ColorInput, Grid, Group, TextInput, Title } from "@mantine/core";
 
 const LabelEdit = () => {
   const { item } = usePage().props;
 
-  const [form, submit, updateValue] = useForm(
-    "post",
-    route("settings.labels.update", item.id),
-    {
-      _method: "put",
-      name: item.name,
-      color: item.color || "",
-    },
-  );
+  const [form, submit, updateValue] = useForm("post", route("settings.labels.update", item.id), {
+    _method: "put",
+    name: item.name,
+    color: item.color || "",
+  });
 
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor
-          href="#"
-          onClick={() => redirectTo("settings.labels.index")}
-          fz={14}
-        >
+        <Anchor href="#" onClick={() => redirectTo("settings.labels.index")} fz={14}>
           Labels
         </Anchor>
         <div>Edit</div>
@@ -54,7 +38,6 @@ const LabelEdit = () => {
             label="Name"
             placeholder="Label name"
             required
-            mt="md"
             value={form.data.name}
             onChange={(e) => updateValue("name", e.target.value)}
             error={form.errors.name}

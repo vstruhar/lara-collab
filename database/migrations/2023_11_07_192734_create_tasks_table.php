@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean('billable')->default(true);
             $table->unsignedInteger('order_column');
             $table->timestamps();
+            $table->timestamp('assigned_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->archivedAt();
         });

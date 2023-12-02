@@ -24,6 +24,7 @@ class ProjectResource extends JsonResource
             'users_with_access' => PermissionService::usersWithAccessToProject($this),
             'all_tasks_count' => $this->all_tasks_count,
             'completed_tasks_count' => $this->completed_tasks_count,
+            'overdue_tasks_count' => $this->overdue_tasks_count,
         ];
     }
 }
