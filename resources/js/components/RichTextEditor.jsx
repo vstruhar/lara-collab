@@ -10,8 +10,6 @@ import { forwardRef, useImperativeHandle } from "react";
 import suggestion from "./RichTextEditor/Mention/suggestion.js";
 import classes from "./css/RichTextEditor.module.css";
 
-suggestion.init(route().params.project);
-
 const RichTextEditor = forwardRef(function RichTextEditor(
   { onChange, placeholder, content, height = 200, readOnly = false, ...props },
   ref,

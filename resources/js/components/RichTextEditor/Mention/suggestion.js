@@ -4,12 +4,17 @@ import tippy from 'tippy.js';
 import MentionList from './MentionList.jsx';
 
 const suggestion = {
+  projectId: null,
   users: [],
 
-  init: (projectId) => {
-    axios.get(route('dropdown.values'), {params: {projectId, mentionProjectUsers: true}})
+  fetchItems: () => {
+    if (suggestion.projectId === route().params.project && suggestion.users.length > 0) {
+      return;
+    }
+    axios.get(route('dropdown.values'), {params: {projectId: route().params.project, mentionProjectUsers: true}})
       .then(({data}) => {
         suggestion.users = data.mentionProjectUsers;
+        suggestion.projectId = route().params.project;
       })
       .catch((e) => console.error('Failed to fetch users for mention feature', e));
   },
@@ -23,6 +28,8 @@ const suggestion = {
   render: () => {
     let component;
     let popup;
+
+    suggestion.fetchItems();
 
     return {
       onStart: props => {

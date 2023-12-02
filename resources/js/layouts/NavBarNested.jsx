@@ -1,3 +1,5 @@
+import Logo from "@/components/Logo";
+import { usePage } from "@inertiajs/react";
 import { Code, Group, ScrollArea, rem } from "@mantine/core";
 import {
   IconBuildingSkyscraper,
@@ -9,12 +11,13 @@ import {
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react";
-import Logo from "../components/Logo";
 import NavbarLinksGroup from "./NavbarLinksGroup";
 import UserButton from "./UserButton";
 import classes from "./css/NavbarNested.module.css";
 
 export default function Sidebar() {
+  const { version } = usePage().props;
+
   const items = [
     {
       label: "Dashboard",
@@ -141,7 +144,7 @@ export default function Sidebar() {
       <div className={classes.header}>
         <Group justify="space-between">
           <Logo style={{ width: rem(120) }} />
-          <Code fw={700}>v1.0.0</Code>
+          <Code fw={700}>v{version}</Code>
         </Group>
       </div>
 
