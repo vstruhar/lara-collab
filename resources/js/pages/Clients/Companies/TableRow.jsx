@@ -1,8 +1,10 @@
 import TableRowActions from "@/components/TableRowActions";
+import { money } from "@/utils/currency";
 import { Link } from "@inertiajs/react";
 import { Badge, Group, Table, Text } from "@mantine/core";
 
 export default function TableRow({ item }) {
+  console.log(item.currency);
   return (
     <Table.Tr key={item.id}>
       <Table.Td>
@@ -14,6 +16,11 @@ export default function TableRow({ item }) {
         <Text fz="sm">{item.email}</Text>
         <Text fz="xs" c="dimmed">
           Email
+        </Text>
+      </Table.Td>
+      <Table.Td>
+        <Text fz="sm" fw={500}>
+          {item.rate ? money(item.rate, item.currency.code, item.currency.decimals) : "-"}
         </Text>
       </Table.Td>
       <Table.Td>

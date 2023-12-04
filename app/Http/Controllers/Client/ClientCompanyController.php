@@ -18,33 +18,24 @@ use Inertia\Response;
 
 class ClientCompanyController extends Controller
 {
-    /**
-     * Create the controller instance.
-     */
     public function __construct()
     {
         $this->authorizeResource(ClientCompany::class, 'company');
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): Response
     {
         return Inertia::render('Clients/Companies/Index', [
             'items' => ClientCompanyResource::collection(
                 ClientCompany::searchByQueryString()
                     ->sortByQueryString()
-                    ->with('clients')
+                    ->with(['clients', 'currency'])
                     ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                     ->paginate(12)
             ),
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return Inertia::render('Clients/Companies/Create', [
@@ -56,9 +47,6 @@ class ClientCompanyController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreClientCompanyRequest $request)
     {
         (new CreateClientCompany)->create($request->validated());
@@ -66,9 +54,6 @@ class ClientCompanyController extends Controller
         return redirect()->route('clients.companies.index')->success('Company created', 'A new company was successfully created.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(ClientCompany $company)
     {
         return Inertia::render('Clients/Companies/Edit', [
@@ -81,9 +66,6 @@ class ClientCompanyController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(ClientCompany $company, UpdateClientCompanyRequest $request)
     {
         (new UpdateClientCompany)->update($company, $request->validated());
@@ -91,9 +73,6 @@ class ClientCompanyController extends Controller
         return redirect()->route('clients.companies.index')->success('Company updated', 'The company was successfully updated.');
     }
 
-    /**
-     * Archive the specified resource from storage.
-     */
     public function destroy(ClientCompany $company)
     {
         $company->archive();
@@ -101,9 +80,6 @@ class ClientCompanyController extends Controller
         return redirect()->back()->success('Company archived', 'The company was successfully archived.');
     }
 
-    /**
-     * Restore the specified resource from storage.
-     */
     public function restore(int $companyId)
     {
         $clientCompany = ClientCompany::withArchived()->findOrFail($companyId);

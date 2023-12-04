@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ClientCompany;
+namespace App\Http\Requests\Invoice;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateClientCompanyRequest extends FormRequest
+class UpdateInvoiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -36,7 +36,6 @@ class UpdateClientCompanyRequest extends FormRequest
             'business_id' => 'string|nullable',
             'tax_id' => 'string|nullable',
             'vat' => 'string|nullable',
-            'rate' => 'numeric|min:0|nullable',
             'clients' => 'array|nullable',
         ];
     }

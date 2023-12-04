@@ -62,7 +62,7 @@ const ActivityIndex = () => {
     if (title.includes("was completed")) {
       return <IconCheck size={18} />;
     }
-    if (title === "New task" || title === "New project") {
+    if (title === "New task" || title === "New project" || title.includes("Assigned user")) {
       return <IconPlus size={18} />;
     }
   };

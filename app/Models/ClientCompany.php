@@ -33,6 +33,7 @@ class ClientCompany extends Model implements AuditableContract
         'business_id',
         'tax_id',
         'vat',
+        'rate',
     ];
 
     protected $searchable = [
@@ -43,6 +44,7 @@ class ClientCompany extends Model implements AuditableContract
     protected $sortable = [
         'name',
         'email',
+        'rate',
     ];
 
     protected static function booted(): void
@@ -70,9 +72,10 @@ class ClientCompany extends Model implements AuditableContract
         return $this->hasMany(Project::class);
     }
 
-    public static function dropdownValues(): array
+    public static function dropdownValues($options = []): array
     {
         return self::orderBy('name')
+            ->when(in_array('hasProjects', $options), fn ($query) => $query->has('projects'))
             ->get(['id', 'name'])
             ->map(fn ($i) => ['value' => (string) $i->id, 'label' => $i->name])
             ->toArray();

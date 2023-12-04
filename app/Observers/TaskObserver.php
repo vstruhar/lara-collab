@@ -19,7 +19,8 @@ class TaskObserver
         ]);
 
         if ($task->assigned_to_user_id !== null) {
-            $task->update(['assigned_at' => now()]);
+            $task->assigned_at = now();
+            $task->saveQuietly();
         }
     }
 
@@ -54,7 +55,8 @@ class TaskObserver
                     : "on task \"{$task->name}\" by ".auth()->user()->name,
             ]);
 
-            $task->update(['assigned_at' => now()]);
+            $task->assigned_at = now();
+            $task->saveQuietly();
         }
         if ($task->isDirty('due_on')) {
             $task->activities()->create([

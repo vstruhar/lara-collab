@@ -23,7 +23,7 @@ class PermissionService
                 'view tasks', 'create task', 'edit task', 'archive task', 'restore task', 'reorder task', 'complete task', 'add time log', 'delete time log',
                 'view time logs', 'view comments',
             ],
-            'Invoices' => ['view invoices'],
+            'Invoices' => ['view invoices', 'create invoice', 'edit invoice', 'archive invoice', 'restore invoice'],
             'Reports' => ['view logged time sum report', 'view daily logged time report'],
             'Activities' => ['view activities'],
         ],

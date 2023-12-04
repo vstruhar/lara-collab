@@ -17,6 +17,7 @@ const ClientCompaniesIndex = () => {
   const columns = prepareColumns([
     { label: "Company", column: "name" },
     { label: "Email", column: "email" },
+    { label: "Hourly rate", column: "rate" },
     { label: "Clients", sortable: false },
     {
       label: "Actions",
@@ -63,10 +64,7 @@ const ClientCompaniesIndex = () => {
         </Table>
       </Table.ScrollContainer>
 
-      <Pagination
-        current={items.meta.current_page}
-        pages={items.meta.last_page}
-      />
+      <Pagination current={items.meta.current_page} pages={items.meta.last_page} />
     </>
   );
 };

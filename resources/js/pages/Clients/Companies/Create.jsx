@@ -12,46 +12,50 @@ import {
   Grid,
   Group,
   MultiSelect,
+  NumberInput,
   Select,
   TextInput,
   Title,
 } from "@mantine/core";
+import { useEffect, useState } from "react";
 
 const ClientCompanyCreate = () => {
   const {
     dropdowns: { clients, countries, currencies },
   } = usePage().props;
+  const [currencySymbol, setCurrencySymbol] = useState("");
 
-  const [form, submit, updateValue] = useForm(
-    "post",
-    route("clients.companies.store"),
-    {
-      name: "",
-      address: "",
-      postal_code: "",
-      city: "",
-      country_id: "",
-      currency_id: "",
-      email: "",
-      phone: "",
-      web: "",
-      iban: "",
-      swift: "",
-      business_id: "",
-      tax_id: "",
-      vat: "",
-      clients: route().params?.client_id ? [route().params.client_id] : [],
-    },
-  );
+  const [form, submit, updateValue] = useForm("post", route("clients.companies.store"), {
+    name: "",
+    address: "",
+    postal_code: "",
+    city: "",
+    country_id: "",
+    currency_id: "",
+    email: "",
+    phone: "",
+    web: "",
+    iban: "",
+    swift: "",
+    business_id: "",
+    tax_id: "",
+    vat: "",
+    rate: 0,
+    clients: route().params?.client_id ? [route().params.client_id] : [],
+  });
+
+  useEffect(() => {
+    let symbol = currencies.find((i) => i.value === form.data.currency_id.toString())?.label;
+
+    if (symbol) {
+      setCurrencySymbol(symbol.slice(symbol.indexOf(" (") + 2, symbol.length - 1));
+    }
+  }, [form.data.currency_id]);
 
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor
-          href="#"
-          onClick={() => redirectTo("clients.companies.index")}
-          fz={14}
-        >
+        <Anchor href="#" onClick={() => redirectTo("clients.companies.index")} fz={14}>
           Companies
         </Anchor>
         <div>Create</div>
@@ -73,6 +77,31 @@ const ClientCompanyCreate = () => {
             value={form.data.name}
             onChange={(e) => updateValue("name", e.target.value)}
             error={form.errors.name}
+          />
+
+          <Select
+            label="Default currency"
+            placeholder="Select currency"
+            required
+            mt="md"
+            searchable={true}
+            value={form.data.currency_id}
+            onChange={(value) => updateValue("currency_id", value)}
+            data={currencies}
+            error={form.errors.currency_id}
+          />
+
+          <NumberInput
+            label="Hourly rate"
+            mt="md"
+            allowNegative={false}
+            clampBehavior="strict"
+            decimalScale={2}
+            fixedDecimalScale={true}
+            prefix={currencySymbol}
+            value={form.data.rate}
+            onChange={(value) => updateValue("rate", value)}
+            error={form.errors.rate}
           />
 
           <MultiSelect
@@ -225,8 +254,6 @@ const ClientCompanyCreate = () => {
   );
 };
 
-ClientCompanyCreate.layout = (page) => (
-  <Layout title="Create company">{page}</Layout>
-);
+ClientCompanyCreate.layout = (page) => <Layout title="Create company">{page}</Layout>;
 
 export default ClientCompanyCreate;

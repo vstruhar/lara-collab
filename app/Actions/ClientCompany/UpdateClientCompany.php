@@ -12,6 +12,8 @@ class UpdateClientCompany
             $clientCompany->clients()->sync($data['clients']);
         }
 
+        $data['rate'] *= 100;
+
         return $clientCompany->update($data);
     }
 }

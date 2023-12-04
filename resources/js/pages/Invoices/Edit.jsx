@@ -12,50 +12,48 @@ import {
   Grid,
   Group,
   MultiSelect,
-  NumberInput,
   Select,
   TextInput,
   Title,
 } from "@mantine/core";
-import { useEffect, useState } from "react";
 
 const ClientCompanyEdit = () => {
   const {
     item,
     dropdowns: { clients, countries, currencies },
   } = usePage().props;
-  const [currencySymbol, setCurrencySymbol] = useState("");
 
-  const [form, submit, updateValue] = useForm("post", route("clients.companies.update", item.id), {
-    _method: "put",
-    name: item.name,
-    address: item.address || "",
-    postal_code: item.postal_code || "",
-    city: item.city || "",
-    country_id: item.country_id || "",
-    currency_id: item.currency_id || "",
-    email: item.email || "",
-    phone: item.phone || "",
-    web: item.web || "",
-    iban: item.iban || "",
-    swift: item.swift || "",
-    business_id: item.business_id || "",
-    tax_id: item.tax_id || "",
-    vat: item.vat || "",
-    rate: item.rate / 100 || 0,
-    clients: item.clients.map((i) => i.id.toString()),
-  });
-
-  useEffect(() => {
-    let symbol = currencies.find((i) => i.value === form.data.currency_id.toString()).label;
-
-    setCurrencySymbol(symbol.slice(symbol.indexOf(" (") + 2, symbol.length - 1));
-  }, [form.data.currency_id]);
+  const [form, submit, updateValue] = useForm(
+    "post",
+    route("clients.companies.update", item.id),
+    {
+      _method: "put",
+      name: item.name,
+      address: item.address || "",
+      postal_code: item.postal_code || "",
+      city: item.city || "",
+      country_id: item.country_id || "",
+      currency_id: item.currency_id || "",
+      email: item.email || "",
+      phone: item.phone || "",
+      web: item.web || "",
+      iban: item.iban || "",
+      swift: item.swift || "",
+      business_id: item.business_id || "",
+      tax_id: item.tax_id || "",
+      vat: item.vat || "",
+      clients: item.clients.map((i) => i.id.toString()),
+    },
+  );
 
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor href="#" onClick={() => redirectTo("clients.companies.index")} fz={14}>
+        <Anchor
+          href="#"
+          onClick={() => redirectTo("clients.companies.index")}
+          fz={14}
+        >
           Companies
         </Anchor>
         <div>Edit</div>
@@ -77,31 +75,6 @@ const ClientCompanyEdit = () => {
             value={form.data.name}
             onChange={(e) => updateValue("name", e.target.value)}
             error={form.errors.name}
-          />
-
-          <Select
-            label="Default currency"
-            placeholder="Select currency"
-            required
-            mt="md"
-            searchable={true}
-            value={form.data.currency_id}
-            onChange={(value) => updateValue("currency_id", value)}
-            data={currencies}
-            error={form.errors.currency_id}
-          />
-
-          <NumberInput
-            label="Hourly rate"
-            mt="md"
-            allowNegative={false}
-            clampBehavior="strict"
-            decimalScale={2}
-            fixedDecimalScale={true}
-            prefix={currencySymbol}
-            value={form.data.rate}
-            onChange={(value) => updateValue("rate", value)}
-            error={form.errors.rate}
           />
 
           <MultiSelect
@@ -201,6 +174,18 @@ const ClientCompanyEdit = () => {
               onChange={(e) => updateValue("swift", e.target.value)}
               error={form.errors.swift}
             />
+
+            <Select
+              label="Default currency"
+              placeholder="Select currency"
+              required
+              mt="md"
+              searchable={true}
+              value={form.data.currency_id}
+              onChange={(value) => updateValue("currency_id", value)}
+              data={currencies}
+              error={form.errors.currency_id}
+            />
           </Fieldset>
 
           <Fieldset legend="Contact" mt="xl">
@@ -242,6 +227,8 @@ const ClientCompanyEdit = () => {
   );
 };
 
-ClientCompanyEdit.layout = (page) => <Layout title="Edit company">{page}</Layout>;
+ClientCompanyEdit.layout = (page) => (
+  <Layout title="Edit company">{page}</Layout>
+);
 
 export default ClientCompanyEdit;

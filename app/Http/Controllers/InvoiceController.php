@@ -2,65 +2,85 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Invoice\StoreInvoiceRequest;
+use App\Http\Requests\Invoice\UpdateInvoiceRequest;
+use App\Http\Resources\Invoice\InvoiceResource;
+use App\Models\ClientCompany;
+use App\Models\Currency;
+use App\Models\Invoice;
+use App\Models\Project;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->authorizeResource(Invoice::class, 'invoice');
+    }
+
     public function index(): Response
     {
-        return Inertia::render('Invoices/Index', []);
+        return Inertia::render('Invoices/Index', [
+            'items' => InvoiceResource::collection(
+                Invoice::with(['clientCompany', 'createdByUser'])
+                    ->paginate(12)
+            ),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return Inertia::render('Invoices/Create', [
+            'projects' => Project::orderBy('name')->get(['id', 'name', 'client_company_id']),
+            'clientCompanies' => ClientCompany::has('projects')
+                ->with(['currency'])
+                ->orderBy('name')
+                ->get(['id', 'name', 'rate', 'currency_id']),
+            'dropdowns' => [
+                'clientCompanies' => ClientCompany::dropdownValues(['hasProjects']),
+                'currencies' => Currency::dropdownValues(),
+            ],
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreInvoiceRequest $request)
     {
-        //
+        // (new CreateInvoice)->create($request->validated());
+
+        return redirect()->route('invoices.index')->success('Invoice created', 'A new company was successfully created.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Invoice $invoice)
     {
-        //
+        return Inertia::render('Invoice/Edit', [
+            'item' => new InvoiceResource($invoice),
+            'dropdowns' => [],
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Invoice $invoice, UpdateInvoiceRequest $request)
     {
-        //
+        // (new UpdateInvoice)->update($invoice, $request->validated());
+
+        return redirect()->route('invoices.index')->success('Invoice updated', 'The invoice was successfully updated.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Invoice $invoice)
     {
-        //
+        $invoice->archive();
+
+        return redirect()->back()->success('Invoice archived', 'The invoice was successfully archived.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function restore(int $invoiceId)
     {
-        //
+        $invoice = Invoice::withArchived()->findOrFail($invoiceId);
+
+        $this->authorize('restore', $invoice);
+
+        $invoice->unArchive();
+
+        return redirect()->back()->success('Invoice restored', 'The restoring of the invoice was completed successfully.');
     }
 }

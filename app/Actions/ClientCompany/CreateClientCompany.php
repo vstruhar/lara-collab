@@ -10,6 +10,8 @@ class CreateClientCompany
     public function create(array $data): ClientCompany
     {
         return DB::transaction(function () use ($data) {
+            $data['rate'] *= 100;
+
             $clientCompany = ClientCompany::create($data);
 
             if (! empty($data['clients'])) {
