@@ -8,11 +8,7 @@ import classes from "../css/Task.module.css";
 
 export default function ArchivedTask({ task }) {
   return (
-    <Flex
-      className={`${classes.task} ${
-        task.completed_at !== null && classes.completed
-      }`}
-    >
+    <Flex className={`${classes.task} ${task.completed_at !== null && classes.completed}`}>
       <Group gap="sm">
         <Checkbox
           size="sm"
@@ -23,11 +19,7 @@ export default function ArchivedTask({ task }) {
         />
         {task.assigned_to_user && (
           <Link href={route("users.edit", task.assigned_to_user.id)}>
-            <Tooltip
-              label={task.assigned_to_user.name}
-              openDelay={1000}
-              withArrow
-            >
+            <Tooltip label={task.assigned_to_user.name} openDelay={1000} withArrow>
               <Pill size="sm" className={classes.user}>
                 {shortName(task.assigned_to_user.name)}
               </Pill>

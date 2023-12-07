@@ -4,6 +4,10 @@ export const date = (date) => {
   return dayjs(date).format("D. MMM YYYY");
 };
 
+export const time = (date) => {
+  return dayjs(date).format("H:mm") + 'h';
+};
+
 export const day = (date) => {
   return dayjs(date).format("dddd");
 };

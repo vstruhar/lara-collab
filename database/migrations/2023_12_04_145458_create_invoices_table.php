@@ -17,10 +17,14 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by_user_id');
             $table->string('number');
             $table->string('status');
+            $table->string('type');
+            $table->text('note')->nullable();
             $table->unsignedInteger('amount');
             $table->unsignedInteger('amount_with_tax')->nullable();
-            $table->date('billing_date')->nullable();
+            $table->unsignedInteger('hourly_rate')->nullable();
+            $table->date('due_date')->nullable();
             $table->timestamp('created_at')->nullable();
+            $table->archivedAt();
 
             $table->foreign('created_by_user_id')->references('id')->on('users');
         });

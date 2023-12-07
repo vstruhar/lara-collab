@@ -22,7 +22,7 @@ class OwnerCompanySeeder extends Seeder
             'currency_id' => 97,
             'phone' => fake()->phoneNumber,
             'web' => 'https://company.com',
-            'tax' => fake()->numberBetween(5, 20),
+            'tax' => 1000, // 10%
             'email' => fake()->email,
             'iban' => fake()->iban,
             'swift' => fake()->swiftBicNumber,

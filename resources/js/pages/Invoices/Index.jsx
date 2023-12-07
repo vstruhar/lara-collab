@@ -16,7 +16,13 @@ const InvoicesIndex = () => {
 
   const columns = prepareColumns([
     { label: "Number", column: "number" },
+    { label: "Status", column: "status" },
     { label: "Company", column: "name" },
+    { label: "Note", column: "note" },
+    { label: "Amount", column: "amount" },
+    { label: "Amount with tax", column: "amount_with_tax" },
+    { label: "Payment due", column: "due_date" },
+    { label: "Created", column: "created_at" },
     {
       label: "Actions",
       sortable: false,
@@ -24,8 +30,8 @@ const InvoicesIndex = () => {
     },
   ]);
 
-  const rows = items.data.length ? (
-    items.data.map((item) => <TableRow item={item} key={item.id} />)
+  let rows = items.data.length ? (
+    items.data.map((item) => <TableRow key={item.id} item={item} />)
   ) : (
     <TableRowEmpty colSpan={columns.length} />
   );

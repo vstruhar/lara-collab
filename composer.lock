@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "270ddcd1f6dc1d44e5598528b6772b0b",
+    "content-hash": "0e0109d98b7e5c72daa31e9158f89cbc",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -1394,16 +1394,16 @@
         },
         {
             "name": "lacodix/laravel-model-filter",
-            "version": "v1.9.4",
+            "version": "v1.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lacodix/laravel-model-filter.git",
-                "reference": "f581350f6c4d3c1b5fcdc2ec9415018d94752869"
+                "reference": "1a5f7a5fc001dcd4bd89c25877b5a9e09270576c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lacodix/laravel-model-filter/zipball/f581350f6c4d3c1b5fcdc2ec9415018d94752869",
-                "reference": "f581350f6c4d3c1b5fcdc2ec9415018d94752869",
+                "url": "https://api.github.com/repos/lacodix/laravel-model-filter/zipball/1a5f7a5fc001dcd4bd89c25877b5a9e09270576c",
+                "reference": "1a5f7a5fc001dcd4bd89c25877b5a9e09270576c",
                 "shasum": ""
             },
             "require": {
@@ -1468,9 +1468,9 @@
             ],
             "support": {
                 "issues": "https://github.com/lacodix/laravel-model-filter/issues",
-                "source": "https://github.com/lacodix/laravel-model-filter/tree/v1.9.4"
+                "source": "https://github.com/lacodix/laravel-model-filter/tree/v1.11.2"
             },
-            "time": "2023-07-25T13:40:03+00:00"
+            "time": "2023-11-28T10:36:46+00:00"
         },
         {
             "name": "laravel/framework",
@@ -4601,107 +4601,6 @@
                 }
             ],
             "time": "2023-11-09T22:03:17+00:00"
-        },
-        {
-            "name": "staudenmeir/eloquent-has-many-deep",
-            "version": "v1.18.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/staudenmeir/eloquent-has-many-deep.git",
-                "reference": "04cdf25eac68bd02c3aa382ddbf437585bd76708"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/staudenmeir/eloquent-has-many-deep/zipball/04cdf25eac68bd02c3aa382ddbf437585bd76708",
-                "reference": "04cdf25eac68bd02c3aa382ddbf437585bd76708",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/database": "^10.0",
-                "php": "^8.1",
-                "staudenmeir/eloquent-has-many-deep-contracts": "^1.1"
-            },
-            "require-dev": {
-                "awobaz/compoships": "^2.2",
-                "barryvdh/laravel-ide-helper": "^2.13",
-                "illuminate/pagination": "^10.0",
-                "korridor/laravel-has-many-merged": "^1.0",
-                "mockery/mockery": "^1.6",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^10.1",
-                "staudenmeir/eloquent-eager-limit": "^1.8",
-                "staudenmeir/eloquent-json-relations": "^1.8.2",
-                "staudenmeir/laravel-adjacency-list": "^1.13.7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Staudenmeir\\EloquentHasManyDeep\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonas Staudenmeir",
-                    "email": "mail@jonas-staudenmeir.de"
-                }
-            ],
-            "description": "Laravel Eloquent HasManyThrough relationships with unlimited levels",
-            "support": {
-                "issues": "https://github.com/staudenmeir/eloquent-has-many-deep/issues",
-                "source": "https://github.com/staudenmeir/eloquent-has-many-deep/tree/v1.18.3"
-            },
-            "funding": [
-                {
-                    "url": "https://paypal.me/JonasStaudenmeir",
-                    "type": "custom"
-                }
-            ],
-            "time": "2023-08-20T17:00:39+00:00"
-        },
-        {
-            "name": "staudenmeir/eloquent-has-many-deep-contracts",
-            "version": "v1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/staudenmeir/eloquent-has-many-deep-contracts.git",
-                "reference": "c39317b839d6123be126b9980e4a3d38310f5939"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/staudenmeir/eloquent-has-many-deep-contracts/zipball/c39317b839d6123be126b9980e4a3d38310f5939",
-                "reference": "c39317b839d6123be126b9980e4a3d38310f5939",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/database": "^10.0",
-                "php": "^8.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Staudenmeir\\EloquentHasManyDeepContracts\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonas Staudenmeir",
-                    "email": "mail@jonas-staudenmeir.de"
-                }
-            ],
-            "description": "Contracts for staudenmeir/eloquent-has-many-deep",
-            "support": {
-                "issues": "https://github.com/staudenmeir/eloquent-has-many-deep-contracts/issues",
-                "source": "https://github.com/staudenmeir/eloquent-has-many-deep-contracts/tree/v1.1"
-            },
-            "time": "2023-01-18T12:43:26+00:00"
         },
         {
             "name": "symfony/console",

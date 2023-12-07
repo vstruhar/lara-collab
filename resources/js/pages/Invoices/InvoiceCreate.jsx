@@ -1,16 +1,18 @@
 import ActionButton from "@/components/ActionButton";
 import BackButton from "@/components/BackButton";
+import { Label } from "@/components/Label";
 import useForm from "@/hooks/useForm";
 import ContainerBox from "@/layouts/ContainerBox";
-import Layout from "@/layouts/MainLayout";
 import { money } from "@/utils/currency";
-import { redirectTo } from "@/utils/route";
+import { date } from "@/utils/datetime";
+import { openInNewTab, redirectTo } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import {
   Anchor,
   Box,
   Breadcrumbs,
   Center,
+  Checkbox,
   Flex,
   Grid,
   Group,
@@ -18,20 +20,22 @@ import {
   NumberInput,
   Radio,
   Select,
+  SimpleGrid,
   Stack,
   Text,
   TextInput,
   Textarea,
   Title,
+  Tooltip,
   rem,
 } from "@mantine/core";
 import { useDidUpdate } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
 import axios from "axios";
 import { useState } from "react";
-import Task from "./Task";
+import classes from "./css/Create.module.css";
 
-const InvoiceCreate = () => {
+export const InvoiceCreate = () => {
   const { projects, clientCompanies, nextNumber } = usePage().props;
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [currency, setCurrency] = useState("");
@@ -59,7 +63,7 @@ const InvoiceCreate = () => {
     const company = clientCompanies.find((i) => form.data.client_company_id === i.id.toString());
 
     if (company.rate) {
-      updateValue("hourly_rate", company.rate);
+      updateValue("hourly_rate", company.rate / 100);
     }
     setCurrency(company.currency);
   }, [form.data.client_company_id]);
@@ -73,7 +77,7 @@ const InvoiceCreate = () => {
       projectTasks.forEach((project) => {
         project.tasks.forEach((task) => {
           if (form.data.tasks.includes(task.id))
-            total += (Number(task.total_minutes) / 60) * form.data.hourly_rate;
+            total += (Number(task.total_minutes) / 60) * form.data.hourly_rate * 100;
         });
       });
     } else {
@@ -124,8 +128,8 @@ const InvoiceCreate = () => {
         <Grid.Col span="content"></Grid.Col>
       </Grid>
 
-      <Flex gap="xl" align="flex-start" direction="row" wrap="nowrap">
-        <ContainerBox miw="440">
+      <SimpleGrid cols={2} spacing="xl">
+        <ContainerBox>
           <form onSubmit={submit}>
             <TextInput
               label="Invoice number"
@@ -185,8 +189,8 @@ const InvoiceCreate = () => {
                 decimalScale={2}
                 fixedDecimalScale={true}
                 prefix={currency.symbol}
-                value={form.data.hourly_rate / 100}
-                onChange={(value) => updateValue("hourly_rate", value * 100)}
+                value={form.data.hourly_rate}
+                onChange={(value) => updateValue("hourly_rate", value)}
                 error={form.errors.hourly_rate}
               />
             )}
@@ -217,13 +221,13 @@ const InvoiceCreate = () => {
               onChange={(e) => updateValue("note", e.target.value)}
             />
 
-            <Group justify="space-between" mt={30}>
+            <Group justify="space-between" mt="xl">
               <BackButton route="invoices.index" />
               <ActionButton loading={form.processing}>Create</ActionButton>
             </Group>
           </form>
         </ContainerBox>
-        <ContainerBox style={{ flexGrow: 1 }}>
+        <ContainerBox>
           {projectTasks.length > 0 ? (
             <>
               {projectTasks.map((project) => (
@@ -233,15 +237,62 @@ const InvoiceCreate = () => {
                   </Title>
                   {project.tasks.length ? (
                     project.tasks.map((task) => (
-                      <Task
+                      <Flex
                         key={task.id}
-                        task={task}
-                        selectedTasks={form.data.tasks}
-                        toggleTask={toggleTask}
-                        currency={currency}
-                        type={form.data.type}
-                        hourlyRate={form.data.hourly_rate}
-                      />
+                        className={classes.task}
+                        justify="space-between"
+                        wrap="nowrap"
+                      >
+                        <Group gap="sm" wrap="nowrap" align="self-start">
+                          <Checkbox
+                            size="sm"
+                            className={classes.checkbox}
+                            checked={form.data.tasks.includes(task.id)}
+                            onChange={(event) => toggleTask(task.id, event.currentTarget.checked)}
+                          />
+                          <Stack gap={3}>
+                            <Text
+                              className={classes.name}
+                              size="sm"
+                              fw={500}
+                              onClick={() =>
+                                openInNewTab("projects.tasks.open", [task.project_id, task.id])
+                              }
+                            >
+                              #{task.number + ": " + task.name}
+                            </Text>
+
+                            <Group wrap="wrap" style={{ rowGap: rem(3), columnGap: rem(12) }}>
+                              {task.labels.map((label) => (
+                                <Label key={label.id} name={label.name} color={label.color} />
+                              ))}
+                            </Group>
+                          </Stack>
+                        </Group>
+                        <Stack gap={3} ml={10} style={{ flexShrink: 0 }}>
+                          {form.data.type === "hourly" && (
+                            <Tooltip
+                              label={
+                                Number(task.total_minutes) === 0
+                                  ? "There is no logged time on this task"
+                                  : `Logged time: ${Number(task.total_minutes) / 60}h`
+                              }
+                              openDelay={500}
+                              withArrow
+                            >
+                              <Text fw={700} c={Number(task.total_minutes) === 0 ? "red.7" : ""}>
+                                {money(
+                                  (Number(task.total_minutes) / 60) * form.data.hourly_rate * 100,
+                                  currency.code,
+                                )}
+                              </Text>
+                            </Tooltip>
+                          )}
+                          <Text size="xs" c="dimmed" fw={500}>
+                            {date(task.completed_at)}
+                          </Text>
+                        </Stack>
+                      </Flex>
                     ))
                   ) : (
                     <Text size="sm" c="dimmed">
@@ -277,11 +328,7 @@ const InvoiceCreate = () => {
             </>
           )}
         </ContainerBox>
-      </Flex>
+      </SimpleGrid>
     </>
   );
 };
-
-InvoiceCreate.layout = (page) => <Layout title="Create invoice">{page}</Layout>;
-
-export default InvoiceCreate;

@@ -16,9 +16,16 @@ class InvoiceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'number' => $this->name,
+            'number' => $this->number,
             'client_company' => $this->clientCompany,
             'created_by_user' => $this->createdByUser,
+            'status' => $this->status,
+            'type' => $this->type,
+            'amount' => $this->amount,
+            'amount_with_tax' => $this->amount_with_tax,
+            'hourly_rate' => $this->hourly_rate,
+            'due_date' => $this->due_date,
+            'note' => $this->note,
         ];
     }
 }

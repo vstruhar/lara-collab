@@ -23,10 +23,10 @@ export const currentUrlParams = () => {
   });
 }
 
-export const reloadWithQuery = (query) => {
+export const reloadWithQuery = (query, keepPrevious = false) => {
   router.get(
     currentUrl(),
-    { ...currentUrlParams(), ...query },
+    keepPrevious ? {...currentUrlParams(), ...query} : {...query},
     {
       preserveState: true,
       preserveScroll: true,

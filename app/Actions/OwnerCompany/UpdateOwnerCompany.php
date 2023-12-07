@@ -18,6 +18,8 @@ class UpdateOwnerCompany
             $data['logo'] = '/storage/company/logo.'.$logo->clientExtension();
         }
 
+        $data['tax'] = intval($data['tax']) * 100;
+
         return $ownerCompany->update($data);
     }
 }

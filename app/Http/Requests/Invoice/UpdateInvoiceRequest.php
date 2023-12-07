@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Invoice;
 
+use App\Enums\Invoice;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateInvoiceRequest extends FormRequest
 {
@@ -22,21 +24,14 @@ class UpdateInvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'address' => 'string|nullable',
-            'postal_code' => 'string|nullable',
-            'city' => 'string|nullable',
-            'country_id' => 'integer|nullable',
-            'currency_id' => 'integer|nullable',
-            'email' => 'email|nullable',
-            'phone' => 'string|nullable',
-            'web' => 'string|nullable',
-            'iban' => 'string|nullable',
-            'swift' => 'string|nullable',
-            'business_id' => 'string|nullable',
-            'tax_id' => 'string|nullable',
-            'vat' => 'string|nullable',
-            'clients' => 'array|nullable',
+            'number' => ['required', 'string'],
+            'client_company_id' => ['required', 'integer', 'exists:client_companies,id'],
+            'projects' => ['required', 'array', 'min:1'],
+            'tasks' => ['required', 'array', 'min:1'],
+            'type' => ['required', 'string', Rule::in(['hourly', 'fixed_amount'])],
+            'hourly_rate' => $this->type === Invoice::TYPE_HOURLY->value ? ['required', 'integer', 'min:1'] : [],
+            'fixed_amount' => $this->type === Invoice::TYPE_FIXED_AMOUNT->value ? ['required', 'integer', 'min:1'] : [],
+            'note' => ['string', 'nullable'],
         ];
     }
 }

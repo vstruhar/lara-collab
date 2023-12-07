@@ -40,7 +40,7 @@ const CompanyEdit = () => {
     business_id: item.business_id || "",
     tax_id: item.tax_id || "",
     vat: item.vat || "",
-    tax: item.tax || 0,
+    tax: item.tax / 100 || 0,
   });
 
   return (

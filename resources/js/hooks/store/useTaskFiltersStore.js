@@ -61,7 +61,7 @@ const useTaskFiltersStore = create((set, get) => ({
         } else {
           state.filters[field].push(id);
         }
-        reloadWithQuery({ [field]: state.filters[field] });
+        reloadWithQuery({ [field]: state.filters[field] }, true);
       }),
     );
   },
@@ -70,7 +70,7 @@ const useTaskFiltersStore = create((set, get) => ({
       produce((state) => {
         if (state.filters[field][property] === 0) {
           state.filters[field][property] = 1;
-          reloadWithQuery({ [property]: 1 });
+          reloadWithQuery({ [property]: 1 }, true);
         } else {
           state.filters[field][property] = 0;
           reloadWithoutQueryParams({exclude: [property]});
@@ -83,7 +83,7 @@ const useTaskFiltersStore = create((set, get) => ({
       produce((state) => {
         if (!state.filters[field]) {
           state.filters[field] = value;
-          reloadWithQuery({ [field]: value });
+          reloadWithQuery({ [field]: value }, true);
         } else {
           state.filters[field] = 0;
           reloadWithoutQueryParams({exclude: [field]});

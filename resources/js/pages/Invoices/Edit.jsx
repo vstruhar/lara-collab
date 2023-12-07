@@ -3,232 +3,286 @@ import BackButton from "@/components/BackButton";
 import useForm from "@/hooks/useForm";
 import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
+import { money } from "@/utils/currency";
 import { redirectTo } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import {
   Anchor,
+  Box,
   Breadcrumbs,
-  Fieldset,
+  Center,
+  Flex,
   Grid,
   Group,
   MultiSelect,
+  NumberInput,
+  Radio,
   Select,
+  Stack,
+  Text,
   TextInput,
+  Textarea,
   Title,
+  rem,
 } from "@mantine/core";
+import { IconSearch } from "@tabler/icons-react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import Task from "./Task";
 
-const ClientCompanyEdit = () => {
-  const {
-    item,
-    dropdowns: { clients, countries, currencies },
-  } = usePage().props;
+const InvoiceEdit = () => {
+  const { invoice, projects, clientCompanies, selectedProjects } = usePage().props;
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [currency, setCurrency] = useState("");
+  const [projectTasks, setProjectTasks] = useState([]);
+  const [total, setTotal] = useState(invoice.amount);
 
-  const [form, submit, updateValue] = useForm(
-    "post",
-    route("clients.companies.update", item.id),
-    {
-      _method: "put",
-      name: item.name,
-      address: item.address || "",
-      postal_code: item.postal_code || "",
-      city: item.city || "",
-      country_id: item.country_id || "",
-      currency_id: item.currency_id || "",
-      email: item.email || "",
-      phone: item.phone || "",
-      web: item.web || "",
-      iban: item.iban || "",
-      swift: item.swift || "",
-      business_id: item.business_id || "",
-      tax_id: item.tax_id || "",
-      vat: item.vat || "",
-      clients: item.clients.map((i) => i.id.toString()),
-    },
-  );
+  const [form, submit, updateValue] = useForm("post", route("invoices.update", invoice.id), {
+    _method: "put",
+    number: invoice.number,
+    client_company_id: invoice.client_company_id.toString(),
+    projects: selectedProjects.map(String),
+    tasks: [],
+    type: invoice.type,
+    hourly_rate: invoice.hourly_rate,
+    fixed_amount: invoice.type === "fixed_amount" ? invoice.amount : 0,
+    note: invoice.note || "",
+  });
+
+  useEffect(() => {
+    setFilteredProjects(
+      projects
+        .filter((i) => i.client_company_id == form.data.client_company_id)
+        .map((i) => ({ value: i.id.toString(), label: i.name })),
+    );
+
+    const company = clientCompanies.find((i) => form.data.client_company_id === i.id.toString());
+
+    if (company.rate) {
+      updateValue("hourly_rate", company.rate);
+    }
+    setCurrency(company.currency);
+  }, [form.data.client_company_id]);
+
+  useEffect(() => fetchTasks(), [form.data.projects]);
+
+  useEffect(() => {
+    let total = 0;
+
+    if (form.data.type === "hourly") {
+      projectTasks.forEach((project) => {
+        project.tasks.forEach((task) => {
+          if (form.data.tasks.includes(task.id))
+            total += (Number(task.total_minutes) / 60) * form.data.hourly_rate;
+        });
+      });
+    } else {
+      total = form.data.fixed_amount;
+    }
+    setTotal(total);
+  }, [form.data.tasks, form.data.type, form.data.hourly_rate, form.data.fixed_amount]);
+
+  const fetchTasks = () => {
+    if (form.data.projects.length) {
+      axios
+        .get(route("invoices.tasks", { projectIds: form.data.projects, invoiceId: invoice.id }))
+        .then(({ data }) => {
+          setProjectTasks(data.projectTasks);
+          const taskIds = [];
+
+          data.projectTasks.forEach((project) => {
+            project.tasks.forEach(
+              (task) =>
+                invoice.tasks.find((i) => i.id === task.id) !== undefined && taskIds.push(task.id),
+            );
+          });
+          updateValue("tasks", [...taskIds]);
+        })
+        .catch((error) => console.error("Failed to fetch tasks", error));
+    }
+  };
+
+  const toggleTask = (taskId, checked) => {
+    updateValue(
+      "tasks",
+      checked ? [...form.data.tasks, taskId] : form.data.tasks.filter((id) => id !== taskId),
+    );
+  };
 
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor
-          href="#"
-          onClick={() => redirectTo("clients.companies.index")}
-          fz={14}
-        >
-          Companies
+        <Anchor href="#" onClick={() => redirectTo("invoices.index")} fz={14}>
+          Invoices
         </Anchor>
         <div>Edit</div>
       </Breadcrumbs>
 
       <Grid justify="space-between" align="flex-end" gutter="xl" mb="lg">
         <Grid.Col span="auto">
-          <Title order={1}>Edit company</Title>
+          <Title order={1}>Edit invoice</Title>
         </Grid.Col>
         <Grid.Col span="content"></Grid.Col>
       </Grid>
 
-      <ContainerBox maw={600}>
-        <form onSubmit={submit}>
-          <TextInput
-            label="Name"
-            placeholder="Company name"
-            required
-            value={form.data.name}
-            onChange={(e) => updateValue("name", e.target.value)}
-            error={form.errors.name}
-          />
-
-          <MultiSelect
-            label="Clients"
-            placeholder="Select clients"
-            required
-            mt="md"
-            value={form.data.clients}
-            onChange={(values) => updateValue("clients", values)}
-            data={clients}
-            error={form.errors.clients}
-          />
-
-          <Fieldset legend="Location" mt="xl">
+      <Flex gap="xl" align="flex-start" direction="row" wrap="nowrap">
+        <ContainerBox miw="440">
+          <form onSubmit={submit}>
             <TextInput
-              label="Address"
-              placeholder="Address"
-              value={form.data.address}
-              onChange={(e) => updateValue("address", e.target.value)}
-              error={form.errors.address}
-            />
-
-            <Group grow>
-              <TextInput
-                label="Postal code"
-                placeholder="Postal code"
-                mt="md"
-                value={form.data.postal_code}
-                onChange={(e) => updateValue("postal_code", e.target.value)}
-                error={form.errors.postal_code}
-              />
-
-              <TextInput
-                label="City"
-                placeholder="City"
-                mt="md"
-                value={form.data.city}
-                onChange={(e) => updateValue("city", e.target.value)}
-                error={form.errors.city}
-              />
-            </Group>
-
-            <Select
-              label="Country"
-              placeholder="Select country"
-              mt="md"
-              searchable={true}
-              value={form.data.country_id}
-              onChange={(value) => updateValue("country_id", value)}
-              data={countries}
-              error={form.errors.country_id}
-            />
-          </Fieldset>
-
-          <Fieldset legend="Details" mt="xl">
-            <TextInput
-              label="Business ID"
-              placeholder="Business ID"
-              value={form.data.business_id}
-              onChange={(e) => updateValue("business_id", e.target.value)}
-              error={form.errors.business_id}
-            />
-
-            <TextInput
-              label="Tax ID"
-              placeholder="Tax ID"
-              mt="md"
-              value={form.data.tax_id}
-              onChange={(e) => updateValue("tax_id", e.target.value)}
-              error={form.errors.tax_id}
-            />
-
-            <TextInput
-              label="VAT"
-              placeholder="VAT"
-              mt="md"
-              value={form.data.vat}
-              onChange={(e) => updateValue("vat", e.target.value)}
-              error={form.errors.vat}
-            />
-          </Fieldset>
-
-          <Fieldset legend="Finance" mt="xl">
-            <TextInput
-              label="IBAN"
-              placeholder="IBAN"
-              value={form.data.iban}
-              onChange={(e) => updateValue("iban", e.target.value)}
-              error={form.errors.iban}
-            />
-
-            <TextInput
-              label="SWIFT"
-              placeholder="SWIFT"
-              mt="md"
-              value={form.data.swift}
-              onChange={(e) => updateValue("swift", e.target.value)}
-              error={form.errors.swift}
-            />
-
-            <Select
-              label="Default currency"
-              placeholder="Select currency"
+              label="Invoice number"
+              placeholder="Invoice number"
               required
-              mt="md"
+              value={form.data.number}
+              onChange={(e) => updateValue("number", e.target.value)}
+              error={form.errors.number}
+            />
+
+            <Select
+              label="Client company"
+              placeholder="Select client company"
               searchable={true}
-              value={form.data.currency_id}
-              onChange={(value) => updateValue("currency_id", value)}
-              data={currencies}
-              error={form.errors.currency_id}
-            />
-          </Fieldset>
-
-          <Fieldset legend="Contact" mt="xl">
-            <Group grow>
-              <TextInput
-                label="Email"
-                placeholder="Email"
-                value={form.data.email}
-                onChange={(e) => updateValue("email", e.target.value)}
-                error={form.errors.email}
-              />
-
-              <TextInput
-                label="Phone"
-                placeholder="Phone"
-                value={form.data.phone}
-                onChange={(e) => updateValue("phone", e.target.value)}
-                error={form.errors.phone}
-              />
-            </Group>
-
-            <TextInput
-              label="Web"
-              placeholder="Web"
+              allowDeselect={false}
               mt="md"
-              value={form.data.web}
-              onChange={(e) => updateValue("web", e.target.value)}
-              error={form.errors.web}
+              required
+              value={form.data.client_company_id}
+              onChange={(value) => updateValue("client_company_id", value)}
+              data={clientCompanies.map((i) => ({ value: i.id.toString(), label: i.name }))}
+              error={form.errors.client_company_id}
             />
-          </Fieldset>
 
-          <Group justify="space-between" mt="xl">
-            <BackButton route="clients.companies.index" />
-            <ActionButton loading={form.processing}>Update</ActionButton>
-          </Group>
-        </form>
-      </ContainerBox>
+            <MultiSelect
+              label="Projects"
+              placeholder={
+                filteredProjects.length ? "Select projects" : "Please select client company first"
+              }
+              disabled={filteredProjects.length === 0}
+              withAsterisk
+              mt="md"
+              value={form.data.projects}
+              onChange={(values) => updateValue("projects", values)}
+              data={filteredProjects}
+              error={form.errors.projects}
+            />
+
+            <Radio.Group
+              label="Payment type"
+              mt="md"
+              withAsterisk
+              value={form.data.type}
+              onChange={(value) => updateValue("type", value)}
+            >
+              <Group mt="xs">
+                <Radio value="hourly" label="Hourly" />
+                <Radio value="fixed_amount" label="Fixed amount" />
+              </Group>
+            </Radio.Group>
+
+            {form.data.type === "hourly" && (
+              <NumberInput
+                label="Hourly rate"
+                mt="md"
+                allowNegative={false}
+                clampBehavior="strict"
+                decimalScale={2}
+                fixedDecimalScale={true}
+                prefix={currency.symbol}
+                value={form.data.hourly_rate / 100}
+                onChange={(value) => updateValue("hourly_rate", value * 100)}
+                error={form.errors.hourly_rate}
+              />
+            )}
+
+            {form.data.type === "fixed_amount" && (
+              <NumberInput
+                label="Fixed amount"
+                mt="md"
+                allowNegative={false}
+                clampBehavior="strict"
+                decimalScale={2}
+                fixedDecimalScale={true}
+                prefix={currency.symbol}
+                value={form.data.fixed_amount / 100}
+                onChange={(value) => updateValue("fixed_amount", value * 100)}
+                error={form.errors.fixed_amount}
+              />
+            )}
+
+            <Textarea
+              label="Note"
+              placeholder="Invoice note"
+              mt="md"
+              autosize
+              minRows={4}
+              maxRows={8}
+              value={form.data.note}
+              onChange={(e) => updateValue("note", e.target.value)}
+            />
+
+            <Group justify="space-between" mt={30}>
+              <BackButton route="invoices.index" />
+              <ActionButton loading={form.processing}>Update</ActionButton>
+            </Group>
+          </form>
+        </ContainerBox>
+        <ContainerBox style={{ flexGrow: 1 }}>
+          {projectTasks.length > 0 ? (
+            <>
+              {projectTasks.map((project) => (
+                <Box key={project.id} mb="lg">
+                  <Title order={2} mb="md">
+                    {project.name}
+                  </Title>
+                  {project.tasks.length ? (
+                    project.tasks.map((task) => (
+                      <Task
+                        key={task.id}
+                        task={task}
+                        selectedTasks={form.data.tasks}
+                        toggleTask={toggleTask}
+                        currency={currency}
+                        type={form.data.type}
+                        hourlyRate={form.data.hourly_rate}
+                      />
+                    ))
+                  ) : (
+                    <Text size="sm" c="dimmed">
+                      No tasks with logged time were found
+                    </Text>
+                  )}
+                </Box>
+              ))}
+              <Flex justify="flex-end" mt="xl">
+                <Stack gap={0}>
+                  <Text size="lg" lts={1} fw={600} mb={-5}>
+                    Total:
+                  </Text>
+                  <Text fw={700} fz={32}>
+                    {money(total, currency.code)}
+                  </Text>
+                </Stack>
+              </Flex>
+            </>
+          ) : (
+            <>
+              <Center mih={300}>
+                <Box align="center">
+                  <IconSearch style={{ width: rem(55), height: rem(55) }} opacity={0.5} />
+                  <Text fz={24} fw={600} align="center">
+                    No tasks found
+                  </Text>
+                  <Text fz={15} c="dimmed">
+                    Select company and at least one project
+                  </Text>
+                </Box>
+              </Center>
+            </>
+          )}
+        </ContainerBox>
+      </Flex>
     </>
   );
 };
 
-ClientCompanyEdit.layout = (page) => (
-  <Layout title="Edit company">{page}</Layout>
-);
+InvoiceEdit.layout = (page) => <Layout title="Edit invoice">{page}</Layout>;
 
-export default ClientCompanyEdit;
+export default InvoiceEdit;

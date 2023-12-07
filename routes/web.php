@@ -97,7 +97,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Invoices
     Route::resource('invoices', InvoiceController::class)->except(['show']);
-    Route::get('invoices/tasks', [InvoiceTasksController::class, 'index'])->name('invoices.tasks');
+    Route::group(['prefix' => 'invoices', 'as' => 'invoices.'], function () {
+        Route::get('tasks', [InvoiceTasksController::class, 'index'])->name('tasks');
+        Route::put('{invoice}/status', [InvoiceController::class, 'setStatus'])->name('status');
+        Route::post('{invoice}/restore', [InvoiceController::class, 'restore'])->name('restore');
+    });
 
     // Reports
     Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {

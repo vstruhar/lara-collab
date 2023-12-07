@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Invoice\CreateInvoice;
+use App\Actions\Invoice\UpdateInvoice;
 use App\Http\Requests\Invoice\StoreInvoiceRequest;
 use App\Http\Requests\Invoice\UpdateInvoiceRequest;
 use App\Http\Resources\Invoice\InvoiceResource;
@@ -9,6 +11,10 @@ use App\Models\ClientCompany;
 use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Project;
+use App\Models\Task;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,11 +25,14 @@ class InvoiceController extends Controller
         $this->authorizeResource(Invoice::class, 'invoice');
     }
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return Inertia::render('Invoices/Index', [
             'items' => InvoiceResource::collection(
-                Invoice::with(['clientCompany', 'createdByUser'])
+                Invoice::searchByQueryString()
+                    ->sortByQueryString()
+                    ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
+                    ->with(['clientCompany.currency', 'createdByUser'])
                     ->paginate(12)
             ),
         ]);
@@ -47,22 +56,35 @@ class InvoiceController extends Controller
 
     public function store(StoreInvoiceRequest $request)
     {
-        // (new CreateInvoice)->create($request->validated());
+        (new CreateInvoice)->create($request->validated());
 
-        return redirect()->route('invoices.index')->success('Invoice created', 'A new company was successfully created.');
+        return redirect()->route('invoices.index')->success('Invoice created', 'A new invoice was successfully created.');
     }
 
     public function edit(Invoice $invoice)
     {
-        return Inertia::render('Invoice/Edit', [
-            'item' => new InvoiceResource($invoice),
-            'dropdowns' => [],
+        return Inertia::render('Invoices/Edit', [
+            'invoice' => $invoice->load('tasks:id,invoice_id'),
+            'projects' => Project::orderBy('name')->get(['id', 'name', 'client_company_id']),
+            'selectedProjects' => DB::table('tasks')
+                ->where('invoice_id', $invoice->id)
+                ->groupBy('project_id')
+                ->get(['project_id'])
+                ->pluck('project_id'),
+            'clientCompanies' => ClientCompany::has('projects')
+                ->with(['currency'])
+                ->orderBy('name')
+                ->get(['id', 'name', 'rate', 'currency_id']),
+            'dropdowns' => [
+                'clientCompanies' => ClientCompany::dropdownValues(['hasProjects']),
+                'currencies' => Currency::dropdownValues(),
+            ],
         ]);
     }
 
     public function update(Invoice $invoice, UpdateInvoiceRequest $request)
     {
-        // (new UpdateInvoice)->update($invoice, $request->validated());
+        (new UpdateInvoice)->update($invoice, $request->validated());
 
         return redirect()->route('invoices.index')->success('Invoice updated', 'The invoice was successfully updated.');
     }
@@ -83,5 +105,14 @@ class InvoiceController extends Controller
         $invoice->unArchive();
 
         return redirect()->back()->success('Invoice restored', 'The restoring of the invoice was completed successfully.');
+    }
+
+    public function setStatus(Request $request, Invoice $invoice)
+    {
+        $request->validate(['status' => ['required', 'in:new,sent,paid']]);
+
+        $invoice->update(['status' => $request->status]);
+
+        return redirect()->back();
     }
 }

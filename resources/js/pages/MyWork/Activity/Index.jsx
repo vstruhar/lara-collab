@@ -24,6 +24,7 @@ import {
   IconMessage,
   IconPaperclip,
   IconPlus,
+  IconX,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
@@ -61,6 +62,9 @@ const ActivityIndex = () => {
     }
     if (title.includes("was completed")) {
       return <IconCheck size={18} />;
+    }
+    if (title.includes("uncompleted")) {
+      return <IconX size={18} />;
     }
     if (title === "New task" || title === "New project" || title.includes("Assigned user")) {
       return <IconPlus size={18} />;

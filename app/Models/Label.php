@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\OrderByScope;
 use Illuminate\Database\Eloquent\Model;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use Lacodix\LaravelModelFilter\Traits\IsSortable;
@@ -12,11 +11,6 @@ class Label extends Model
 {
     use Archivable, IsSearchable, IsSortable;
 
-    protected static function booted(): void
-    {
-        static::addGlobalScope(new OrderByScope('name'));
-    }
-
     protected $fillable = ['name', 'color'];
 
     protected $searchable = [
@@ -24,6 +18,6 @@ class Label extends Model
     ];
 
     protected $sortable = [
-        'name',
+        'name' => 'asc',
     ];
 }

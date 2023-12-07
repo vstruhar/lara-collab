@@ -13,10 +13,13 @@ class InvoiceTasksController extends Controller
     {
         return response()->json([
             'projectTasks' => Project::whereIn('id', $request->get('projectIds', []))
-                ->with(['tasks' => function ($query) {
+                ->with(['tasks' => function ($query) use ($request) {
                     $query->whereNotNull('completed_at')
-                        ->whereNull('invoice_id')
                         ->where('billable', true)
+                        ->where(function ($query) use ($request) {
+                            $query->whereNull('invoice_id')
+                                ->when($request->invoiceId, fn ($query) => $query->orWhere('invoice_id', $request->invoiceId));
+                        })
                         ->with(['labels:id,name,color'])
                         ->withSum('timeLogs AS total_minutes', 'minutes');
                 }])
