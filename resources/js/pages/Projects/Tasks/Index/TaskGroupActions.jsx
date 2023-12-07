@@ -1,11 +1,6 @@
 import { openConfirmModal } from "@/components/ConfirmModal";
 import { ActionIcon, Group, Menu, rem } from "@mantine/core";
-import {
-  IconArchive,
-  IconArchiveOff,
-  IconDots,
-  IconPencil,
-} from "@tabler/icons-react";
+import { IconArchive, IconArchiveOff, IconDots, IconPencil } from "@tabler/icons-react";
 import { useForm } from "laravel-precognition-react-inertia";
 import EditTasksGroupModal from "./Modals/EditTasksGroupModal";
 
@@ -55,20 +50,14 @@ export default function TaskGroupActions({ group, ...props }) {
         >
           <Menu.Target>
             <ActionIcon variant="subtle" color="gray">
-              <IconDots
-                style={{ width: rem(20), height: rem(20) }}
-                stroke={1.5}
-              />
+              <IconDots style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
             {can("edit task group") && !route().params.archived && (
               <Menu.Item
                 leftSection={
-                  <IconPencil
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
+                  <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }
                 onClick={openEditModal}
               >
@@ -78,10 +67,7 @@ export default function TaskGroupActions({ group, ...props }) {
             {can("restore task group") && route().params.archived && (
               <Menu.Item
                 leftSection={
-                  <IconArchiveOff
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
+                  <IconArchiveOff style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }
                 color="blue"
                 onClick={openRestoreModal}
@@ -92,10 +78,7 @@ export default function TaskGroupActions({ group, ...props }) {
             {can("archive task group") && !route().params.archived && (
               <Menu.Item
                 leftSection={
-                  <IconArchive
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
+                  <IconArchive style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }
                 color="red"
                 onClick={openArchiveModal}

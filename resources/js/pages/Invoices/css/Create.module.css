@@ -1,0 +1,19 @@
+.checkbox input {
+    cursor: pointer;
+}
+
+.task {
+    transition: 0.3s ease color, 0.3s ease background-color;
+    padding: 5px 10px 5px 15px;
+    margin: 5px -15px;
+    border-radius: var(--mantine-radius-md);
+
+    @mixin hover {
+        color: light-dark(var(--mantine-color-dark-4), var(--mantine-color-white));
+        background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-gray-9));
+    }
+}
+
+.name {
+    cursor: pointer;
+}

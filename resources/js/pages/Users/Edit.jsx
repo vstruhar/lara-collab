@@ -27,22 +27,18 @@ const UserEdit = () => {
   const { item } = usePage().props;
   const { getDropdownValues } = useRoles();
 
-  const [form, submit, updateValue] = useForm(
-    "post",
-    route("users.update", item.id),
-    {
-      _method: "put",
-      avatar: null,
-      job_title: item.job_title,
-      name: item.name,
-      phone: item.phone || "",
-      rate: item.rate / 100,
-      email: item.email,
-      password: "",
-      password_confirmation: "",
-      roles: item.roles,
-    },
-  );
+  const [form, submit, updateValue] = useForm("post", route("users.update", item.id), {
+    _method: "put",
+    avatar: null,
+    job_title: item.job_title,
+    name: item.name,
+    phone: item.phone || "",
+    rate: item.rate / 100,
+    email: item.email,
+    password: "",
+    password_confirmation: "",
+    roles: item.roles,
+  });
 
   return (
     <>
@@ -66,9 +62,7 @@ const UserEdit = () => {
             <Grid.Col span="content">
               <Avatar
                 src={
-                  form.data.avatar === null
-                    ? item.avatar
-                    : URL.createObjectURL(form.data.avatar)
+                  form.data.avatar === null ? item.avatar : URL.createObjectURL(form.data.avatar)
                 }
                 size={120}
               >
@@ -86,11 +80,7 @@ const UserEdit = () => {
               />
               <Text size="xs" c="dimmed" mt="sm">
                 If no image is uploaded we will try to fetch it via{" "}
-                <Anchor
-                  href="https://unavatar.io"
-                  target="_blank"
-                  opacity={0.6}
-                >
+                <Anchor href="https://unavatar.io" target="_blank" opacity={0.6}>
                   unavatar.io
                 </Anchor>{" "}
                 service.
@@ -151,12 +141,7 @@ const UserEdit = () => {
             />
           </Group>
 
-          <Divider
-            mt="xl"
-            mb="md"
-            label="Login credentials"
-            labelPosition="center"
-          />
+          <Divider mt="xl" mb="md" label="Login credentials" labelPosition="center" />
 
           <TextInput
             label="Email"
@@ -182,9 +167,7 @@ const UserEdit = () => {
             placeholder="Confirm password"
             mt="md"
             value={form.data.password_confirmation}
-            onChange={(e) =>
-              updateValue("password_confirmation", e.target.value)
-            }
+            onChange={(e) => updateValue("password_confirmation", e.target.value)}
             error={form.errors.password_confirmation}
           />
 

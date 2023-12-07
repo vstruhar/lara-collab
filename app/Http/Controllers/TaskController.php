@@ -48,8 +48,7 @@ class TaskController extends Controller
                         ->withDefault()
                         ->get(),
                 ];
-            })
-            ->filter(fn ($items) => $items->count() > 0);
+            });
 
         return Inertia::render('Projects/Tasks/Index', [
             'project' => $project,

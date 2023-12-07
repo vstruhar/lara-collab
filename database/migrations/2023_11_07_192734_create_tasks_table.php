@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('group_id');
             $table->foreignId('created_by_user_id')->nullable();
             $table->foreignId('assigned_to_user_id')->nullable();
+            $table->foreignId('invoice_id')->nullable();
             $table->string('name');
             $table->unsignedInteger('number');
             $table->text('description')->nullable();

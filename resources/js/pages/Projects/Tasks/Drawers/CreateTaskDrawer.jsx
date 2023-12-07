@@ -58,11 +58,7 @@ export function CreateTaskDrawer() {
   }, [create.opened]);
 
   const closeDrawer = (force = false) => {
-    if (
-      force ||
-      (JSON.stringify(form.data) === JSON.stringify(initial) &&
-        !form.processing)
-    ) {
+    if (force || (JSON.stringify(form.data) === JSON.stringify(initial) && !form.processing)) {
       closeCreateTask();
     } else {
       openConfirmModal({
@@ -149,12 +145,7 @@ export function CreateTaskDrawer() {
           />
 
           <Flex justify="space-between" mt="xl">
-            <Button
-              variant="transparent"
-              w={100}
-              disabled={form.processing}
-              onClick={closeDrawer}
-            >
+            <Button variant="transparent" w={100} disabled={form.processing} onClick={closeDrawer}>
               Cancel
             </Button>
 
@@ -226,9 +217,7 @@ export function CreateTaskDrawer() {
             label="Billable"
             mt="xl"
             checked={form.data.billable}
-            onChange={(event) =>
-              updateValue("billable", event.currentTarget.checked)
-            }
+            onChange={(event) => updateValue("billable", event.currentTarget.checked)}
           />
 
           {!hasRoles(user, ["client"]) && (
@@ -236,9 +225,7 @@ export function CreateTaskDrawer() {
               label="Hidden from clients"
               mt="md"
               checked={form.data.hidden_from_clients}
-              onChange={(event) =>
-                updateValue("hidden_from_clients", event.currentTarget.checked)
-              }
+              onChange={(event) => updateValue("hidden_from_clients", event.currentTarget.checked)}
             />
           )}
         </div>

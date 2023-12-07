@@ -1,13 +1,20 @@
 import ActionButton from "@/components/ActionButton";
 import BackButton from "@/components/BackButton";
+import { Label } from "@/components/Label";
 import useForm from "@/hooks/useForm";
 import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
-import { redirectTo } from "@/utils/route";
+import { money } from "@/utils/currency";
+import { date } from "@/utils/datetime";
+import { openInNewTab, redirectTo } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import {
   Anchor,
+  Box,
   Breadcrumbs,
+  Center,
+  Checkbox,
+  Flex,
   Grid,
   Group,
   MultiSelect,
@@ -15,20 +22,32 @@ import {
   Radio,
   Select,
   SimpleGrid,
+  Stack,
+  Text,
+  TextInput,
   Textarea,
   Title,
+  Tooltip,
+  rem,
 } from "@mantine/core";
 import { useDidUpdate } from "@mantine/hooks";
+import { IconSearch } from "@tabler/icons-react";
+import axios from "axios";
 import { useState } from "react";
+import classes from "./css/Create.module.css";
 
 const InvoiceCreate = () => {
-  const { projects, clientCompanies } = usePage().props;
+  const { projects, clientCompanies, nextNumber } = usePage().props;
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [currency, setCurrency] = useState("");
+  const [projectTasks, setProjectTasks] = useState([]);
+  const [total, setTotal] = useState(0);
 
   const [form, submit, updateValue] = useForm("post", route("invoices.store"), {
+    number: nextNumber,
     client_company_id: "",
     projects: [],
+    tasks: [],
     type: "hourly",
     hourly_rate: 0,
     fixed_amount: 0,
@@ -47,8 +66,52 @@ const InvoiceCreate = () => {
     if (company.rate) {
       updateValue("hourly_rate", company.rate / 100);
     }
-    setCurrency(company.currency.symbol);
+    setCurrency(company.currency);
   }, [form.data.client_company_id]);
+
+  useDidUpdate(() => fetchTasks(), [form.data.projects]);
+
+  useDidUpdate(() => {
+    let total = 0;
+
+    if (form.data.type === "hourly") {
+      projectTasks.forEach((project) => {
+        project.tasks.forEach((task) => {
+          if (form.data.tasks.includes(task.id))
+            total += (Number(task.total_minutes) / 60) * form.data.hourly_rate * 100;
+        });
+      });
+    } else {
+      total = form.data.fixed_amount;
+    }
+    setTotal(total);
+  }, [form.data.tasks, form.data.type, form.data.hourly_rate, form.data.fixed_amount]);
+
+  const fetchTasks = () => {
+    if (form.data.projects.length) {
+      axios
+        .get(route("invoices.tasks", { projectIds: form.data.projects }))
+        .then(({ data }) => {
+          setProjectTasks(data.projectTasks);
+          const taskIds = [];
+
+          data.projectTasks.forEach((project) => {
+            project.tasks.forEach(
+              (task) => Number(task.total_minutes) > 0 && taskIds.push(task.id),
+            );
+          });
+          updateValue("tasks", [...taskIds]);
+        })
+        .catch((error) => console.error("Failed to fetch tasks", error));
+    }
+  };
+
+  const toggleTask = (taskId, checked) => {
+    updateValue(
+      "tasks",
+      checked ? [...form.data.tasks, taskId] : form.data.tasks.filter((id) => id !== taskId),
+    );
+  };
 
   return (
     <>
@@ -66,13 +129,24 @@ const InvoiceCreate = () => {
         <Grid.Col span="content"></Grid.Col>
       </Grid>
 
-      <SimpleGrid cols={2}>
+      <SimpleGrid cols={2} spacing="xl">
         <ContainerBox>
           <form onSubmit={submit}>
+            <TextInput
+              label="Invoice number"
+              placeholder="Invoice number"
+              required
+              value={form.data.number}
+              onChange={(e) => updateValue("number", e.target.value)}
+              error={form.errors.number}
+            />
+
             <Select
               label="Client company"
               placeholder="Select client company"
               searchable={true}
+              allowDeselect={false}
+              mt="md"
               required
               value={form.data.client_company_id}
               onChange={(value) => updateValue("client_company_id", value)}
@@ -83,9 +157,9 @@ const InvoiceCreate = () => {
             <MultiSelect
               label="Projects"
               placeholder={
-                filteredProjects.length ? "Select projects" : "Please select client company"
+                filteredProjects.length ? "Select projects" : "Please select client company first"
               }
-              readOnly={filteredProjects.length === 0}
+              disabled={filteredProjects.length === 0}
               withAsterisk
               mt="md"
               value={form.data.projects}
@@ -95,7 +169,7 @@ const InvoiceCreate = () => {
             />
 
             <Radio.Group
-              label="Invoice type"
+              label="Payment type"
               mt="md"
               withAsterisk
               value={form.data.type}
@@ -115,7 +189,7 @@ const InvoiceCreate = () => {
                 clampBehavior="strict"
                 decimalScale={2}
                 fixedDecimalScale={true}
-                prefix={currency}
+                prefix={currency.symbol}
                 value={form.data.hourly_rate}
                 onChange={(value) => updateValue("hourly_rate", value)}
                 error={form.errors.hourly_rate}
@@ -130,9 +204,9 @@ const InvoiceCreate = () => {
                 clampBehavior="strict"
                 decimalScale={2}
                 fixedDecimalScale={true}
-                prefix={currency}
-                value={form.data.fixed_amount}
-                onChange={(value) => updateValue("fixed_amount", value)}
+                prefix={currency.symbol}
+                value={form.data.fixed_amount / 100}
+                onChange={(value) => updateValue("fixed_amount", value * 100)}
                 error={form.errors.fixed_amount}
               />
             )}
@@ -154,7 +228,107 @@ const InvoiceCreate = () => {
             </Group>
           </form>
         </ContainerBox>
-        <ContainerBox>2</ContainerBox>
+        <ContainerBox>
+          {projectTasks.length > 0 ? (
+            <>
+              {projectTasks.map((project) => (
+                <Box key={project.id} mb="lg">
+                  <Title order={2} mb="md">
+                    {project.name}
+                  </Title>
+                  {project.tasks.length ? (
+                    project.tasks.map((task) => (
+                      <Flex
+                        key={task.id}
+                        className={classes.task}
+                        justify="space-between"
+                        wrap="nowrap"
+                      >
+                        <Group gap="sm" wrap="nowrap" align="self-start">
+                          <Checkbox
+                            size="sm"
+                            className={classes.checkbox}
+                            checked={form.data.tasks.includes(task.id)}
+                            onChange={(event) => toggleTask(task.id, event.currentTarget.checked)}
+                          />
+                          <Stack gap={3}>
+                            <Text
+                              className={classes.name}
+                              size="sm"
+                              fw={500}
+                              onClick={() =>
+                                openInNewTab("projects.tasks.open", [task.project_id, task.id])
+                              }
+                            >
+                              #{task.number + ": " + task.name}
+                            </Text>
+
+                            <Group wrap="wrap" style={{ rowGap: rem(3), columnGap: rem(12) }}>
+                              {task.labels.map((label) => (
+                                <Label key={label.id} name={label.name} color={label.color} />
+                              ))}
+                            </Group>
+                          </Stack>
+                        </Group>
+                        <Stack gap={3} ml={10} style={{ flexShrink: 0 }}>
+                          {form.data.type === "hourly" && (
+                            <Tooltip
+                              label={
+                                Number(task.total_minutes) === 0
+                                  ? "There is no logged time on this task"
+                                  : `Logged time: ${Number(task.total_minutes) / 60}h`
+                              }
+                              openDelay={500}
+                              withArrow
+                            >
+                              <Text fw={700} c={Number(task.total_minutes) === 0 ? "red.7" : ""}>
+                                {money(
+                                  (Number(task.total_minutes) / 60) * form.data.hourly_rate * 100,
+                                  currency.code,
+                                )}
+                              </Text>
+                            </Tooltip>
+                          )}
+                          <Text size="xs" c="dimmed" fw={500}>
+                            {date(task.completed_at)}
+                          </Text>
+                        </Stack>
+                      </Flex>
+                    ))
+                  ) : (
+                    <Text size="sm" c="dimmed">
+                      No tasks with logged time were found
+                    </Text>
+                  )}
+                </Box>
+              ))}
+              <Flex justify="flex-end" mt="xl">
+                <Stack gap={0}>
+                  <Text size="lg" lts={1} fw={600} mb={-5}>
+                    Total:
+                  </Text>
+                  <Text fw={700} fz={32}>
+                    {money(total, currency.code)}
+                  </Text>
+                </Stack>
+              </Flex>
+            </>
+          ) : (
+            <>
+              <Center mih={300}>
+                <Box align="center">
+                  <IconSearch style={{ width: rem(55), height: rem(55) }} opacity={0.5} />
+                  <Text fz={24} fw={600} align="center">
+                    No tasks found
+                  </Text>
+                  <Text fz={15} c="dimmed">
+                    Select company and at least one project
+                  </Text>
+                </Box>
+              </Center>
+            </>
+          )}
+        </ContainerBox>
       </SimpleGrid>
     </>
   );

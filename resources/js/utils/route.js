@@ -62,3 +62,7 @@ export const replaceUrlWithoutReload = (url) => {
     url + location.search,
   );
 };
+
+export const openInNewTab = (routeName, params = {}) => {
+  window.open(route(routeName, params));
+};

@@ -4,7 +4,6 @@ import { Link } from "@inertiajs/react";
 import { Badge, Group, Table, Text } from "@mantine/core";
 
 export default function TableRow({ item }) {
-  console.log(item.currency);
   return (
     <Table.Tr key={item.id}>
       <Table.Td>

@@ -13,9 +13,7 @@ export default function TaskGroup({ group, tasks, ...props }) {
     <Draggable draggableId={group.id.toString()} {...props}>
       {(provided, snapshot) => (
         <div
-          className={`${classes.row} ${
-            snapshot.isDragging && classes.itemDragging
-          }`}
+          className={`${classes.row} ${snapshot.isDragging && classes.itemDragging}`}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
@@ -27,9 +25,7 @@ export default function TaskGroup({ group, tasks, ...props }) {
                     width: rem(18),
                     height: rem(18),
                     display:
-                      can("reorder task group") && !route().params.archived
-                        ? "inline"
-                        : "none",
+                      can("reorder task group") && !route().params.archived ? "inline" : "none",
                   }}
                   stroke={1.5}
                 />
@@ -48,10 +44,7 @@ export default function TaskGroup({ group, tasks, ...props }) {
                   mr={-10}
                   onClick={() => openCreateTask(group.id)}
                 >
-                  <IconPlus
-                    style={{ width: rem(18), height: rem(18) }}
-                    stroke={2}
-                  />
+                  <IconPlus style={{ width: rem(18), height: rem(18) }} stroke={2} />
                 </ActionIcon>
               </Tooltip>
             )}

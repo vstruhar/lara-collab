@@ -14,18 +14,29 @@ import { Notifications } from "@mantine/notifications";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
 
-const theme = createTheme({});
+const theme = createTheme({
+  colors: {
+    dark: [
+      "#C1C2C5",
+      "#A6A7AB",
+      "#909296",
+      "#5c5f66",
+      "#373A40",
+      "#2C2E33",
+      "#25262b",
+      "#1A1B1E",
+      "#141517",
+      "#101113",
+    ],
+  },
+});
 
-const appName =
-  window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
+const appName = window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
 
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
   resolve: (name) =>
-    resolvePageComponent(
-      `./pages/${name}.jsx`,
-      import.meta.glob("./pages/**/*.jsx"),
-    ),
+    resolvePageComponent(`./pages/${name}.jsx`, import.meta.glob("./pages/**/*.jsx")),
   setup({ el, App, props }) {
     const root = createRoot(el);
 

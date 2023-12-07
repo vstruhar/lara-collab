@@ -19,6 +19,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
+        "laraveldaily/laravel-invoices": "^3.0",
         "overtrue/laravel-favorite": "^5.1",
         "owen-it/laravel-auditing": "^13.5",
         "pusher/pusher-php-server": "^7.2",

@@ -44,10 +44,7 @@ const TasksIndex = () => {
     if (!destination) {
       return;
     }
-    if (
-      source.droppableId.includes("tasks") &&
-      destination.droppableId.includes("tasks")
-    ) {
+    if (source.droppableId.includes("tasks") && destination.droppableId.includes("tasks")) {
       if (source.droppableId === destination.droppableId) {
         reorderTask(source, destination);
       } else {
@@ -71,18 +68,13 @@ const TasksIndex = () => {
             {groups.length ? (
               <>
                 <DragDropContext onDragEnd={onDragEnd}>
-                  <Droppable
-                    droppableId="groups"
-                    direction="vertical"
-                    type="group"
-                  >
+                  <Droppable droppableId="groups" direction="vertical" type="group">
                     {(provided) => (
                       <div {...provided.droppableProps} ref={provided.innerRef}>
                         {groups
                           .filter(
                             (group) =>
-                              !usingFilters ||
-                              (usingFilters && tasks[group.id]?.length > 0),
+                              !usingFilters || (usingFilters && tasks[group.id]?.length > 0),
                           )
                           .map((group, index) => (
                             <TaskGroup
@@ -113,10 +105,7 @@ const TasksIndex = () => {
                 )}
               </>
             ) : (
-              <EmptyResult
-                title="No tasks found"
-                subtitle="or none match your search criteria"
-              />
+              <EmptyResult title="No tasks found" subtitle="or none match your search criteria" />
             )}
           </Grid.Col>
         ) : (
@@ -132,8 +121,6 @@ const TasksIndex = () => {
   );
 };
 
-TasksIndex.layout = (page) => (
-  <Layout title={currentProject?.name}>{page}</Layout>
-);
+TasksIndex.layout = (page) => <Layout title={currentProject?.name}>{page}</Layout>;
 
 export default TasksIndex;

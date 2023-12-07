@@ -32,6 +32,7 @@ class InvoiceController extends Controller
     public function create()
     {
         return Inertia::render('Invoices/Create', [
+            'nextNumber' => Invoice::getNextNumber(),
             'projects' => Project::orderBy('name')->get(['id', 'name', 'client_company_id']),
             'clientCompanies' => ClientCompany::has('projects')
                 ->with(['currency'])

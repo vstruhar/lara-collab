@@ -25,11 +25,7 @@ export default function Header() {
       </Grid.Col>
       <Grid.Col span="content">
         {can("create task") && (
-          <Button
-            leftSection={<IconPlus size={14} />}
-            radius="xl"
-            onClick={() => openCreateTask()}
-          >
+          <Button leftSection={<IconPlus size={14} />} radius="xl" onClick={() => openCreateTask()}>
             Add task
           </Button>
         )}
