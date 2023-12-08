@@ -66,18 +66,18 @@ export default function RecentComments({ comments }) {
         </ScrollArea>
       ) : (
         <Center my={30}>
-          <Group gap={15}>
+          <Group gap={15} opacity={0.5}>
             <IconMessage
               style={{
-                width: rem(45),
-                height: rem(45),
+                width: rem(40),
+                height: rem(40),
               }}
             />
             <div>
-              <Text fz={24} fw={600}>
+              <Text fz={20} fw={600}>
                 No comments
               </Text>
-              <Text fz={15} c="dimmed">
+              <Text fz={12} c="dimmed">
                 On your tasks
               </Text>
             </div>
