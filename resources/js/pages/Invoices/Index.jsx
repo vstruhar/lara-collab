@@ -19,8 +19,8 @@ const InvoicesIndex = () => {
     { label: "Status", column: "status" },
     { label: "Company", column: "name" },
     { label: "Note", column: "note" },
-    { label: "Amount", column: "amount" },
-    { label: "Amount with tax", column: "amount_with_tax" },
+    { label: "Total", column: "amount" },
+    { label: "Total with tax", column: "amount_with_tax" },
     { label: "Payment due", column: "due_date" },
     { label: "Created", column: "created_at" },
     {

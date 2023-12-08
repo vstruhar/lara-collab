@@ -69,7 +69,16 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        Project::create($request->validated());
+        $project = Project::create($request->validated());
+
+        $project->taskGroups()->createMany([
+            ['name' => 'New'],
+            ['name' => 'Todo'],
+            ['name' => 'In progress'],
+            ['name' => 'QA'],
+            ['name' => 'Done'],
+            ['name' => 'Deployed'],
+        ]);
 
         return redirect()->route('projects.index')->success('Project created', 'A new project was successfully created.');
     }

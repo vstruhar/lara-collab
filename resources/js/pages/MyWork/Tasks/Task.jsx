@@ -15,7 +15,7 @@ export default function Task({ task }) {
     >
       <Group gap="sm" wrap="nowrap">
         <Tooltip label="Task group" openDelay={1000} withArrow>
-          <Pill size="sm" className={classes.user} bg="blue" c="white">
+          <Pill size="sm" className={classes.user} bg="blue.8" c="white">
             {task.task_group.name}
           </Pill>
         </Tooltip>

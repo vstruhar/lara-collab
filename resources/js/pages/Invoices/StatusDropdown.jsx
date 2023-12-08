@@ -14,7 +14,7 @@ export default function StatusDropdown({ invoiceId, status }) {
   };
 
   return (
-    <Menu withArrow shadow="md" width={120}>
+    <Menu withArrow shadow="md" width={120} disabled={!can("change invoice status")}>
       <Menu.Target>
         <Pill
           size="sm"
@@ -22,7 +22,10 @@ export default function StatusDropdown({ invoiceId, status }) {
           variant="default"
           bg={color(status)}
           c="white"
-          styles={{ label: { cursor: "pointer" }, root: { cursor: "pointer" } }}
+          styles={{
+            label: { cursor: can("change invoice status") ? "pointer" : "default" },
+            root: { cursor: "pointer" },
+          }}
         >
           {status}
         </Pill>

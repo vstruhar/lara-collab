@@ -26,6 +26,7 @@ class InvoiceResource extends JsonResource
             'hourly_rate' => $this->hourly_rate,
             'due_date' => $this->due_date,
             'note' => $this->note,
+            'filename' => $this->filename,
         ];
     }
 }

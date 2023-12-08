@@ -1,11 +1,6 @@
 import { redirectTo } from "@/utils/route";
 import { ActionIcon, Group, Menu, rem } from "@mantine/core";
-import {
-  IconArchive,
-  IconArchiveOff,
-  IconDots,
-  IconPencil,
-} from "@tabler/icons-react";
+import { IconArchive, IconArchiveOff, IconDots, IconPencil } from "@tabler/icons-react";
 import { useForm } from "laravel-precognition-react-inertia";
 import { openConfirmModal } from "./ConfirmModal";
 
@@ -17,6 +12,7 @@ export default function TableRowActions({
   restorePermission,
   archive,
   restore,
+  children,
 }) {
   const archiveForm = useForm("delete", route(archive.route, item.id));
   const restoreForm = useForm("post", route(restore.route, item.id));
@@ -42,17 +38,11 @@ export default function TableRowActions({
     });
 
   return (
-    <Group gap={0} justify="flex-end">
+    <Group gap={0} justify="flex-end" wrap="nowrap">
+      {children}
       {can(editPermission) && !route().params.archived && (
-        <ActionIcon
-          variant="subtle"
-          color="blue"
-          onClick={() => redirectTo(editRoute, item.id)}
-        >
-          <IconPencil
-            style={{ width: rem(16), height: rem(16) }}
-            stroke={1.5}
-          />
+        <ActionIcon variant="subtle" color="blue" onClick={() => redirectTo(editRoute, item.id)}>
+          <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
         </ActionIcon>
       )}
       {((can(archivePermission) && !route().params.archived) ||
@@ -67,20 +57,14 @@ export default function TableRowActions({
           >
             <Menu.Target>
               <ActionIcon variant="subtle" color="gray">
-                <IconDots
-                  style={{ width: rem(16), height: rem(16) }}
-                  stroke={1.5}
-                />
+                <IconDots style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
               </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
               {can(restorePermission) && route().params.archived && (
                 <Menu.Item
                   leftSection={
-                    <IconArchiveOff
-                      style={{ width: rem(16), height: rem(16) }}
-                      stroke={1.5}
-                    />
+                    <IconArchiveOff style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                   }
                   color="blue"
                   onClick={openRestoreModal}
@@ -91,10 +75,7 @@ export default function TableRowActions({
               {can(archivePermission) && !route().params.archived && (
                 <Menu.Item
                   leftSection={
-                    <IconArchive
-                      style={{ width: rem(16), height: rem(16) }}
-                      stroke={1.5}
-                    />
+                    <IconArchive style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                   }
                   color="red"
                   onClick={openArchiveModal}

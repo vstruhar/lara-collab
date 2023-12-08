@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedInteger('amount_with_tax')->nullable();
             $table->unsignedInteger('hourly_rate')->nullable();
             $table->date('due_date')->nullable();
+            $table->string('filename')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->archivedAt();
 

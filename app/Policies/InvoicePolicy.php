@@ -46,4 +46,28 @@ class InvoicePolicy
     {
         return $user->hasPermissionTo('restore invoice');
     }
+
+    /**
+     * Determine whether the user can change status of the model.
+     */
+    public function changeStatus(User $user, Invoice $model): bool
+    {
+        return $user->hasPermissionTo('change invoice status');
+    }
+
+    /**
+     * Determine whether the user can download the model.
+     */
+    public function download(User $user, Invoice $model): bool
+    {
+        return $user->hasPermissionTo('download invoice');
+    }
+
+    /**
+     * Determine whether the user can print the model.
+     */
+    public function print(User $user, Invoice $model): bool
+    {
+        return $user->hasPermissionTo('print invoice');
+    }
 }

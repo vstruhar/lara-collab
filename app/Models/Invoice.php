@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\ClientCompany;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -29,6 +27,7 @@ class Invoice extends Model
         'hourly_rate',
         'due_date',
         'note',
+        'filename',
     ];
 
     protected $searchable = [
@@ -72,6 +71,7 @@ class Invoice extends Model
         if ($last?->created_at->isCurrentYear()) {
             $number = (int) Str::substr($last->number, 4);
         }
+
         return (string) Str::of(++$number)
             ->padLeft(4, '0')
             ->prepend(today()->year);

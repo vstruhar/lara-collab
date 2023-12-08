@@ -1,13 +1,34 @@
 import TableRowActions from "@/components/TableRowActions";
 import { money } from "@/utils/currency";
 import { date, time } from "@/utils/datetime";
+import { download } from "@/utils/file";
 import { redirectTo } from "@/utils/route";
-import { Anchor, Table, Text, Tooltip } from "@mantine/core";
-import { IconNotes, IconNotesOff } from "@tabler/icons-react";
+import { ActionIcon, Anchor, HoverCard, Table, Text, Tooltip, rem } from "@mantine/core";
+import { IconFileDownload, IconNotes, IconNotesOff, IconPrinter } from "@tabler/icons-react";
+import axios from "axios";
 import dayjs from "dayjs";
+import printJS from "print-js";
+import { useState } from "react";
 import StatusDropdown from "./StatusDropdown";
 
 export default function TableRow({ item }) {
+  const [printLoading, setPrintLoading] = useState(false);
+
+  const downloadPdf = () => {
+    axios.get(route("invoices.download", item.id), { responseType: "blob" }).then(({ data }) => {
+      download(data, item.filename.slice(5), "application/pdf");
+    });
+  };
+
+  const printPdf = () => {
+    printJS({
+      printable: route("invoices.pdf", item.id),
+      type: "pdf",
+      onLoadingStart: () => setPrintLoading(true),
+      onLoadingEnd: () => setTimeout(() => setPrintLoading(false), 500),
+    });
+  };
+
   return (
     <Table.Tr key={item.id}>
       <Table.Td>
@@ -32,9 +53,14 @@ export default function TableRow({ item }) {
       </Table.Td>
       <Table.Td>
         {item.note ? (
-          <Tooltip label={item.note} openDelay={250} withArrow>
-            <IconNotes />
-          </Tooltip>
+          <HoverCard width={280} shadow="md" withArrow>
+            <HoverCard.Target>
+              <IconNotes />
+            </HoverCard.Target>
+            <HoverCard.Dropdown>
+              <Text size="sm">{item.note}</Text>
+            </HoverCard.Dropdown>
+          </HoverCard>
         ) : (
           <IconNotesOff opacity={0.3} />
         )}
@@ -80,7 +106,24 @@ export default function TableRow({ item }) {
               content: `Are you sure you want to restore this invoice?`,
               confirmLabel: "Restore",
             }}
-          />
+          >
+            {can("download invoice") && (
+              <ActionIcon variant="subtle" color="blue" onClick={() => downloadPdf()}>
+                <IconFileDownload style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              </ActionIcon>
+            )}
+
+            {can("print invoice") && (
+              <ActionIcon
+                variant="subtle"
+                color="blue"
+                loading={printLoading}
+                onClick={() => printPdf()}
+              >
+                <IconPrinter style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              </ActionIcon>
+            )}
+          </TableRowActions>
         </Table.Td>
       )}
     </Table.Tr>

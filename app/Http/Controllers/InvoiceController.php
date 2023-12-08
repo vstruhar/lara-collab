@@ -11,12 +11,15 @@ use App\Models\ClientCompany;
 use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Project;
-use App\Models\Task;
-use Illuminate\Http\JsonResponse;
+use App\Services\InvoiceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class InvoiceController extends Controller
 {
@@ -56,7 +59,9 @@ class InvoiceController extends Controller
 
     public function store(StoreInvoiceRequest $request)
     {
-        (new CreateInvoice)->create($request->validated());
+        $invoice = (new CreateInvoice)->create($request->validated());
+
+        InvoiceService::generate($invoice);
 
         return redirect()->route('invoices.index')->success('Invoice created', 'A new invoice was successfully created.');
     }
@@ -84,7 +89,9 @@ class InvoiceController extends Controller
 
     public function update(Invoice $invoice, UpdateInvoiceRequest $request)
     {
-        (new UpdateInvoice)->update($invoice, $request->validated());
+        $invoice = (new UpdateInvoice)->update($invoice, $request->validated());
+
+        InvoiceService::generate($invoice);
 
         return redirect()->route('invoices.index')->success('Invoice updated', 'The invoice was successfully updated.');
     }
@@ -109,10 +116,37 @@ class InvoiceController extends Controller
 
     public function setStatus(Request $request, Invoice $invoice)
     {
+        $this->authorize('changeStatus', $invoice);
+
         $request->validate(['status' => ['required', 'in:new,sent,paid']]);
 
         $invoice->update(['status' => $request->status]);
 
         return redirect()->back();
+    }
+
+    public function download(Invoice $invoice): StreamedResponse
+    {
+        $this->authorize('download', $invoice);
+
+        $headers = [
+            'Content-Description' => 'File Transfer',
+            'Content-Type' => 'application/pdf',
+        ];
+
+        return Storage::drive('invoices')->download($invoice->filename, null, $headers);
+    }
+
+    public function pdf(Invoice $invoice): BinaryFileResponse
+    {
+        $this->authorize('print', $invoice);
+
+        $filepath = Storage::drive('invoices')->path($invoice->filename);
+
+        if (! File::exists($filepath)) {
+            abort(404);
+        }
+
+        return response()->file($filepath, ['Cache-Control' => 'no-cache, must-revalidate']);
     }
 }
