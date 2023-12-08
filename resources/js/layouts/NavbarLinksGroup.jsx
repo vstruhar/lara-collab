@@ -1,47 +1,37 @@
-import { router } from "@inertiajs/react";
+import useNavigationStore from "@/hooks/store/useNavigationStore";
+import { redirectToUrl } from "@/utils/route";
 import { Box, Collapse, Group, UnstyledButton, rem } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
-import { useState } from "react";
 import classes from "./css/NavbarLinksGroup.module.css";
 
-export default function NavbarLinksGroup({
-  icon: Icon,
-  label,
-  active,
-  link,
-  links,
-}) {
-  const hasLinks = Array.isArray(links);
-  const [opened, setOpened] = useState(active || false);
+export default function NavbarLinksGroup({ item }) {
+  const { toggle, active } = useNavigationStore();
+  const hasLinks = Array.isArray(item.links);
 
-  const items = (hasLinks ? links.filter((l) => l.visible) : []).map((item) => (
-    <UnstyledButton
-      className={`${classes.link} ${item.active ? classes.active : ""}`}
-      key={item.label}
-      onClick={() => router.get(item.link)}
-    >
-      {item.label}
-    </UnstyledButton>
-  ));
-
-  const handleClick = () => {
+  const itemClick = () => {
     if (hasLinks) {
-      setOpened((o) => !o);
+      toggle(item.label);
     } else {
-      router.get(link);
+      active(item.label, false);
+      redirectToUrl(item.link);
     }
+  };
+
+  const subItemClick = (subItem) => {
+    active(subItem.label, true);
+    redirectToUrl(subItem.link);
   };
 
   return (
     <>
       <UnstyledButton
-        onClick={handleClick}
-        className={`${classes.control} ${active ? classes.active : ""}`}
+        onClick={itemClick}
+        className={`${classes.control} ${item.active ? classes.active : ""}`}
       >
         <Group justify="space-between" gap={0}>
           <Box style={{ display: "flex", alignItems: "center" }}>
-            <Icon className={classes.linkIcon} stroke={1.5} />
-            <Box ml="md">{label}</Box>
+            <item.icon className={classes.linkIcon} stroke={1.5} />
+            <Box ml="md">{item.label}</Box>
           </Box>
           {hasLinks && (
             <IconChevronRight
@@ -50,13 +40,25 @@ export default function NavbarLinksGroup({
               style={{
                 width: rem(16),
                 height: rem(16),
-                transform: opened ? "rotate(-90deg)" : "none",
+                transform: item.opened ? "rotate(-90deg)" : "none",
               }}
             />
           )}
         </Group>
       </UnstyledButton>
-      {hasLinks ? <Collapse in={opened}>{items}</Collapse> : null}
+      {hasLinks ? (
+        <Collapse in={item.opened}>
+          {(hasLinks ? item.links.filter((l) => l.visible) : []).map((item) => (
+            <UnstyledButton
+              key={item.label}
+              className={`${classes.link} ${item.active ? classes.active : ""}`}
+              onClick={() => subItemClick(item)}
+            >
+              {item.label}
+            </UnstyledButton>
+          ))}
+        </Collapse>
+      ) : null}
     </>
   );
 }
