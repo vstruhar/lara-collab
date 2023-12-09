@@ -30,7 +30,7 @@
 
     @mixin hover {
         color: light-dark(var(--mantine-color-dark-4), var(--mantine-color-white));
-        background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-gray-9));
+        background-color: light-dark(var(--mantine-color-dark-1), var(--mantine-color-dark-6));
 
         .actions {
             opacity: 0.4;

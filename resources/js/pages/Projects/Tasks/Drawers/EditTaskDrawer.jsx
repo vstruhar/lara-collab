@@ -144,7 +144,14 @@ export function EditTaskDrawer() {
     >
       {task ? (
         <>
-          <Breadcrumbs c="dark.3" ml={24} mb="xs" separator="I" separatorMargin="sm">
+          <Breadcrumbs
+            c="dark.3"
+            ml={24}
+            mb="xs"
+            separator="I"
+            separatorMargin="sm"
+            styles={{ separator: { opacity: 0.3 } }}
+          >
             <Text size="xs">{task.project.name}</Text>
             <Text size="xs">Task #{task.number}</Text>
             <Text size="xs">
