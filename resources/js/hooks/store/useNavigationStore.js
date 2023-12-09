@@ -36,6 +36,7 @@ const useNavigationStore = create((set) => ({
           });
 
           item.active = hasActive;
+          item.opened = hasActive;
         } else {
           if (item.label === label && !isSubItem) {
             item.active = true;
