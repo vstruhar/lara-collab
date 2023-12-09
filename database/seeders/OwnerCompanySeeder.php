@@ -15,7 +15,7 @@ class OwnerCompanySeeder extends Seeder
         OwnerCompany::create([
             'name' => fake()->company,
             'logo' => null,
-            'address' => fake()->address,
+            'address' => fake()->streetAddress,
             'postal_code' => fake()->postcode,
             'city' => fake()->city,
             'country_id' => fake()->numberBetween(1, 249),

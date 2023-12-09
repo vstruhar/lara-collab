@@ -129,7 +129,7 @@ const DailyLoggedTime = () => {
                   </Table.Tr>
                 ))}
                 <Table.Tr fw={800}>
-                  <Table.Td>SUM</Table.Td>
+                  <Table.Td align="right">SUM</Table.Td>
                   {Object.keys(users).map((userId) => (
                     <Table.Td key={userId}>
                       {Object.keys(items)
