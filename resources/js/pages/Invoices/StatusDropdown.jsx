@@ -8,9 +8,9 @@ export default function StatusDropdown({ invoiceId, status }) {
   };
 
   const color = (status) => {
-    if (status === "new") return "blue.8";
-    if (status === "sent") return "yellow.8";
-    if (status === "paid") return "green.8";
+    if (status === "new") return "blue";
+    if (status === "sent") return "yellow";
+    if (status === "paid") return "green";
   };
 
   return (

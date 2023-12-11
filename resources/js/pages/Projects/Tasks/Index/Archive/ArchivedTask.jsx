@@ -32,7 +32,7 @@ export default function ArchivedTask({ task }) {
           style={{ cursor: "default" }}
           size="sm"
           fw={500}
-          c={isOverdue(task) && task.completed_at === null ? "red.7" : ""}
+          c={isOverdue(task) && task.completed_at === null ? "red" : ""}
         >
           #{task.number + ": " + task.name}
         </Text>

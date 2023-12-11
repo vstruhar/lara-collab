@@ -1,11 +1,13 @@
 .container {
     background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
     border-radius: var(--mantine-radius-md);
-    border: rem(1px) solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+    border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
     padding: rem(8px) rem(5px);
 
-    @mixin hover {
-        border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    @mixin dark {
+        @mixin hover {
+            border: rem(1px) solid var(--mantine-color-dark-4);
+        }
     }
 }
 
@@ -13,6 +15,10 @@
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
     border-radius: var(--mantine-radius-xl);
     padding: rem(8px);
+
+    @mixin light {
+        border: rem(1px) solid var(--mantine-color-gray-3);
+    }
 }
 
 .input {

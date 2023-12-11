@@ -74,7 +74,7 @@ export default function TableRow({ item }) {
       <Table.Td>
         <Text
           fz="sm"
-          c={dayjs().isAfter(item.due_date) && item.status !== "paid" ? "red.8" : "inherit"}
+          c={dayjs().isAfter(item.due_date) && item.status !== "paid" ? "red" : "inherit"}
         >
           {date(item.due_date)}
         </Text>

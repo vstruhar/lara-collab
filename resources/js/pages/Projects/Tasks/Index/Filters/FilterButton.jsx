@@ -1,11 +1,12 @@
 import { Button, rem } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
+import classes from "./css/FilterButton.module.css";
 
 export default function FilterButton({ selected, children, ...props }) {
   return (
     <Button
+      className={classes.button}
       variant={selected ? "filled" : "default"}
-      opacity={selected ? 1 : 0.6}
       radius="md"
       justify="flex-start"
       size="xs"
@@ -23,7 +24,7 @@ export default function FilterButton({ selected, children, ...props }) {
           }}
         />
       }
-      style={{ border: "none", height: rem(32) }}
+      style={{ height: rem(32) }}
       {...props}
     >
       {children}

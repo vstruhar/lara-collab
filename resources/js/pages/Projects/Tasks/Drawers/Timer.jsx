@@ -14,12 +14,7 @@ import {
   Tooltip,
   rem,
 } from "@mantine/core";
-import {
-  IconPlayerPlayFilled,
-  IconPlayerStopFilled,
-  IconPlus,
-  IconX,
-} from "@tabler/icons-react";
+import { IconPlayerPlayFilled, IconPlayerStopFilled, IconPlus, IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import classes from "./css/Timer.module.css";
 
@@ -28,10 +23,8 @@ export default function Timer({ task, ...props }) {
     auth: { user },
   } = usePage().props;
   const [totalMinutes, setTotalMinutes] = useState(0);
-  const { timerValue, setTimerValue, isTimerRunning, runningTimer } =
-    useTimer(task);
-  const { saveTimeLog, deleteTimerLog, startTimer, stopTimer } =
-    useTasksStore();
+  const { timerValue, setTimerValue, isTimerRunning, runningTimer } = useTimer(task);
+  const { saveTimeLog, deleteTimerLog, startTimer, stopTimer } = useTasksStore();
 
   useEffect(() => {
     setTotalMinutes(task.time_logs.reduce((acc, i) => acc + i.minutes, 0));
@@ -42,11 +35,7 @@ export default function Timer({ task, ...props }) {
     <Box className={classes.container} {...props}>
       <Stack>
         {can("add time log") ? (
-          <Group
-            className={classes.timer}
-            justify="space-between"
-            wrap="nowrap"
-          >
+          <Group className={classes.timer} justify="space-between" wrap="nowrap">
             {runningTimer ? (
               <ActionIcon
                 size={32}
@@ -54,20 +43,11 @@ export default function Timer({ task, ...props }) {
                 variant="filled"
                 onClick={() => stopTimer(task, runningTimer.id)}
               >
-                <IconPlayerStopFilled
-                  style={{ width: rem(16), height: rem(16) }}
-                />
+                <IconPlayerStopFilled style={{ width: rem(16), height: rem(16) }} />
               </ActionIcon>
             ) : (
-              <ActionIcon
-                size={32}
-                radius="xl"
-                variant="filled"
-                onClick={() => startTimer(task)}
-              >
-                <IconPlayerPlayFilled
-                  style={{ width: rem(16), height: rem(16) }}
-                />
+              <ActionIcon size={32} radius="xl" variant="filled" onClick={() => startTimer(task)}>
+                <IconPlayerPlayFilled style={{ width: rem(16), height: rem(16) }} />
               </ActionIcon>
             )}
 
@@ -78,13 +58,10 @@ export default function Timer({ task, ...props }) {
                 placeholder="0:00"
                 readOnly={runningTimer !== undefined}
                 className={`
-                ${classes.input}
-                ${runningTimer ? classes.blink : null}
-                ${
-                  isTimeValueValid(timerValue)
-                    ? null
-                    : timerValue.length && classes.invalid
-                }`}
+                  ${classes.input}
+                  ${runningTimer ? classes.blink : null}
+                  ${isTimeValueValid(timerValue) ? null : timerValue.length && classes.invalid}
+                `}
                 value={timerValue}
                 onChange={(event) => {
                   if (/^(\d|\.|,|:)*$/.test(event.currentTarget.value)) {
@@ -101,10 +78,7 @@ export default function Timer({ task, ...props }) {
               onClick={() => saveTimeLog(task, timerValue)}
               disabled={!isTimeValueValid(timerValue) || runningTimer}
             >
-              <IconPlus
-                style={{ width: rem(16), height: rem(16) }}
-                stroke={3}
-              />
+              <IconPlus style={{ width: rem(16), height: rem(16) }} stroke={3} />
             </ActionIcon>
           </Group>
         ) : (
@@ -123,9 +97,7 @@ export default function Timer({ task, ...props }) {
                   className={classes.row}
                 >
                   <Text fz={14}>
-                    <Link href={route("users.edit", timeLog.user_id)}>
-                      {timeLog.user.name}
-                    </Link>
+                    <Link href={route("users.edit", timeLog.user_id)}>{timeLog.user.name}</Link>
                   </Text>
                   {isTimerRunning(timeLog) ? (
                     <Text fz={14} fw={600} c="blue" className={classes.blink}>
@@ -133,19 +105,14 @@ export default function Timer({ task, ...props }) {
                     </Text>
                   ) : (
                     <Group gap={7}>
-                      {can("delete time log") &&
-                        timeLog.user_id === user.id && (
-                          <IconX
-                            className={classes.delete}
-                            stroke={1.5}
-                            onClick={() => deleteTimerLog(task, timeLog.id)}
-                          />
-                        )}
-                      <Tooltip
-                        label={dateTime(timeLog.created_at)}
-                        openDelay={250}
-                        withArrow
-                      >
+                      {can("delete time log") && timeLog.user_id === user.id && (
+                        <IconX
+                          className={classes.delete}
+                          stroke={1.5}
+                          onClick={() => deleteTimerLog(task, timeLog.id)}
+                        />
+                      )}
+                      <Tooltip label={dateTime(timeLog.created_at)} openDelay={250} withArrow>
                         <Text fz={14} c="dimmed">
                           {humanReadableTime(timeLog.minutes)}h
                         </Text>
@@ -155,13 +122,11 @@ export default function Timer({ task, ...props }) {
                 </Group>
               ))}
             </Stack>
-            <Divider />
-            <Group
-              wrap="nowrap"
-              justify="space-between"
-              className={classes.summary}
-            >
-              <Text>Total:</Text>
+            <Divider my={-5} />
+            <Group wrap="nowrap" justify="space-between" className={classes.summary}>
+              <Text fz={15} fw={500}>
+                Total:
+              </Text>
               <Text fw={600}>{humanReadableTime(totalMinutes)}h</Text>
             </Group>
           </>

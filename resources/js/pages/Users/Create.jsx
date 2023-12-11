@@ -58,12 +58,9 @@ const UserCreate = () => {
           <Grid justify="flex-start" align="flex-start" gutter="lg">
             <Grid.Col span="content">
               <Avatar
-                src={
-                  form.data.avatar !== null
-                    ? URL.createObjectURL(form.data.avatar)
-                    : null
-                }
+                src={form.data.avatar !== null ? URL.createObjectURL(form.data.avatar) : null}
                 size={120}
+                color="blue"
               >
                 {getInitials(form.data.name)}
               </Avatar>
@@ -79,11 +76,7 @@ const UserCreate = () => {
               />
               <Text size="xs" c="dimmed" mt="sm">
                 If no image is uploaded we will try to fetch it via{" "}
-                <Anchor
-                  href="https://unavatar.io"
-                  target="_blank"
-                  opacity={0.6}
-                >
+                <Anchor href="https://unavatar.io" target="_blank" opacity={0.6}>
                   unavatar.io
                 </Anchor>{" "}
                 service.
@@ -144,12 +137,7 @@ const UserCreate = () => {
             />
           </Group>
 
-          <Divider
-            mt="xl"
-            mb="md"
-            label="Login credentials"
-            labelPosition="center"
-          />
+          <Divider mt="xl" mb="md" label="Login credentials" labelPosition="center" />
 
           <TextInput
             label="Email"
@@ -177,9 +165,7 @@ const UserCreate = () => {
             required
             mt="md"
             value={form.data.password_confirmation}
-            onChange={(e) =>
-              updateValue("password_confirmation", e.target.value)
-            }
+            onChange={(e) => updateValue("password_confirmation", e.target.value)}
             error={form.errors.password_confirmation}
           />
 

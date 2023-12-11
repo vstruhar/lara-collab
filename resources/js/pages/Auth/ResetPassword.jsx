@@ -1,12 +1,6 @@
+import ContainerBox from "@/layouts/ContainerBox";
 import GuestLayout from "@/layouts/GuestLayout";
-import {
-  Button,
-  Paper,
-  PasswordInput,
-  Text,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Button, PasswordInput, Text, TextInput, Title } from "@mantine/core";
 import { useForm } from "laravel-precognition-react-inertia";
 import { useEffect } from "react";
 import classes from "./css/ResetPassword.module.css";
@@ -40,7 +34,7 @@ const ResetPassword = ({ token }) => {
         Enter your email and new password
       </Text>
 
-      <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
+      <ContainerBox shadow="md" p={30} mt="xl" radius="md">
         <form onSubmit={submit}>
           <TextInput
             label="Email"
@@ -64,22 +58,18 @@ const ResetPassword = ({ token }) => {
             required
             mt="md"
             value={form.data.password_confirmation}
-            onChange={(e) =>
-              form.setData("password_confirmation", e.target.value)
-            }
+            onChange={(e) => form.setData("password_confirmation", e.target.value)}
             error={form.errors.password_confirmation}
           />
           <Button type="submit" fullWidth mt="xl" disabled={form.processing}>
             Reset password
           </Button>
         </form>
-      </Paper>
+      </ContainerBox>
     </>
   );
 };
 
-ResetPassword.layout = (page) => (
-  <GuestLayout title="Reset Password">{page}</GuestLayout>
-);
+ResetPassword.layout = (page) => <GuestLayout title="Reset Password">{page}</GuestLayout>;
 
 export default ResetPassword;

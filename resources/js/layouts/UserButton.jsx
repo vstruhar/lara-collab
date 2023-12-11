@@ -1,12 +1,34 @@
 import { redirectTo } from "@/utils/route";
 import { getInitials } from "@/utils/user";
 import { router, usePage } from "@inertiajs/react";
-import { Avatar, Group, Menu, Text, UnstyledButton, rem } from "@mantine/core";
-import { IconBell, IconChevronRight, IconLogout, IconUser } from "@tabler/icons-react";
+import {
+  Avatar,
+  Group,
+  Menu,
+  Text,
+  UnstyledButton,
+  darken,
+  rem,
+  useComputedColorScheme,
+  useMantineColorScheme,
+  useMantineTheme,
+} from "@mantine/core";
+import { upperFirst } from "@mantine/hooks";
+import {
+  IconBell,
+  IconChevronRight,
+  IconLogout,
+  IconMoon,
+  IconSun,
+  IconUser,
+} from "@tabler/icons-react";
 import classes from "./css/UserButton.module.css";
 
 export default function UserButton() {
   const { user } = usePage().props.auth;
+  const { setColorScheme } = useMantineColorScheme({ keepTransition: true });
+  const computedColorScheme = useComputedColorScheme();
+  const { colors } = useMantineTheme();
 
   const logout = () => {
     router.delete(route("logout"), {
@@ -15,11 +37,30 @@ export default function UserButton() {
   };
 
   return (
-    <Menu position="right" offset={10} withArrow width={200}>
+    <Menu
+      position="right"
+      offset={10}
+      withArrow
+      width={200}
+      shadow="md"
+      styles={{ dropdown: { translate: "0 -12px" } }}
+    >
       <Menu.Target>
-        <UnstyledButton className={classes.user}>
+        <UnstyledButton
+          className={classes.user}
+          bg={
+            computedColorScheme === "light"
+              ? darken(colors.blue[8], 0.15)
+              : "var(--mantine-color-dark-7)"
+          }
+        >
           <Group>
-            <Avatar src={user.avatar} radius="xl" color="blue" alt={user.name}>
+            <Avatar
+              src={user.avatar}
+              radius="xl"
+              color={computedColorScheme === "light" ? "white" : "blue"}
+              alt={user.name}
+            >
               {getInitials(user.name)}
             </Avatar>
 
@@ -28,7 +69,7 @@ export default function UserButton() {
                 {user.name}
               </Text>
 
-              <Text c="dimmed" size="xs">
+              <Text c={computedColorScheme === "light" ? "blue.4" : "dimmed"} size="xs">
                 {user.job_title}
               </Text>
             </div>
@@ -51,6 +92,21 @@ export default function UserButton() {
           onClick={() => redirectTo("notifications")}
         >
           Notifications
+        </Menu.Item>
+
+        <Menu.Divider />
+
+        <Menu.Item
+          leftSection={
+            computedColorScheme === "light" ? (
+              <IconSun style={{ width: rem(14), height: rem(14) }} />
+            ) : (
+              <IconMoon style={{ width: rem(14), height: rem(14) }} />
+            )
+          }
+          onClick={() => setColorScheme(computedColorScheme === "light" ? "dark" : "light")}
+        >
+          {upperFirst(computedColorScheme)} mode
         </Menu.Item>
 
         <Menu.Divider />

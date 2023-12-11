@@ -8,10 +8,7 @@ export default function TaskActions({ task, ...props }) {
     "delete",
     route("projects.tasks.destroy", [task.project_id, task.id]),
   );
-  const restoreForm = useForm(
-    "post",
-    route("projects.tasks.restore", [task.project_id, task.id]),
-  );
+  const restoreForm = useForm("post", route("projects.tasks.restore", [task.project_id, task.id]));
 
   const openArchiveModal = () =>
     openConfirmModal({
@@ -41,25 +38,20 @@ export default function TaskActions({ task, ...props }) {
           withArrow
           position="bottom-end"
           withinPortal
+          shadow="md"
           transitionProps={{ duration: 100, transition: "pop-top-right" }}
           offset={{ mainAxis: 3, alignmentAxis: 5 }}
         >
           <Menu.Target>
             <ActionIcon variant="subtle" color="gray">
-              <IconDots
-                style={{ width: rem(20), height: rem(20) }}
-                stroke={1.5}
-              />
+              <IconDots style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
             {can("restore task") && route().params.archived && (
               <Menu.Item
                 leftSection={
-                  <IconArchiveOff
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
+                  <IconArchiveOff style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }
                 color="blue"
                 onClick={openRestoreModal}
@@ -70,10 +62,7 @@ export default function TaskActions({ task, ...props }) {
             {can("archive task") && !route().params.archived && (
               <Menu.Item
                 leftSection={
-                  <IconArchive
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
+                  <IconArchive style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }
                 color="red"
                 onClick={openArchiveModal}

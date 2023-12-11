@@ -15,7 +15,7 @@ export default function Task({ task }) {
     >
       <Group gap="sm" wrap="nowrap">
         <Tooltip label="Task group" openDelay={1000} withArrow>
-          <Pill size="sm" className={classes.user} bg="blue.8" c="white">
+          <Pill size="sm" className={classes.user} bg="blue" c="white">
             {task.task_group.name}
           </Pill>
         </Tooltip>
@@ -40,7 +40,7 @@ export default function Task({ task }) {
             size="sm"
             fw={500}
             truncate="end"
-            c={isOverdue(task) && task.completed_at === null ? "red.7" : ""}
+            c={isOverdue(task) && task.completed_at === null ? "red" : ""}
             onClick={() => redirectTo("projects.tasks.open", [task.project_id, task.id])}
           >
             #{task.number + ": " + task.name}

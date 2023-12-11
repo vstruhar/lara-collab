@@ -26,28 +26,20 @@ const ClientCreate = () => {
     dropdowns: { companies },
   } = usePage().props;
 
-  const [form, submit, updateValue] = useForm(
-    "post",
-    route("clients.users.store"),
-    {
-      avatar: null,
-      name: "",
-      phone: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
-      companies: [],
-    },
-  );
+  const [form, submit, updateValue] = useForm("post", route("clients.users.store"), {
+    avatar: null,
+    name: "",
+    phone: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    companies: [],
+  });
 
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor
-          href="#"
-          onClick={() => redirectTo("clients.users.index")}
-          fz={14}
-        >
+        <Anchor href="#" onClick={() => redirectTo("clients.users.index")} fz={14}>
           Clients
         </Anchor>
         <div>Create</div>
@@ -65,12 +57,9 @@ const ClientCreate = () => {
           <Grid justify="flex-start" align="flex-start" gutter="lg">
             <Grid.Col span="content">
               <Avatar
-                src={
-                  form.data.avatar !== null
-                    ? URL.createObjectURL(form.data.avatar)
-                    : null
-                }
+                src={form.data.avatar !== null ? URL.createObjectURL(form.data.avatar) : null}
                 size={120}
+                color="blue"
               >
                 {getInitials(form.data.name)}
               </Avatar>
@@ -86,11 +75,7 @@ const ClientCreate = () => {
               />
               <Text size="xs" c="dimmed" mt="sm">
                 If no image is uploaded we will try to fetch it via{" "}
-                <Anchor
-                  href="https://unavatar.io"
-                  target="_blank"
-                  opacity={0.6}
-                >
+                <Anchor href="https://unavatar.io" target="_blank" opacity={0.6}>
                   unavatar.io
                 </Anchor>{" "}
                 service.
@@ -129,17 +114,11 @@ const ClientCreate = () => {
 
           {form.data.companies.length === 0 && (
             <Text c="dimmed" fz="xs" mt="xs">
-              If left empty, you will be asked to create a company after
-              creating the client.
+              If left empty, you will be asked to create a company after creating the client.
             </Text>
           )}
 
-          <Divider
-            mt="xl"
-            mb="md"
-            label="Login credentials"
-            labelPosition="center"
-          />
+          <Divider mt="xl" mb="md" label="Login credentials" labelPosition="center" />
 
           <TextInput
             label="Email"
@@ -167,9 +146,7 @@ const ClientCreate = () => {
             required
             mt="md"
             value={form.data.password_confirmation}
-            onChange={(e) =>
-              updateValue("password_confirmation", e.target.value)
-            }
+            onChange={(e) => updateValue("password_confirmation", e.target.value)}
             error={form.errors.password_confirmation}
           />
 

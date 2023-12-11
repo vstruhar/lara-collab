@@ -45,6 +45,7 @@ export default function TaskGroupActions({ group, ...props }) {
           withArrow
           position="bottom-end"
           withinPortal
+          shadow="md"
           transitionProps={{ duration: 100, transition: "pop-top-right" }}
           offset={{ mainAxis: 3, alignmentAxis: 5 }}
         >

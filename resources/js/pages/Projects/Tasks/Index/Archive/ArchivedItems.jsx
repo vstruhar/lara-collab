@@ -4,9 +4,11 @@ import ArchivedTask from "./ArchivedTask";
 import ArchivedTaskGroup from "./ArchivedTaskGroup";
 
 export default function ArchivedItems({ groups, tasks }) {
-  return groups.length || Object.keys(tasks).length ? (
+  const hasTasks = Object.keys(tasks).some((key) => tasks[key].length > 0);
+
+  return groups.length || hasTasks ? (
     <>
-      {Object.keys(tasks).length > 0 && (
+      {hasTasks && (
         <>
           <Text fz={24} fw={600} mb={20}>
             Tasks

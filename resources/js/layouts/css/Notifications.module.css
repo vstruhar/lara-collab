@@ -5,7 +5,7 @@
 }
 
 .notification {
-    margin: rem(5px) 0;
+    margin: rem(10px) 0;
 
     @mixin hover {
         opacity: 1 !important;
@@ -13,11 +13,11 @@
 }
 
 .link {
-    color: var(--mantine-color-white);
-    opacity: 0.4;
+    color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+    opacity: 0.6;
 
     @mixin hover {
-        opacity: 0.7;
+        opacity: 0.9;
         text-decoration: underline;
     }
 }

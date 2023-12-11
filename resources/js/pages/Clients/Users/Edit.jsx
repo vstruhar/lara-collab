@@ -27,29 +27,21 @@ const ClientEdit = () => {
     dropdowns: { companies },
   } = usePage().props;
 
-  const [form, submit, updateValue] = useForm(
-    "post",
-    route("clients.users.update", item.id),
-    {
-      _method: "put",
-      avatar: null,
-      name: item.name,
-      phone: item.phone || "",
-      email: item.email,
-      password: "",
-      password_confirmation: "",
-      companies: item.companies.map((i) => i.id.toString()),
-    },
-  );
+  const [form, submit, updateValue] = useForm("post", route("clients.users.update", item.id), {
+    _method: "put",
+    avatar: null,
+    name: item.name,
+    phone: item.phone || "",
+    email: item.email,
+    password: "",
+    password_confirmation: "",
+    companies: item.companies.map((i) => i.id.toString()),
+  });
 
   return (
     <>
       <Breadcrumbs fz={14} mb={30}>
-        <Anchor
-          href="#"
-          onClick={() => redirectTo("clients.users.index")}
-          fz={14}
-        >
+        <Anchor href="#" onClick={() => redirectTo("clients.users.index")} fz={14}>
           Clients
         </Anchor>
         <div>Edit</div>
@@ -68,11 +60,10 @@ const ClientEdit = () => {
             <Grid.Col span="content">
               <Avatar
                 src={
-                  form.data.avatar === null
-                    ? item.avatar
-                    : URL.createObjectURL(form.data.avatar)
+                  form.data.avatar === null ? item.avatar : URL.createObjectURL(form.data.avatar)
                 }
                 size={120}
+                color="blue"
               >
                 {getInitials(form.data.name)}
               </Avatar>
@@ -88,11 +79,7 @@ const ClientEdit = () => {
               />
               <Text size="xs" c="dimmed" mt="sm">
                 If no image is uploaded we will try to fetch it via{" "}
-                <Anchor
-                  href="https://unavatar.io"
-                  target="_blank"
-                  opacity={0.6}
-                >
+                <Anchor href="https://unavatar.io" target="_blank" opacity={0.6}>
                   unavatar.io
                 </Anchor>{" "}
                 service.
@@ -130,12 +117,7 @@ const ClientEdit = () => {
             error={form.errors.companies}
           />
 
-          <Divider
-            mt="xl"
-            mb="md"
-            label="Login credentials"
-            labelPosition="center"
-          />
+          <Divider mt="xl" mb="md" label="Login credentials" labelPosition="center" />
 
           <TextInput
             label="Email"
@@ -161,9 +143,7 @@ const ClientEdit = () => {
             placeholder="Confirm password"
             mt="md"
             value={form.data.password_confirmation}
-            onChange={(e) =>
-              updateValue("password_confirmation", e.target.value)
-            }
+            onChange={(e) => updateValue("password_confirmation", e.target.value)}
             error={form.errors.password_confirmation}
           />
 

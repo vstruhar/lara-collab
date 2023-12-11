@@ -44,6 +44,12 @@ class PermissionService
                 'view time logs', 'view comments',
             ],
         ],
+        'qa engineer' => [
+            'Project' => ['view projects', 'view project'],
+            'Tasks' => [
+                'view tasks', 'create task', 'edit task', 'add time log', 'delete time log', 'view time logs', 'view comments',
+            ],
+        ],
         'designer' => [
             'Project' => ['view projects', 'view project'],
             'Tasks' => [

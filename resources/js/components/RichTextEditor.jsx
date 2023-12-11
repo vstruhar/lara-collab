@@ -1,4 +1,4 @@
-import { useColorScheme } from "@mantine/hooks";
+import { useComputedColorScheme } from "@mantine/core";
 import { RichTextEditor as Editor, Link } from "@mantine/tiptap";
 import Highlight from "@tiptap/extension-highlight";
 import Mention from "@tiptap/extension-mention";
@@ -41,7 +41,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(
     },
   }));
 
-  const colorScheme = useColorScheme();
+  const computedColorScheme = useComputedColorScheme();
 
   return (
     <Editor editor={editor} {...props}>
@@ -71,7 +71,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(
       </Editor.Toolbar>
 
       <Editor.Content
-        bg={colorScheme === "dark" ? "dark.6" : "white"}
+        bg={computedColorScheme === "dark" ? "dark.6" : "white"}
         className={classes.content}
         style={{ "--rich-text-editor-height": `${height}px` }}
       />

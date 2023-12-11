@@ -280,7 +280,7 @@ export const InvoiceCreate = () => {
                               openDelay={500}
                               withArrow
                             >
-                              <Text fw={700} c={Number(task.total_minutes) === 0 ? "red.7" : ""}>
+                              <Text fw={700} c={Number(task.total_minutes) === 0 ? "red" : ""}>
                                 {money(
                                   (Number(task.total_minutes) / 60) * form.data.hourly_rate * 100,
                                   currency.code,

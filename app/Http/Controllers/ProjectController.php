@@ -72,7 +72,7 @@ class ProjectController extends Controller
         $project = Project::create($request->validated());
 
         $project->taskGroups()->createMany([
-            ['name' => 'New'],
+            ['name' => 'Backlog'],
             ['name' => 'Todo'],
             ['name' => 'In progress'],
             ['name' => 'QA'],

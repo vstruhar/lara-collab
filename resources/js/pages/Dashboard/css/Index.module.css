@@ -25,6 +25,10 @@
     padding-left: rem(20px);
     background-clip: padding-box;
 
+    &:first-child {
+        padding-left: 0;
+    }
+
     >div {
         margin-bottom: rem(20px);
     }

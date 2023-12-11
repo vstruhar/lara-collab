@@ -1,4 +1,5 @@
 import GoogleIcon from "@/icons/GoogleIcon";
+import ContainerBox from "@/layouts/ContainerBox";
 import GuestLayout from "@/layouts/GuestLayout";
 import { router } from "@inertiajs/react";
 import {
@@ -7,7 +8,6 @@ import {
   Checkbox,
   Divider,
   Group,
-  Paper,
   PasswordInput,
   Text,
   TextInput,
@@ -48,7 +48,7 @@ const Login = ({ notify }) => {
       <LoginNotification notify={notify} />
 
       <form onSubmit={submit}>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <ContainerBox shadow="md" p={30} mt={30} radius="md">
           <Group grow mb="md" mt="md">
             <Button
               leftSection={<GoogleIcon />}
@@ -63,11 +63,7 @@ const Login = ({ notify }) => {
             </Button>
           </Group>
 
-          <Divider
-            label="Or continue with email"
-            labelPosition="center"
-            my="lg"
-          />
+          <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
           <TextInput
             label="Email"
@@ -100,7 +96,7 @@ const Login = ({ notify }) => {
           <Button type="submit" fullWidth mt="xl" disabled={form.processing}>
             Sign in
           </Button>
-        </Paper>
+        </ContainerBox>
       </form>
     </>
   );

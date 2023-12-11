@@ -66,7 +66,7 @@ export default function Comments({ task }) {
             <div key={comment.id}>
               <Group justify="space-between">
                 <Group>
-                  <Avatar src={comment.user.avatar} radius="xl" />
+                  <Avatar src={comment.user.avatar} radius="xl" color="blue" />
                   <div>
                     <Text size="sm" c="blue" fw={500}>
                       {comment.user.name}

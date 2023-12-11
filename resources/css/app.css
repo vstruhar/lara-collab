@@ -1,0 +1,5 @@
+:root[data-mantine-color-scheme=light] {
+    --mantine-color-text: #343d43;
+    --mantine-color-gray-filled: var(--mantine-color-gray-3) !important;
+    --mantine-color-body: var(--mantine-color-gray-0);
+}

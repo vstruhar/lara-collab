@@ -43,7 +43,7 @@ export default function OverdueTasks({ tasks }) {
                     </Text>
                     <Group>
                       <Tooltip label="Task group" openDelay={500} withArrow>
-                        <Pill size="xs" className={classes.user} bg="blue.8" c="white">
+                        <Pill size="xs" className={classes.user} bg="blue" c="white">
                           {task.task_group.name}
                         </Pill>
                       </Tooltip>

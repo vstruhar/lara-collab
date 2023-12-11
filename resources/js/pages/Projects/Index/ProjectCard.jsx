@@ -60,6 +60,7 @@ export default function ProjectCard({ item }) {
                   radius="xl"
                   style={{ cursor: "default" }}
                   data-ignore-link
+                  className={classes.avatar}
                 >
                   {getInitials(user.name)}
                 </Avatar>

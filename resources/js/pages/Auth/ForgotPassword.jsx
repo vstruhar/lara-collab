@@ -1,3 +1,4 @@
+import ContainerBox from "@/layouts/ContainerBox";
 import GuestLayout from "@/layouts/GuestLayout";
 import { redirectTo } from "@/utils/route";
 import {
@@ -7,7 +8,6 @@ import {
   Button,
   Center,
   Group,
-  Paper,
   Text,
   TextInput,
   Title,
@@ -38,16 +38,15 @@ const ForgotPassword = ({ status }) => {
         Enter your email to get a reset link
       </Text>
 
-      <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
+      <ContainerBox shadow="md" p={30} mt="xl" radius="md">
         <Text c="dimmed" fz="sm" mb={20}>
-          Enter your email and we will email you a password reset link that will
-          allow you to choose a new one.
+          Enter your email and we will email you a password reset link that will allow you to choose
+          a new one.
         </Text>
 
         {status && (
           <Alert radius="md" title={status} icon={<IconInfoCircle />} mb={10}>
-            Please read instruction in the email to set a new password for your
-            account.
+            Please read instruction in the email to set a new password for your account.
           </Alert>
         )}
 
@@ -68,29 +67,20 @@ const ForgotPassword = ({ status }) => {
               onClick={() => redirectTo("auth.login.form")}
             >
               <Center inline>
-                <IconArrowLeft
-                  style={{ width: rem(12), height: rem(12) }}
-                  stroke={1.5}
-                />
-                <Box ml={5}>Back to the login page</Box>
+                <IconArrowLeft style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+                <Box ml={5}>Back to the login</Box>
               </Center>
             </Anchor>
-            <Button
-              type="submit"
-              className={classes.control}
-              disabled={form.processing}
-            >
+            <Button type="submit" className={classes.control} disabled={form.processing}>
               Reset password
             </Button>
           </Group>
         </form>
-      </Paper>
+      </ContainerBox>
     </>
   );
 };
 
-ForgotPassword.layout = (page) => (
-  <GuestLayout title="Forgot Password">{page}</GuestLayout>
-);
+ForgotPassword.layout = (page) => <GuestLayout title="Forgot Password">{page}</GuestLayout>;
 
 export default ForgotPassword;

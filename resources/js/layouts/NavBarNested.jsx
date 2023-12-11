@@ -1,7 +1,7 @@
 import Logo from "@/components/Logo";
 import useNavigationStore from "@/hooks/store/useNavigationStore";
 import { usePage } from "@inertiajs/react";
-import { Code, Group, ScrollArea, rem } from "@mantine/core";
+import { Group, ScrollArea, Text, rem } from "@mantine/core";
 import {
   IconBuildingSkyscraper,
   IconFileDollar,
@@ -149,7 +149,9 @@ export default function Sidebar() {
       <div className={classes.header}>
         <Group justify="space-between">
           <Logo style={{ width: rem(120) }} />
-          <Code fw={700}>v{version}</Code>
+          <Text size="xs" className={classes.version}>
+            v{version}
+          </Text>
         </Group>
       </div>
 

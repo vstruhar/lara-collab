@@ -10,11 +10,12 @@
 .user {
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
     border-radius: var(--mantine-radius-xl);
-    border: rem(1px) solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-6));
+    border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-6));
     transition: 0.3s ease border, 0.3s ease color;
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-white));
 
     @mixin hover {
-        color: light-dark(var(--mantine-color-dark-4), var(--mantine-color-white));
+        color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
         border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
     }
 
@@ -30,14 +31,14 @@
 
     @mixin hover {
         color: light-dark(var(--mantine-color-dark-4), var(--mantine-color-white));
-        background-color: light-dark(var(--mantine-color-dark-1), var(--mantine-color-dark-6));
+        background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-6));
 
         .actions {
-            opacity: 0.4;
+            opacity: 0.5;
         }
 
         .dragHandle {
-            opacity: 0.1;
+            opacity: 0.2;
         }
     }
 }

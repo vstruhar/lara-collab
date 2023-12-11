@@ -2,13 +2,7 @@ import { openConfirmModal } from "@/components/ConfirmModal";
 import useForm from "@/hooks/useForm";
 import { router } from "@inertiajs/react";
 import { ActionIcon, Menu, rem } from "@mantine/core";
-import {
-  IconArchive,
-  IconArchiveOff,
-  IconDots,
-  IconPencil,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconArchive, IconArchiveOff, IconDots, IconPencil, IconUsers } from "@tabler/icons-react";
 import UserAccessModal from "./Modals/UserAccessModal.jsx";
 
 export default function ProjectCardActions({ item }) {
@@ -46,17 +40,14 @@ export default function ProjectCardActions({ item }) {
         <Menu
           withArrow
           position="bottom-end"
+          shadow="md"
           transitionProps={{ duration: 100, transition: "pop-top-right" }}
           offset={{ mainAxis: 3, alignmentAxis: 5 }}
           data-ignore-link
         >
           <Menu.Target>
             <ActionIcon variant="subtle" color="gray" data-ignore-link>
-              <IconDots
-                style={{ width: rem(20), height: rem(20) }}
-                stroke={1.5}
-                data-ignore-link
-              />
+              <IconDots style={{ width: rem(20), height: rem(20) }} stroke={1.5} data-ignore-link />
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>

@@ -11,7 +11,7 @@ class UserSeeder extends Seeder
         'Frontend Developer' => 'developer',
         'Backend Developer' => 'developer',
         'Fullstack Developer' => 'developer',
-        'QA Engineer' => 'qa_engineer',
+        'QA Engineer' => 'qa engineer',
         'Designer' => 'designer',
         'Client' => 'client',
         'Manager' => 'manager',

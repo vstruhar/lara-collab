@@ -9,6 +9,7 @@ import {
   Indicator,
   Menu,
   Text,
+  Title,
   UnstyledButton,
   rem,
 } from "@mantine/core";
@@ -35,6 +36,7 @@ export default function Notifications() {
         withArrow
         position="bottom-end"
         withinPortal
+        shadow="md"
         transitionProps={{ duration: 100, transition: "pop-top-right" }}
         offset={{ mainAxis: 10, alignmentAxis: 8 }}
       >
@@ -52,19 +54,15 @@ export default function Notifications() {
             </ActionIcon>
           </Menu.Target>
 
-          <Menu.Dropdown miw={340} maw={400}>
-            <Menu.Label>
-              <Group justify="space-between">
-                <Text c="white" fz={20} fw={600}>
-                  Notifications
-                </Text>
-                {unreadCount > 0 && (
-                  <UnstyledButton fz={11} onClick={markAllAsRead} className={classes.link}>
-                    Mark all as read
-                  </UnstyledButton>
-                )}
-              </Group>
-            </Menu.Label>
+          <Menu.Dropdown miw={340} maw={400} p={12}>
+            <Group justify="space-between" m={10} ml={15}>
+              <Title order={4}>Notifications</Title>
+              {unreadCount > 0 && (
+                <UnstyledButton fz={11} onClick={markAllAsRead} className={classes.link}>
+                  Mark all as read
+                </UnstyledButton>
+              )}
+            </Group>
 
             <Menu.Divider />
 
@@ -73,7 +71,7 @@ export default function Notifications() {
                 <Menu.Item
                   key={notification.id}
                   onClick={() => open(notification)}
-                  opacity={notification.read_at ? 0.4 : 1}
+                  opacity={notification.read_at ? 0.6 : 1}
                   className={classes.notification}
                 >
                   <Notification
@@ -87,22 +85,24 @@ export default function Notifications() {
             ) : (
               <Center mih={100} opacity={0.75}>
                 <Group>
-                  <IconMessage style={{ width: rem(35), height: rem(35) }} />
+                  <IconMessage style={{ width: rem(35), height: rem(35), opacity: 0.5 }} />
                   <div>
                     <Text size="lg" fw={600} c="dimmed">
-                      No notifications
+                      Recent notifications
                     </Text>
-                    <Text size="xs" c="dimmed" opacity={0.5}>
-                      List of recent notifications
+                    <Text size="xs" c="dimmed" fw={500} opacity={0.6}>
+                      will be shown here
                     </Text>
                   </div>
                 </Group>
               </Center>
             )}
+
             <Menu.Divider />
 
             <UnstyledButton
               fz={13}
+              fw={500}
               onClick={() => redirectTo("notifications")}
               mx={13}
               my={6}

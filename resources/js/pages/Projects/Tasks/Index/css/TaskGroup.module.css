@@ -3,23 +3,23 @@
 }
 
 .group {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
-    padding: var(--mantine-spacing-sm) var(--mantine-spacing-xl);
-    padding-left: calc(var(--mantine-spacing-xl) - var(--mantine-spacing-md));
     border-radius: var(--mantine-radius-md);
     border: rem(1px) solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-6));
-    transition: 0.3s ease border, 0.3s ease color;
+    display: flex;
+    justify-content: space-between;
     margin-bottom: var(--mantine-spacing-sm);
+    padding-left: calc(var(--mantine-spacing-xl) - var(--mantine-spacing-md));
+    padding: var(--mantine-spacing-sm) var(--mantine-spacing-xl);
+    transition: 0.3s ease border, 0.3s ease color;
 
     @mixin hover {
-        color: light-dark(var(--mantine-color-dark-3), var(--mantine-color-white));
+        color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
         border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 
         .actions {
-            opacity: 0.4;
+            opacity: 0.5;
         }
 
         .dragHandle {

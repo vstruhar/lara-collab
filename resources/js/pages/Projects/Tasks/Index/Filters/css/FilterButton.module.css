@@ -1,0 +1,7 @@
+.button {
+    border: rem(1px) solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-6));
+
+    @mixin hover {
+        border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    }
+}
