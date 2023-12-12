@@ -2,7 +2,7 @@
 
 LaraCollab, developed with Laravel and React, serves as a project management tool. The primary idea behind this initiative is to provide developers or development companies with a free platform to efficiently manage clients, projects, log time, and generate invoices. You may wonder, 'Why another tool when there are already feature-rich options available for free?' Yes, that's a valid point. However, my aim is to offer a project management tool specifically tailored for Laravel developers, giving them option to integrate and customize features according to their unique workflows.
 
-##Features
+## Features
 
 -   User roles (e.g., client, manager, developer, designer) with customizable permissions.
 -   Management of client companies.
@@ -21,7 +21,7 @@ LaraCollab, developed with Laravel and React, serves as a project management too
 -   Additional reports for daily logged time per user and total logged time.
 -   Dark mode support for user preference.
 
-##Screenshots
+## Screenshots
 
 <p align="center">
 <img src="/resources/docs/screenshots/Dashboard - light.jpeg" width="45%">
@@ -56,8 +56,9 @@ LaraCollab, developed with Laravel and React, serves as a project management too
 
 [Laravel](https://laravel.com) for backend, [React](https://react.dev) for frontend and [Inertia](https://inertiajs.com) for "glueing" them together. For the frontend React UI components, the beautiful and awesome [Mantine](https://mantine.dev) library was used.
 
-##Setup
-###Project
+## Setup
+
+### Project
 
 1. Clone the repository using `git clone https://github.com/vstruhar/lara-collab.git`
 2. Cd into the project
@@ -84,7 +85,7 @@ To use Pusher, sign up, then create a project and copy paste app keys to `.env` 
 2. Create "OAuth Client ID", select Web application when asked for type ([link](https://console.cloud.google.com/apis/credentials)).
 3. Use generated "Client ID" and "Client secret" in the `.env` (`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`).
 
-##Roadmap
+## Roadmap
 
 -   Kanban view.
 -   Change permission for specific user.
