@@ -14,9 +14,16 @@ class ProductionSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()
-            ->create(['email' => 'admin@mail.com', 'job_title' => 'Owner'])
-            ->assignRole(Role::firstWhere('name', 'admin'));
+        User::create([
+            'email' => 'admin@mail.com',
+            'name' => 'Admin',
+            'phone' => '',
+            'rate' => 0,
+            'job_title' => 'Owner',
+            'avatar' => null,
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token' => null,
+        ])->assignRole(Role::firstWhere('name', 'admin'));
 
         OwnerCompany::create([
             'name' => '',
