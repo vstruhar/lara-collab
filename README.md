@@ -90,8 +90,10 @@ LaraCollab, developed with Laravel and React, serves as a project management too
 16. Finally build frontend with `npm run build`.
 
 ### Admin user
-After running migrations with seed a default admin user will be created.
+New admin user will be created after running migrations with seed.
+
 email: `admin@mail.com`
+
 password: `password`
 
 ### Web sockets
