@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import EmptyWithIcon from "@/components/EmptyWithIcon";
 import TaskGroupLabel from "@/components/TaskGroupLabel";
 import { date, diffForHumans } from "@/utils/datetime";
 import { redirectTo } from "@/utils/route";
@@ -12,7 +13,6 @@ import {
   Text,
   Title,
   Tooltip,
-  rem,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import classes from "./css/RecentlyAssignedTasks.module.css";
@@ -62,22 +62,7 @@ export default function RecentlyAssignedTasks({ tasks }) {
         </ScrollArea>
       ) : (
         <Center my={30}>
-          <Group gap={15}>
-            <IconSearch
-              style={{
-                width: rem(45),
-                height: rem(45),
-              }}
-            />
-            <div>
-              <Text fz={24} fw={600}>
-                No tasks
-              </Text>
-              <Text fz={15} c="dimmed">
-                You have no assigned tasks
-              </Text>
-            </div>
-          </Group>
+          <EmptyWithIcon title="No tasks" subtitle="You have no assigned tasks" icon={IconSearch} />
         </Center>
       )}
     </Card>

@@ -1,3 +1,4 @@
+import EmptyWithIcon from "@/components/EmptyWithIcon";
 import Notification from "@/components/Notification";
 import useNotificationsStore from "@/hooks/store/useNotificationsStore";
 import { redirectTo, redirectToUrl } from "@/utils/route";
@@ -8,10 +9,8 @@ import {
   Group,
   Indicator,
   Menu,
-  Text,
   Title,
   UnstyledButton,
-  rem,
 } from "@mantine/core";
 import { IconBellFilled, IconMessage } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
@@ -83,18 +82,15 @@ export default function Notifications() {
                 </Menu.Item>
               ))
             ) : (
-              <Center mih={100} opacity={0.75}>
-                <Group>
-                  <IconMessage style={{ width: rem(35), height: rem(35), opacity: 0.5 }} />
-                  <div>
-                    <Text size="lg" fw={600} c="dimmed">
-                      Recent notifications
-                    </Text>
-                    <Text size="xs" c="dimmed" fw={500} opacity={0.6}>
-                      will be shown here
-                    </Text>
-                  </div>
-                </Group>
+              <Center mih={100}>
+                <EmptyWithIcon
+                  title="Recent notifications"
+                  subtitle="Will be shown here"
+                  icon={IconMessage}
+                  titleFontSize={17}
+                  subtitleFontSize={13}
+                  iconSize={38}
+                />
               </Center>
             )}
 

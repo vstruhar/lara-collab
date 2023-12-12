@@ -1,19 +1,9 @@
+import EmptyWithIcon from "@/components/EmptyWithIcon";
 import Layout from "@/layouts/MainLayout";
 import { dateTime, diffForHumans } from "@/utils/datetime";
 import { redirectTo, reloadWithQuery, reloadWithoutQueryParams } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
-import {
-  Anchor,
-  Breadcrumbs,
-  Center,
-  Group,
-  Select,
-  Text,
-  Timeline,
-  Title,
-  Tooltip,
-  rem,
-} from "@mantine/core";
+import { Anchor, Breadcrumbs, Center, Select, Text, Timeline, Title, Tooltip } from "@mantine/core";
 import {
   IconActivity,
   IconArchive,
@@ -139,22 +129,11 @@ const ActivityIndex = () => {
         ))
       ) : (
         <Center mih={300}>
-          <Group gap={20}>
-            <IconActivity
-              style={{
-                width: rem(55),
-                height: rem(55),
-              }}
-            />
-            <div>
-              <Text fz={24} fw={600}>
-                No activities
-              </Text>
-              <Text fz={15} c="dimmed">
-                On projects you have access to
-              </Text>
-            </div>
-          </Group>
+          <EmptyWithIcon
+            title="No activities found"
+            subtitle="On projects you have access to"
+            icon={IconActivity}
+          />
         </Center>
       )}
     </>

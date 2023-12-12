@@ -1,6 +1,7 @@
+import EmptyWithIcon from "@/components/EmptyWithIcon";
 import Layout from "@/layouts/MainLayout";
 import { usePage } from "@inertiajs/react";
-import { Accordion, Box, Breadcrumbs, Center, Group, Stack, Text, Title, rem } from "@mantine/core";
+import { Accordion, Box, Breadcrumbs, Center, Stack, Text, Title, rem } from "@mantine/core";
 import { IconRocket, IconStar, IconStarFilled } from "@tabler/icons-react";
 import Task from "./Task";
 import classes from "./css/Index.module.css";
@@ -72,22 +73,11 @@ const TasksIndex = () => {
           </Accordion>
         ) : (
           <Center mih={300}>
-            <Group gap={20}>
-              <IconRocket
-                style={{
-                  width: rem(55),
-                  height: rem(55),
-                }}
-              />
-              <div>
-                <Text fz={24} fw={600}>
-                  All caught up!
-                </Text>
-                <Text fz={15} c="dimmed">
-                  No tasks assigned at the moment
-                </Text>
-              </div>
-            </Group>
+            <EmptyWithIcon
+              title="All caught up!"
+              subtitle="No tasks assigned at the moment"
+              icon={IconRocket}
+            />
           </Center>
         )}
       </Box>

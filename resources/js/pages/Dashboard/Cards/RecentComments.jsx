@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import EmptyWithIcon from "@/components/EmptyWithIcon";
 import { dateTime, diffForHumans } from "@/utils/datetime";
 import { redirectTo } from "@/utils/route";
 import {
@@ -12,7 +13,6 @@ import {
   Text,
   Title,
   Tooltip,
-  rem,
 } from "@mantine/core";
 import { IconMessage } from "@tabler/icons-react";
 import classes from "./css/RecentComments.module.css";
@@ -66,22 +66,7 @@ export default function RecentComments({ comments }) {
         </ScrollArea>
       ) : (
         <Center my={30}>
-          <Group gap={15} opacity={0.5}>
-            <IconMessage
-              style={{
-                width: rem(40),
-                height: rem(40),
-              }}
-            />
-            <div>
-              <Text fz={20} fw={600}>
-                No comments
-              </Text>
-              <Text fz={12} c="dimmed">
-                On your tasks
-              </Text>
-            </div>
-          </Group>
+          <EmptyWithIcon title="No comments" subtitle="On your tasks" icon={IconMessage} />
         </Center>
       )}
     </Card>

@@ -62,16 +62,32 @@ LaraCollab, developed with Laravel and React, serves as a project management too
 
 1. Clone the repository using `git clone https://github.com/vstruhar/lara-collab.git`
 2. Cd into the project
-3. Install composer dependencies with `composer install`
-4. Install npm dependencies with `npm install`
-5. Copy the `.env` file with `cp .env.example .env`
-6. Generate an app encryption key with `php artisan key:generate`
-7. Create an empty database for the application
-8. In the `.env` file, add database credentials to allow Laravel to connect to the database (variables prefixed with `DB_`)
-9. Migrate the database with `php artisan migrate --seed`
-10. You will be asked if you want to seed development data, for testing or development enter `yes`.
+3. Install npm dependencies with `npm install`
+4. Copy the `.env` file with `cp .env.example .env`
+5. Generate an app encryption key with `php artisan key:generate`
+6. Create an empty database for the application
+7. In the `.env` file, add database credentials to allow Laravel to connect to the database (variables prefixed with `DB_`)
+8. Migrate the database with `php artisan migrate --seed`
+
+#### Development
+
+9. You will be asked if you want to seed development data, for testing or development enter `yes`.
+10. Install composer dependencies with `composer install`
+11. Run `npm run dev`
 
 > NOTE: [Laravel Sail](https://laravel.com/docs/10.x/sail#introduction) was used for development so if you want you can also use Docker.
+
+#### Production
+
+9. You will be asked if you want to seed development data, for production enter `no`.
+10. Run `composer install --no-dev` to remove dev dependencies.
+11. Run `php artisan optimize` to optimize Laravel.
+12. Run `php artisan storage:link` to create symbolic link for storage in public directory.
+13. Setup [task scheduler](https://laravel.com/docs/10.x/scheduling#running-the-scheduler) by adding this to cron (to edit cron run `crontab -e`).
+    `* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1`
+14. Emails, notifications and events are queueable. If you want to enable queues then you will have to set `QUEUE_CONNECTION=database` in `.env`. And then run [queue worker](https://laravel.com/docs/10.x/queues#running-the-queue-worker) with [supervisor](https://laravel.com/docs/10.x/queues#supervisor-configuration) using this command `php artisan queue:work --queue=default,email`.
+15. Setup email by updating variables in `.env` that have `MAIL_` prefix.
+16. Finally build frontend with `npm run build`.
 
 ### Web sockets
 
@@ -90,5 +106,7 @@ To use Pusher, sign up, then create a project and copy paste app keys to `.env` 
 -   Kanban view.
 -   Change permission for specific user.
 -   Add emojis to rich text editor.
+-   Report that will calculate expense and profit per user.
 -   Write tests.
+-   Optimize frontend and backend.
 -   Consider moving to TypeScript.

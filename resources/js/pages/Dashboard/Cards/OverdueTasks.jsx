@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import EmptyWithIcon from "@/components/EmptyWithIcon";
 import TaskGroupLabel from "@/components/TaskGroupLabel";
 import { date, diffForHumans } from "@/utils/datetime";
 import { redirectTo } from "@/utils/route";
@@ -12,7 +13,6 @@ import {
   Text,
   Title,
   Tooltip,
-  rem,
 } from "@mantine/core";
 import { IconRocket } from "@tabler/icons-react";
 import classes from "./css/OverdueTasks.module.css";
@@ -62,22 +62,7 @@ export default function OverdueTasks({ tasks }) {
         </ScrollArea>
       ) : (
         <Center my={30}>
-          <Group gap={15}>
-            <IconRocket
-              style={{
-                width: rem(45),
-                height: rem(45),
-              }}
-            />
-            <div>
-              <Text fz={24} fw={600}>
-                All done!
-              </Text>
-              <Text fz={15} c="dimmed">
-                You have no overdue tasks
-              </Text>
-            </div>
-          </Group>
+          <EmptyWithIcon title="All done!" subtitle="You have no overdue tasks" icon={IconRocket} />
         </Center>
       )}
     </Card>

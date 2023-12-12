@@ -1,3 +1,4 @@
+import EmptyWithIcon from "@/components/EmptyWithIcon";
 import useForm from "@/hooks/useForm";
 import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
@@ -15,7 +16,6 @@ import {
   Table,
   Text,
   Title,
-  rem,
 } from "@mantine/core";
 import { DatePickerInput, DatesProvider } from "@mantine/dates";
 import { IconClock } from "@tabler/icons-react";
@@ -137,22 +137,11 @@ const LoggedTimeSum = () => {
           ))
         ) : (
           <Center mih={300}>
-            <Group gap={20}>
-              <IconClock
-                style={{
-                  width: rem(55),
-                  height: rem(55),
-                }}
-              />
-              <div>
-                <Text fz={24} fw={600}>
-                  No logged time found
-                </Text>
-                <Text fz={15} c="dimmed">
-                  Try changing selected filters
-                </Text>
-              </div>
-            </Group>
+            <EmptyWithIcon
+              title="No logged time found"
+              subtitle="Try changing selected filters"
+              icon={IconClock}
+            />
           </Center>
         )}
       </Box>

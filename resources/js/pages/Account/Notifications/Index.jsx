@@ -1,3 +1,4 @@
+import EmptyWithIcon from "@/components/EmptyWithIcon";
 import Notification from "@/components/Notification";
 import useNotificationsStore from "@/hooks/store/useNotificationsStore";
 import ContainerBox from "@/layouts/ContainerBox";
@@ -5,7 +6,7 @@ import Layout from "@/layouts/MainLayout";
 import { day, diffForHumans } from "@/utils/datetime";
 import { redirectToUrl } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
-import { Center, Grid, Group, Stack, Text, Title, UnstyledButton, rem } from "@mantine/core";
+import { Center, Grid, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 import { IconMessage } from "@tabler/icons-react";
 import classes from "./css/Index.module.css";
 
@@ -67,18 +68,12 @@ const NotificationsIndex = () => {
             ))}
           </Stack>
         ) : (
-          <Center mih={160} opacity={0.75}>
-            <Group>
-              <IconMessage style={{ width: rem(40), height: rem(40) }} />
-              <div>
-                <Text size="xl" fw={600} c="dimmed">
-                  No notifications
-                </Text>
-                <Text fz={13} c="dimmed" opacity={0.5}>
-                  List of recent notifications
-                </Text>
-              </div>
-            </Group>
+          <Center mih={160}>
+            <EmptyWithIcon
+              title="No notifications"
+              subtitle="List of recent notifications"
+              icon={IconMessage}
+            />
           </Center>
         )}
       </ContainerBox>
