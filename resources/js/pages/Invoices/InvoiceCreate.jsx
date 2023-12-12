@@ -33,7 +33,6 @@ import { useDidUpdate } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
 import axios from "axios";
 import { useState } from "react";
-import classes from "./css/Create.module.css";
 
 export const InvoiceCreate = () => {
   const { projects, clientCompanies, nextNumber } = usePage().props;
@@ -237,22 +236,15 @@ export const InvoiceCreate = () => {
                   </Title>
                   {project.tasks.length ? (
                     project.tasks.map((task) => (
-                      <Flex
-                        key={task.id}
-                        className={classes.task}
-                        justify="space-between"
-                        wrap="nowrap"
-                      >
+                      <Flex key={task.id} justify="space-between" wrap="nowrap">
                         <Group gap="sm" wrap="nowrap" align="self-start">
                           <Checkbox
                             size="sm"
-                            className={classes.checkbox}
                             checked={form.data.tasks.includes(task.id)}
                             onChange={(event) => toggleTask(task.id, event.currentTarget.checked)}
                           />
                           <Stack gap={3}>
                             <Text
-                              className={classes.name}
                               size="sm"
                               fw={500}
                               onClick={() =>
