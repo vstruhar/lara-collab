@@ -13,9 +13,6 @@ use Inertia\Response;
 
 class ActivityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): Response
     {
         /** @var \App\Models\User */

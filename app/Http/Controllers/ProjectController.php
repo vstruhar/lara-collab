@@ -13,17 +13,11 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    /**
-     * Create the controller instance.
-     */
     public function __construct()
     {
         $this->authorizeResource(Project::class, 'project');
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         return Inertia::render('Projects/Index', [
@@ -52,9 +46,6 @@ class ProjectController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return Inertia::render('Projects/Create', [
@@ -64,9 +55,6 @@ class ProjectController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreProjectRequest $request)
     {
         $project = Project::create($request->validated());
@@ -83,9 +71,6 @@ class ProjectController extends Controller
         return redirect()->route('projects.index')->success('Project created', 'A new project was successfully created.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Project $project)
     {
         return Inertia::render('Projects/Edit', [
@@ -96,9 +81,6 @@ class ProjectController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateProjectRequest $request, Project $project)
     {
         $project->update($request->validated());
@@ -106,9 +88,6 @@ class ProjectController extends Controller
         return redirect()->route('projects.index')->success('Project updated', 'The project was successfully updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Project $project)
     {
         $project->archive();
@@ -116,9 +95,6 @@ class ProjectController extends Controller
         return redirect()->back()->success('Project archived', 'The project was successfully archived.');
     }
 
-    /**
-     * Restore the specified resource from storage.
-     */
     public function restore(int $projectId)
     {
         $project = Project::withArchived()->findOrFail($projectId);
@@ -130,9 +106,6 @@ class ProjectController extends Controller
         return redirect()->back()->success('Project restored', 'The restoring of the project was completed successfully.');
     }
 
-    /**
-     * Toggle favorite on specified resource from storage.
-     */
     public function favoriteToggle(Project $project)
     {
         request()->user()->toggleFavorite($project);
@@ -140,9 +113,6 @@ class ProjectController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Update use access to specified resource from storage.
-     */
     public function userAccess(Request $request, Project $project)
     {
         $this->authorize('editUserAccess', $project);

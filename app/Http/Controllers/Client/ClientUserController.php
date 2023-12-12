@@ -16,9 +16,6 @@ use Inertia\Response;
 
 class ClientUserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): Response
     {
         abort_if(! $request->user()->can('view client users'), 401);
@@ -35,9 +32,6 @@ class ClientUserController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         abort_if(! request()->user()->can('create client user'), 401);
@@ -49,9 +43,6 @@ class ClientUserController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreClientRequest $request)
     {
         abort_if(! request()->user()->can('create client user'), 401);
@@ -67,9 +58,6 @@ class ClientUserController extends Controller
         return redirect()->route('clients.users.index')->success('Client created', 'A new client was successfully created.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(User $user)
     {
         abort_if(! request()->user()->can('edit client user'), 401);
@@ -82,9 +70,6 @@ class ClientUserController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(User $user, UpdateClientRequest $request)
     {
         abort_if(! request()->user()->can('edit client user'), 401);
@@ -94,9 +79,6 @@ class ClientUserController extends Controller
         return redirect()->route('clients.users.index')->success('Client updated', 'The client was successfully updated.');
     }
 
-    /**
-     * Archive the specified resource from storage.
-     */
     public function destroy(User $user)
     {
         abort_if(! request()->user()->can('archive client user'), 401);
@@ -109,9 +91,6 @@ class ClientUserController extends Controller
         return redirect()->back()->success('Client archived', 'The client was successfully archived.');
     }
 
-    /**
-     * Restore the specified resource from storage.
-     */
     public function restore(int $userId)
     {
         abort_if(! request()->user()->can('restore client user'), 401);

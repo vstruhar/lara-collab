@@ -15,17 +15,11 @@ use Inertia\Response;
 
 class RoleController extends Controller
 {
-    /**
-     * Create the controller instance.
-     */
     public function __construct()
     {
         $this->authorizeResource(Role::class, 'role');
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): Response
     {
         return Inertia::render('Settings/Roles/Index', [
@@ -39,9 +33,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return Inertia::render('Settings/Roles/Create', [
@@ -49,9 +40,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreRoleRequest $request)
     {
         $role = Role::create(['name' => $request->name, 'guard_name' => 'web']);
@@ -60,9 +48,6 @@ class RoleController extends Controller
         return redirect()->route('settings.roles.index')->success('Role created', 'A new role was successfully created.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Role $role)
     {
         return Inertia::render('Settings/Roles/Edit', [
@@ -71,9 +56,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Role $role, UpdateRoleRequest $request)
     {
         $role->update(['name' => $request->name]);
@@ -82,9 +64,6 @@ class RoleController extends Controller
         return redirect()->route('settings.roles.index')->success('Role updated', 'The role was successfully updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Role $role)
     {
         $usersWithRole = DB::table('model_has_roles')->where('role_id', $role->id)->exists();
@@ -97,9 +76,6 @@ class RoleController extends Controller
         return redirect()->back()->success('Role archived', 'The role was successfully archived.');
     }
 
-    /**
-     * Restore the specified resource from storage.
-     */
     public function restore(int $roleId)
     {
         $role = Role::withArchived()->findOrFail($roleId);

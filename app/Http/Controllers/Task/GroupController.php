@@ -11,9 +11,6 @@ use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    /**
-     * Store the specified resource in storage.
-     */
     public function store(StoreTaskGroupRequest $request, Project $project)
     {
         $this->authorize('create', [TaskGroup::class, $project]);
@@ -23,9 +20,6 @@ class GroupController extends Controller
         return redirect()->route('projects.tasks', $project)->success('Tasks group created', 'A new tasks group was successfully created.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateTaskGroupRequest $request, Project $project, TaskGroup $taskGroup)
     {
         $this->authorize('update', [$taskGroup, $project]);
@@ -35,9 +29,6 @@ class GroupController extends Controller
         return redirect()->route('projects.tasks', $project)->success('Tasks group updated', 'The tasks group was successfully updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Project $project, TaskGroup $taskGroup)
     {
         $this->authorize('delete', [$taskGroup, $project]);

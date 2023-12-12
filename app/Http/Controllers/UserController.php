@@ -14,17 +14,11 @@ use Inertia\Response;
 
 class UserController extends Controller
 {
-    /**
-     * Create the controller instance.
-     */
     public function __construct()
     {
         $this->authorizeResource(User::class, 'user');
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): Response
     {
         return Inertia::render('Users/Index', [
@@ -39,17 +33,11 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return Inertia::render('Users/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreUserRequest $request)
     {
         (new CreateUser)->create($request->validated());
@@ -57,17 +45,11 @@ class UserController extends Controller
         return redirect()->route('users.index')->success('User created', 'A new user was successfully created.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(User $user)
     {
         return Inertia::render('Users/Edit', ['item' => new UserResource($user)]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(User $user, UpdateUserRequest $request)
     {
         (new UpdateUser)->update($user, $request->validated());
@@ -75,9 +57,6 @@ class UserController extends Controller
         return redirect()->route('users.index')->success('User updated', 'The user was successfully updated.');
     }
 
-    /**
-     * Archive the specified resource from storage.
-     */
     public function destroy(User $user)
     {
         if (auth()->id() === $user->id) {
@@ -88,9 +67,6 @@ class UserController extends Controller
         return redirect()->back()->success('User archived', 'The user was successfully archived.');
     }
 
-    /**
-     * Restore the specified resource from storage.
-     */
     public function restore(int $userId)
     {
         $user = User::withArchived()->findOrFail($userId);

@@ -10,9 +10,6 @@ use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit()
     {
         return Inertia::render('Account/Profile/Edit', [
@@ -20,9 +17,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateAuthUserRequest $request)
     {
         (new UpdateAuthUser)->update($request->user(), $request->validated());

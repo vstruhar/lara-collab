@@ -12,9 +12,6 @@ use Inertia\Inertia;
 
 class OwnerCompanyController extends Controller
 {
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit()
     {
         $this->authorize('view', OwnerCompany::class);
@@ -28,9 +25,6 @@ class OwnerCompanyController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateOwnerCompanyRequest $request)
     {
         $this->authorize('update', OwnerCompany::class);

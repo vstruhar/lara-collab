@@ -12,9 +12,6 @@ use Inertia\Response;
 
 class ResetPasswordController extends Controller
 {
-    /**
-     * Display the password reset link request view.
-     */
     public function create(): Response
     {
         return Inertia::render('Auth/ForgotPassword', [
@@ -22,11 +19,6 @@ class ResetPasswordController extends Controller
         ]);
     }
 
-    /**
-     * Handle an incoming password reset link request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([

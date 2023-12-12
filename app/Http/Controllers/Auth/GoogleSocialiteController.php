@@ -8,21 +8,16 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class GoogleSocialiteController extends Controller
 {
-    /**
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function redirectToGoogle()
+    public function redirectToGoogle(): RedirectResponse
     {
         return Socialite::driver('google')->redirect();
     }
 
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function handleCallback()
+    public function handleCallback(): RedirectResponse
     {
         try {
             $user = Socialite::driver('google')->user();
