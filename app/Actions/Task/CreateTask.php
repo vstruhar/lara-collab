@@ -24,7 +24,7 @@ class CreateTask
                 'created_by_user_id' => auth()->id(),
                 'assigned_to_user_id' => $data['assigned_to_user_id'],
                 'name' => $data['name'],
-                'number' => $project->tasks()->withArchived()->count(),
+                'number' => $project->tasks()->withArchived()->count() + 1,
                 'description' => $data['description'],
                 'due_on' => $data['due_on'],
                 'estimation' => $data['estimation'],
