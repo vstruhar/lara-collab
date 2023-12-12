@@ -6,6 +6,7 @@
 
 .notification {
     margin: rem(10px) 0;
+    transition: 0.3s ease opacity;
 
     @mixin hover {
         opacity: 1 !important;

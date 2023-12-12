@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import TaskGroupLabel from "@/components/TaskGroupLabel";
 import { date, diffForHumans } from "@/utils/datetime";
 import { redirectTo } from "@/utils/route";
 import {
@@ -6,7 +7,6 @@ import {
   Center,
   Divider,
   Group,
-  Pill,
   ScrollArea,
   Stack,
   Text,
@@ -43,9 +43,7 @@ export default function RecentlyAssignedTasks({ tasks }) {
                     </Text>
                     <Group>
                       <Tooltip label="Task group" openDelay={500} withArrow>
-                        <Pill size="xs" className={classes.user} bg="blue" c="white">
-                          {task.task_group.name}
-                        </Pill>
+                        <TaskGroupLabel>{task.task_group.name}</TaskGroupLabel>
                       </Tooltip>
                       <Text fz={11} c="dimmed">
                         {task.project.name}

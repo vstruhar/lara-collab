@@ -3,6 +3,7 @@ import { usePage } from "@inertiajs/react";
 import { Accordion, Box, Breadcrumbs, Center, Group, Stack, Text, Title, rem } from "@mantine/core";
 import { IconRocket, IconStar, IconStarFilled } from "@tabler/icons-react";
 import Task from "./Task";
+import classes from "./css/Index.module.css";
 
 const TasksIndex = () => {
   let { projects } = usePage().props;
@@ -30,7 +31,11 @@ const TasksIndex = () => {
         {projects.length ? (
           <Accordion variant="separated" radius="md" multiple defaultValue={opened}>
             {projects.map((project) => (
-              <Accordion.Item key={project.id} value={project.id.toString()}>
+              <Accordion.Item
+                key={project.id}
+                value={project.id.toString()}
+                className={classes.accordionControl}
+              >
                 <Accordion.Control
                   icon={
                     project.favorite ? (

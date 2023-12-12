@@ -1,4 +1,5 @@
 import { Label } from "@/components/Label";
+import TaskGroupLabel from "@/components/TaskGroupLabel";
 import { diffForHumans } from "@/utils/datetime";
 import { redirectTo } from "@/utils/route";
 import { isOverdue } from "@/utils/task";
@@ -15,9 +16,7 @@ export default function Task({ task }) {
     >
       <Group gap="sm" wrap="nowrap">
         <Tooltip label="Task group" openDelay={1000} withArrow>
-          <Pill size="sm" className={classes.user} bg="blue" c="white">
-            {task.task_group.name}
-          </Pill>
+          <TaskGroupLabel size="sm">{task.task_group.name}</TaskGroupLabel>
         </Tooltip>
         {task.assigned_to_user && (
           <Link href={route("users.edit", task.assigned_to_user.id)}>

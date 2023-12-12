@@ -1,0 +1,6 @@
+.accordionControl:not([data-active="true"]) {
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+    border-radius: var(--mantine-radius-md);
+    border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-6));
+    transition: 0.3s ease border, 0.3s ease color;
+}
