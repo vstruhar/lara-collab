@@ -75,19 +75,24 @@ LaraCollab, developed with Laravel and React, serves as a project management too
 10. Install composer dependencies with `composer install`
 11. Run `npm run dev`
 
-> NOTE: [Laravel Sail](https://laravel.com/docs/10.x/sail#introduction) was used for development so if you want you can also use Docker.
+> NOTE: [Laravel Sail](https://laravel.com/docs/10.x/sail#introduction) was used for development, so if you want you can use that.
 
 #### Production
 
 9. You will be asked if you want to seed development data, for production enter `no`.
-10. Run `composer install --no-dev` to remove dev dependencies.
-11. Run `php artisan optimize` to optimize Laravel.
+10. Run `composer install --no-dev` to install project dependencies.
+11. Run `php artisan optimize` to optimize Laravel for production.
 12. Run `php artisan storage:link` to create symbolic link for storage in public directory.
 13. Setup [task scheduler](https://laravel.com/docs/10.x/scheduling#running-the-scheduler) by adding this to cron (to edit cron run `crontab -e`).
     `* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1`
 14. Emails, notifications and events are queueable. If you want to enable queues then you will have to set `QUEUE_CONNECTION=database` in `.env`. And then run [queue worker](https://laravel.com/docs/10.x/queues#running-the-queue-worker) with [supervisor](https://laravel.com/docs/10.x/queues#supervisor-configuration) using this command `php artisan queue:work --queue=default,email`.
 15. Setup email by updating variables in `.env` that have `MAIL_` prefix.
 16. Finally build frontend with `npm run build`.
+
+### Admin user
+After running migrations with seed a default admin user will be created.
+email: `admin@mail.com`
+password: `password`
 
 ### Web sockets
 
