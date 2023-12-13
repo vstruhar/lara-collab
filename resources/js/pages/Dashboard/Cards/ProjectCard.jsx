@@ -6,8 +6,13 @@ import round from "lodash/round";
 import classes from "./css/ProjectCard.module.css";
 
 export function ProjectCard({ project }) {
-  const completedPercent = (project.completed_tasks_count / project.all_tasks_count) * 100;
-  const overduePercent = (project.overdue_tasks_count / project.all_tasks_count) * 100;
+  let completedPercent = 0;
+  let overduePercent = 0;
+
+  if (project.all_tasks_count > 0) {
+    completedPercent = (project.completed_tasks_count / project.all_tasks_count) * 100;
+    overduePercent = (project.overdue_tasks_count / project.all_tasks_count) * 100;
+  }
 
   return (
     <Card bg="none">
