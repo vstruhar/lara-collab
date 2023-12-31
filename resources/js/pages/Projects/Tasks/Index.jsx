@@ -2,20 +2,23 @@ import { EmptyResult } from "@/components/EmptyResult";
 import useGroupsStore from "@/hooks/store/useGroupsStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
+import usePreferences from "@/hooks/usePreferences";
 import useWebSockets from "@/hooks/useWebSockets";
 import Layout from "@/layouts/MainLayout";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { usePage } from "@inertiajs/react";
-import { Button, Grid } from "@mantine/core";
+import { Button, Grid, ScrollArea } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { CreateTaskDrawer } from "./Drawers/CreateTaskDrawer";
 import { EditTaskDrawer } from "./Drawers/EditTaskDrawer";
 import ArchivedItems from "./Index/Archive/ArchivedItems";
 import Filters from "./Index/Filters";
+import FiltersDrawer from "./Index/FiltersDrawer";
 import Header from "./Index/Header";
 import CreateTasksGroupModal from "./Index/Modals/CreateTasksGroupModal";
 import TaskGroup from "./Index/TaskGroup";
+import classes from "./css/Index.module.css";
 
 let currentProject = null;
 
@@ -27,6 +30,7 @@ const TasksIndex = () => {
   const { tasks, setTasks, addTask, reorderTask, moveTask } = useTasksStore();
   const { hasUrlParams } = useTaskFiltersStore();
   const { initProjectWebSocket } = useWebSockets();
+  const { tasksView } = usePreferences();
 
   const usingFilters = hasUrlParams();
 
@@ -62,47 +66,53 @@ const TasksIndex = () => {
       {can("create task") && <CreateTaskDrawer />}
       <EditTaskDrawer />
 
-      <Grid columns={12} gutter={50} mt="xl">
+      <Grid columns={12} gutter={50} mt="xl" className={`${tasksView}-view`}>
         {!route().params.archived ? (
           <Grid.Col span="auto">
             {groups.length ? (
               <>
                 <DragDropContext onDragEnd={onDragEnd}>
-                  <Droppable droppableId="groups" direction="vertical" type="group">
+                  <Droppable
+                    droppableId="groups"
+                    direction={tasksView === "list" ? "vertical" : "horizontal"}
+                    type="group"
+                  >
                     {(provided) => (
-                      <div {...provided.droppableProps} ref={provided.innerRef}>
-                        {groups
-                          .filter(
-                            (group) =>
-                              !usingFilters || (usingFilters && tasks[group.id]?.length > 0),
-                          )
-                          .map((group, index) => (
-                            <TaskGroup
-                              key={group.id}
-                              index={index}
-                              group={group}
-                              tasks={tasks[group.id] || []}
-                            />
-                          ))}
-                        {provided.placeholder}
-                      </div>
+                      <ScrollArea {...provided.droppableProps} ref={provided.innerRef}>
+                        <div className={classes.viewport}>
+                          {groups
+                            .filter(
+                              (group) =>
+                                !usingFilters || (usingFilters && tasks[group.id]?.length > 0),
+                            )
+                            .map((group, index) => (
+                              <TaskGroup
+                                key={group.id}
+                                index={index}
+                                group={group}
+                                tasks={tasks[group.id] || []}
+                              />
+                            ))}
+                          {provided.placeholder}
+                          {!route().params.archived && can("create task group") && (
+                            <Button
+                              leftSection={<IconPlus size={14} />}
+                              variant="transparent"
+                              size="sm"
+                              mt={14}
+                              m={4}
+                              radius="xl"
+                              onClick={CreateTasksGroupModal}
+                              style={{ width: "200px" }}
+                            >
+                              Add {tasksView === "list" ? "tasks group" : "group"}
+                            </Button>
+                          )}
+                        </div>
+                      </ScrollArea>
                     )}
                   </Droppable>
                 </DragDropContext>
-
-                {!route().params.archived && can("create task group") && (
-                  <Button
-                    leftSection={<IconPlus size={14} />}
-                    variant="transparent"
-                    size="sm"
-                    mt="md"
-                    m={4}
-                    radius="xl"
-                    onClick={CreateTasksGroupModal}
-                  >
-                    Add tasks group
-                  </Button>
-                )}
               </>
             ) : (
               <EmptyResult title="No tasks found" subtitle="or none match your search criteria" />
@@ -113,9 +123,13 @@ const TasksIndex = () => {
             <ArchivedItems groups={groups} tasks={tasks} />
           </Grid.Col>
         )}
-        <Grid.Col span={3}>
-          <Filters />
-        </Grid.Col>
+        {tasksView === "list" ? (
+          <Grid.Col span={3}>
+            <Filters />
+          </Grid.Col>
+        ) : (
+          <FiltersDrawer />
+        )}
       </Grid>
     </>
   );

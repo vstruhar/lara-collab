@@ -41,7 +41,6 @@ export default function TaskGroup({ group, tasks, ...props }) {
                   variant="filled"
                   size="md"
                   radius="xl"
-                  mr={-10}
                   onClick={() => openCreateTask(group.id)}
                 >
                   <IconPlus style={{ width: rem(18), height: rem(18) }} stroke={2} />

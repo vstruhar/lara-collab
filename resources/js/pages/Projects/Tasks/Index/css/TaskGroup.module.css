@@ -10,8 +10,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: var(--mantine-spacing-sm);
-    padding-left: calc(var(--mantine-spacing-xl) - var(--mantine-spacing-md));
-    padding: var(--mantine-spacing-sm) var(--mantine-spacing-xl);
+    padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
     transition: 0.3s ease border, 0.3s ease color;
 
     @mixin hover {
@@ -43,4 +42,16 @@
     color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-1));
     opacity: 0.2;
     transition: 0.3s ease opacity;
+}
+
+:global(.kanban-view) {
+    .row {
+        max-width: rem(260px);
+        min-width: rem(260px);
+    }
+
+    .group {
+        margin-bottom: var(--mantine-spacing-xs);
+        padding: var(--mantine-spacing-sm) var(--mantine-spacing-xs);
+    }
 }

@@ -3,8 +3,8 @@ import { isOverdue } from "@/utils/task";
 import { shortName } from "@/utils/user";
 import { Link } from "@inertiajs/react";
 import { Checkbox, Flex, Group, Pill, Text, Tooltip } from "@mantine/core";
+import classes from "../Task/css/TaskRow.module.css";
 import TaskActions from "../TaskActions";
-import classes from "../css/Task.module.css";
 
 export default function ArchivedTask({ task }) {
   return (

@@ -65,8 +65,8 @@ class Task extends Model implements AuditableContract, Sortable
 
     public array $defaultWith = [
         'project:id,name',
-        'createdByUser:id,name',
-        'assignedToUser:id,name',
+        'createdByUser:id,name,avatar',
+        'assignedToUser:id,name,avatar',
         'subscribedUsers:id',
         'labels:id,name,color',
         'attachments',

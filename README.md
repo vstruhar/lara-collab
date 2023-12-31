@@ -54,7 +54,7 @@ LaraCollab, developed with Laravel and React, serves as a project management too
 
 ## Tech stack
 
-[Laravel](https://laravel.com) for backend, [React](https://react.dev) for frontend and [Inertia](https://inertiajs.com) for "glueing" them together. For the frontend React UI components, the beautiful and awesome [Mantine](https://mantine.dev) library was used.
+[Laravel](https://laravel.com) for backend, [React](https://react.dev) for frontend and [Inertia](https://inertiajs.com) for "glueing" them together. For the frontend React UI components, the awesome [Mantine](https://mantine.dev) library was used.
 
 ## Setup
 
@@ -90,6 +90,7 @@ LaraCollab, developed with Laravel and React, serves as a project management too
 16. Finally build frontend with `npm run build`.
 
 ### Admin user
+
 New admin user will be created after running migrations with seed.
 
 email: `admin@mail.com`
@@ -110,7 +111,7 @@ To use Pusher, sign up, then create a project and copy paste app keys to `.env` 
 
 ## Roadmap
 
--   Kanban view.
+-   ✅ ~~Kanban view.~~
 -   Change permission for specific user.
 -   Add emojis to rich text editor.
 -   Report that will calculate expense and profit per user.

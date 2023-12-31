@@ -7,6 +7,7 @@ import { create } from 'zustand';
 const params = currentUrlParams();
 
 const useTaskFiltersStore = create((set, get) => ({
+  openedDrawer: false,
   filters: {
     groups: params.groups || [],
     assignees: params.assignees || [],
@@ -90,6 +91,12 @@ const useTaskFiltersStore = create((set, get) => ({
         }
       }),
     );
+  },
+  openDrawer: () => {
+    return set(produce(state => {state.openedDrawer = true}));
+  },
+  closeDrawer: () => {
+    return set(produce(state => {state.openedDrawer = false}));
   },
 }));
 

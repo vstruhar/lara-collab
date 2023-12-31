@@ -1,0 +1,7 @@
+:global(.kanban-view) {
+    .viewport {
+        display: flex;
+        gap: rem(15px);
+        padding-bottom: rem(20px);
+    }
+}
