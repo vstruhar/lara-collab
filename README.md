@@ -111,10 +111,12 @@ To use Pusher, sign up, then create a project and copy paste app keys to `.env` 
 
 ## Roadmap
 
--   ✅ ~~Kanban view.~~
--   Change permission for specific user.
--   Add emojis to rich text editor.
--   Report that will calculate expense and profit per user.
--   Write tests.
--   Optimize frontend and backend.
--   Consider moving to TypeScript.
+-   [x] ~~Kanban view.~~
+-   [ ] Add project notes section.
+-   [ ] Change permission for specific user.
+-   [ ] Make it responsive.
+-   [ ] Add emojis to rich text editor.
+-   [ ] Report that will calculate expense and profit per user.
+-   [ ] Write tests.
+-   [ ] Optimize frontend and backend.
+-   [ ] Consider moving to TypeScript.

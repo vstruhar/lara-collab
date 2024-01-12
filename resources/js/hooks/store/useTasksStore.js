@@ -70,7 +70,9 @@ const useTasksStore = create((set, get) => ({
       .post(route("projects.tasks.complete", [task.project_id, task.id]), { completed: checked })
       .catch(() => alert("Failed to save task completed action"));
 
-    return set(produce(state => { state.tasks[task.group_id][index].completed_at = newState }));
+    return set(produce(state => {
+      state.tasks[task.group_id][index].completed_at = newState
+    }));
   },
   reorderTask: (source, destination) => {
     const sourceGroupId = +source.droppableId.split("-")[1];
