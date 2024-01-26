@@ -23,7 +23,7 @@ export default function MainLayout({ children, title }) {
   return (
     <AppShell
       navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: false } }}
-      style={{ padding: "3rem 5rem" }}
+      padding="4rem"
     >
       <Head title={title} />
 

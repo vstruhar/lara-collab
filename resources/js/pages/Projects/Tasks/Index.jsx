@@ -7,7 +7,7 @@ import useWebSockets from "@/hooks/useWebSockets";
 import Layout from "@/layouts/MainLayout";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { usePage } from "@inertiajs/react";
-import { Button, Grid, ScrollArea } from "@mantine/core";
+import { Button, Grid } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { CreateTaskDrawer } from "./Drawers/CreateTaskDrawer";
@@ -78,7 +78,7 @@ const TasksIndex = () => {
                     type="group"
                   >
                     {(provided) => (
-                      <ScrollArea {...provided.droppableProps} ref={provided.innerRef}>
+                      <div {...provided.droppableProps} ref={provided.innerRef}>
                         <div className={classes.viewport}>
                           {groups
                             .filter(
@@ -109,7 +109,7 @@ const TasksIndex = () => {
                             </Button>
                           )}
                         </div>
-                      </ScrollArea>
+                      </div>
                     )}
                   </Droppable>
                 </DragDropContext>

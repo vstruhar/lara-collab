@@ -1,3 +1,5 @@
+import cloneDeep from "lodash/cloneDeep";
+
 export const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -7,7 +9,7 @@ export const reorder = (list, startIndex, endIndex) => {
 };
 
 export const move = (tasks, sourceGroupId, destinationGroupId, sourceIndex, destinationIndex) => {
-  const sourceClone = Array.from(tasks[sourceGroupId]);
+  const sourceClone = cloneDeep(tasks[sourceGroupId]);
   const destClone = Array.from(tasks[destinationGroupId] || []);
   const [removed] = sourceClone.splice(sourceIndex, 1);
 

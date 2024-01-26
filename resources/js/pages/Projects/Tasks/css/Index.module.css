@@ -2,6 +2,15 @@
     .viewport {
         display: flex;
         gap: rem(15px);
-        padding-bottom: rem(20px);
+
+        padding-left: 4rem;
+        padding-right: 4rem;
+
+        height: calc(100dvh - 147px);
     }
+
+    overflow-x: auto;
+    margin-left: -4rem;
+    margin-right: -4rem;
+    margin-bottom: -4rem;
 }

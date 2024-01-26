@@ -58,7 +58,7 @@ export default function TaskGroup({ group, tasks, ...props }) {
                 {tasks.map((task, index) => (
                   <Task key={task.id} task={task} index={index} />
                 ))}
-                {provided.placeholder}
+                <div className={classes.placeholder}>{provided.placeholder}</div>
               </div>
             )}
           </Droppable>
