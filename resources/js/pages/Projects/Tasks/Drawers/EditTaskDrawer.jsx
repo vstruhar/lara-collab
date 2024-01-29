@@ -114,7 +114,7 @@ export function EditTaskDrawer() {
       opened={edit.opened}
       onClose={closeEditTask}
       title={
-        <Group ml={25} my="sm">
+        <Group ml={25} my="sm" wrap="nowrap">
           <Checkbox
             size="md"
             radius="xl"
@@ -124,10 +124,10 @@ export function EditTaskDrawer() {
             className={can("complete task") ? classes.checkbox : classes.disabledCheckbox}
           />
           <Text
-            fz={rem(28)}
+            fz={rem(27)}
             fw={600}
+            lh={1.2}
             td={task?.completed_at !== null ? "line-through" : null}
-            truncate="end"
           >
             #{task?.number}: {data.name}
           </Text>
