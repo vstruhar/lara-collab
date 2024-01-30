@@ -6,6 +6,7 @@ use App\Http\Requests\Project\StoreProjectRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\Project\ProjectResource;
 use App\Models\ClientCompany;
+use App\Models\Currency;
 use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
@@ -51,13 +52,18 @@ class ProjectController extends Controller
         return Inertia::render('Projects/Create', [
             'dropdowns' => [
                 'companies' => ClientCompany::dropdownValues(),
+                'currencies' => Currency::dropdownValues(['with' => ['clientCompanies:id,currency_id']]),
             ],
         ]);
     }
 
     public function store(StoreProjectRequest $request)
     {
-        $project = Project::create($request->validated());
+        $data = $request->validated();
+
+        $data['rate'] *= 100;
+
+        $project = Project::create($data);
 
         $project->taskGroups()->createMany([
             ['name' => 'Backlog'],
@@ -77,13 +83,18 @@ class ProjectController extends Controller
             'item' => $project,
             'dropdowns' => [
                 'companies' => ClientCompany::dropdownValues(),
+                'currencies' => Currency::dropdownValues(['with' => ['clientCompanies:id,currency_id']]),
             ],
         ]);
     }
 
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        $project->update($request->validated());
+        $data = $request->validated();
+
+        $data['rate'] *= 100;
+
+        $project->update($data);
 
         return redirect()->route('projects.index')->success('Project updated', 'The project was successfully updated.');
     }

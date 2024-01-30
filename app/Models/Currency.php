@@ -3,14 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Currency extends Model
 {
-    public static function dropdownValues(): array
+    public function clientCompanies(): HasMany
+    {
+        return $this->hasMany(ClientCompany::class);
+    }
+
+    public static function dropdownValues($options = []): array
     {
         return self::orderBy('name')
-            ->get(['id', 'name', 'symbol'])
-            ->map(fn ($i) => ['value' => (string) $i->id, 'label' => "{$i->name} ({$i->symbol})"])
+            ->when(isset($options['with']), fn ($query) => $query->with($options['with']))
+            ->get()
+            ->map(fn ($i) => array_merge([
+                'value' => (string) $i->id,
+                'label' => "{$i->name} ({$i->symbol})",
+            ], isset($options['with']) ? $i->toArray() : []))
             ->toArray();
     }
 }

@@ -36,7 +36,6 @@ class StoreClientCompanyRequest extends FormRequest
             'business_id' => 'string|nullable',
             'tax_id' => 'string|nullable',
             'vat' => 'string|nullable',
-            'rate' => 'numeric|min:0|nullable',
             'clients' => 'array|nullable',
         ];
     }

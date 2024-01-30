@@ -27,7 +27,6 @@ return new class extends Migration
             $table->string('business_id')->nullable();
             $table->string('tax_id')->nullable();
             $table->string('vat')->nullable();
-            $table->unsignedInteger('rate')->nullable();
             $table->timestamps();
             $table->archivedAt();
         });

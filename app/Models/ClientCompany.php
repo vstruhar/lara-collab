@@ -32,7 +32,6 @@ class ClientCompany extends Model implements AuditableContract
         'business_id',
         'tax_id',
         'vat',
-        'rate',
     ];
 
     protected $searchable = [
@@ -43,7 +42,6 @@ class ClientCompany extends Model implements AuditableContract
     protected $sortable = [
         'name' => 'asc',
         'email',
-        'rate',
     ];
 
     public function clients(): BelongsToMany
