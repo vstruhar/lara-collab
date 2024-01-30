@@ -4,22 +4,22 @@ LaraCollab, developed with Laravel and React, serves as a project management too
 
 ## Features
 
--   User roles (e.g., client, manager, developer, designer) with customizable permissions.
--   Management of client companies.
--   Manage client users that have access to company tasks.
--   Project management with user access control.
--   Task groups within projects (e.g., Todo, In progress, QA, Done, Deployed).
--   Task can have a assignee, due date, custom labels, time estimation (add manually or use timer), attachments, subscribers, and comments.
--   Task filters for efficient organization.
--   Real-time notifications and task updates via web sockets.
--   Mention functionality in task descriptions and comments.
--   Personalized "My Tasks" page for each user.
--   Activity page for projects or selected ones.
--   Invoice generation from billable tasks with logged time.
--   Print or download invoices directly from the platform.
--   Dashboard offering project progress, overdue tasks, recently assigned tasks, and recent comments.
--   Additional reports for daily logged time per user and total logged time.
--   Dark mode support for user preference.
+- User roles (e.g., client, manager, developer, designer) with customizable permissions.
+- Management of client companies.
+- Manage client users that have access to company tasks.
+- Project management with user access control.
+- Task groups within projects (e.g., Todo, In progress, QA, Done, Deployed).
+- Task can have a assignee, due date, custom labels, time estimation (add manually or use timer), attachments, subscribers, and comments.
+- Task filters for efficient organization.
+- Real-time notifications and task updates via web sockets.
+- Mention functionality in task descriptions and comments.
+- Personalized "My Tasks" page for each user.
+- Activity page for projects or selected ones.
+- Invoice generation from billable tasks with logged time.
+- Print or download invoices directly from the platform.
+- Dashboard offering project progress, overdue tasks, recently assigned tasks, and recent comments.
+- Additional reports for daily logged time per user and total logged time.
+- Dark mode support for user preference.
 
 ## Screenshots
 
@@ -111,12 +111,12 @@ To use Pusher, sign up, then create a project and copy paste app keys to `.env` 
 
 ## Roadmap
 
--   [x] ~~Kanban view.~~
--   [ ] Add project notes section.
--   [ ] Change permission for specific user.
--   [ ] Make it responsive.
--   [ ] Add emojis to rich text editor.
--   [ ] Report that will calculate expense and profit per user.
--   [ ] Write tests.
--   [ ] Optimize frontend and backend.
--   [ ] Consider moving to TypeScript.
+- [x] ~~Kanban view.~~
+- [ ] Add project notes section.
+- [ ] Change permission for specific user.
+- [ ] Make it responsive.
+- [ ] Add emojis to rich text editor.
+- [x] Report that will calculate expense and profit per user.
+- [ ] Write tests.
+- [ ] Optimize frontend and backend.
+- [ ] Consider moving to TypeScript.

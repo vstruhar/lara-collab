@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientCompany;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -38,15 +39,17 @@ class ReportController extends Controller
                 )
                 ->{$completed ? 'whereNotNull' : 'whereNull'}('tasks.completed_at')
                 ->where('billable', $request->get('billable', 'true') === 'true')
-                ->groupBy(['time_logs.user_id'])
+                ->groupBy(['tasks.project_id'])
                 ->selectRaw('
                     ANY_VALUE(projects.id) AS project_id, ANY_VALUE(projects.name) AS project_name,
+                    ANY_VALUE(projects.rate) AS project_rate, ANY_VALUE(projects.client_company_id) AS client_company_id,
                     ANY_VALUE(users.id) AS user_id, ANY_VALUE(users.name) AS user_name, ANY_VALUE(users.rate) AS user_rate,
                     SUM(time_logs.minutes) / 60 AS total_hours
                 ')
                 ->orderBy('project_name')
                 ->get()
                 ->groupBy('project_id'),
+            'clientCompanies' => ClientCompany::with('currency')->get(['id', 'name', 'currency_id']),
             'dropdowns' => [
                 'projects' => Project::dropdownValues(),
                 'users' => User::userDropdownValues(['client']),
