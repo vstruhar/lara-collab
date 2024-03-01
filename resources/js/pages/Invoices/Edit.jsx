@@ -57,14 +57,33 @@ const InvoiceEdit = () => {
     );
 
     const company = clientCompanies.find(i => form.data.client_company_id === i.id.toString());
-
-    if (company.rate) {
-      updateValue('hourly_rate', company.rate);
-    }
     setCurrency(company.currency);
+
+    updateValue('projects', []);
   }, [form.data.client_company_id]);
 
-  useEffect(() => fetchTasks(), [form.data.projects]);
+  useEffect(() => {
+    if (form.data.projects.length) {
+      axios
+        .get(route('invoices.tasks', { projectIds: form.data.projects, invoiceId: invoice.id }))
+        .then(({ data }) => {
+          setProjectTasks(data.projectTasks);
+          const taskIds = [];
+
+          data.projectTasks.forEach(project => {
+            project.tasks.forEach(
+              task =>
+                invoice.tasks.find(i => i.id === task.id) !== undefined && taskIds.push(task.id)
+            );
+          });
+          updateValue({
+            ...form.data,
+            tasks: [...taskIds],
+          });
+        })
+        .catch(error => console.error('Failed to fetch tasks', error));
+    }
+  }, [form.data.projects]);
 
   useEffect(() => {
     let total = 0;
@@ -81,26 +100,6 @@ const InvoiceEdit = () => {
     }
     setTotal(total);
   }, [form.data.tasks, form.data.type, form.data.hourly_rate, form.data.fixed_amount]);
-
-  const fetchTasks = () => {
-    if (form.data.projects.length) {
-      axios
-        .get(route('invoices.tasks', { projectIds: form.data.projects, invoiceId: invoice.id }))
-        .then(({ data }) => {
-          setProjectTasks(data.projectTasks);
-          const taskIds = [];
-
-          data.projectTasks.forEach(project => {
-            project.tasks.forEach(
-              task =>
-                invoice.tasks.find(i => i.id === task.id) !== undefined && taskIds.push(task.id)
-            );
-          });
-          updateValue('tasks', [...taskIds]);
-        })
-        .catch(error => console.error('Failed to fetch tasks', error));
-    }
-  };
 
   const toggleTask = (taskId, checked) => {
     updateValue(

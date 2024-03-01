@@ -45,11 +45,11 @@ class InvoiceController extends Controller
     {
         return Inertia::render('Invoices/Create', [
             'nextNumber' => Invoice::getNextNumber(),
-            'projects' => Project::orderBy('name')->get(['id', 'name', 'client_company_id']),
+            'projects' => Project::orderBy('name')->get(['id', 'name', 'client_company_id', 'rate']),
             'clientCompanies' => ClientCompany::has('projects')
                 ->with(['currency'])
                 ->orderBy('name')
-                ->get(['id', 'name', 'rate', 'currency_id']),
+                ->get(['id', 'name', 'currency_id']),
             'dropdowns' => [
                 'clientCompanies' => ClientCompany::dropdownValues(['hasProjects']),
                 'currencies' => Currency::dropdownValues(),
@@ -70,7 +70,7 @@ class InvoiceController extends Controller
     {
         return Inertia::render('Invoices/Edit', [
             'invoice' => $invoice->load('tasks:id,invoice_id'),
-            'projects' => Project::orderBy('name')->get(['id', 'name', 'client_company_id']),
+            'projects' => Project::orderBy('name')->get(['id', 'name', 'client_company_id', 'rate']),
             'selectedProjects' => DB::table('tasks')
                 ->where('invoice_id', $invoice->id)
                 ->groupBy('project_id')
@@ -79,7 +79,7 @@ class InvoiceController extends Controller
             'clientCompanies' => ClientCompany::has('projects')
                 ->with(['currency'])
                 ->orderBy('name')
-                ->get(['id', 'name', 'rate', 'currency_id']),
+                ->get(['id', 'name', 'currency_id']),
             'dropdowns' => [
                 'clientCompanies' => ClientCompany::dropdownValues(['hasProjects']),
                 'currencies' => Currency::dropdownValues(),
