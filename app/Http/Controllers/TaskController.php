@@ -24,7 +24,7 @@ use Inertia\Response;
 
 class TaskController extends Controller
 {
-    public function index(Request $request, Project $project, Task $task = null): Response
+    public function index(Request $request, Project $project, ?Task $task = null): Response
     {
         $this->authorize('viewAny', [Task::class, $project]);
 
