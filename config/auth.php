@@ -13,6 +13,11 @@ return [
     |
     */
 
+    'admin' => [
+        'email' => env('ADMIN_EMAIL', ''),
+        'password' => env('ADMIN_PASSWORD', ''),
+    ],
+
     'defaults' => [
         'guard' => 'web',
         'passwords' => 'users',

@@ -15,28 +15,28 @@ class ProductionSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'email' => 'admin@mail.com',
-            'name' => 'Admin',
+            'email' => config('auth.admin.email'),
+            'name' => 'Crystal Desarrollo S.R.L.',
             'phone' => '',
             'rate' => 0,
             'job_title' => 'Owner',
             'avatar' => null,
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => bcrypt(config('auth.admin.password')),
             'remember_token' => null,
         ])->assignRole(Role::firstWhere('name', 'admin'));
 
         OwnerCompany::create([
-            'name' => '',
+            'name' => 'Crystal Desarrollo S.R.L.',
             'logo' => null,
             'address' => '',
             'postal_code' => '',
-            'city' => '',
+            'city' => 'San Salvador de Jujuy',
             'country_id' => null,
             'currency_id' => 97,
             'phone' => '',
-            'web' => '',
+            'web' => 'https://crystal-desarrollo.com',
             'tax' => 0,
-            'email' => '',
+            'email' => 'contacto@crystal-desarrollo.com',
             'iban' => '',
             'swift' => '',
             'business_id' => '',
