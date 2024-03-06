@@ -15,7 +15,7 @@ import {
 import { useEffect } from "react";
 import NavbarLinksGroup from "./NavbarLinksGroup";
 import UserButton from "./UserButton";
-import classes from "./css/NavbarNested.module.css";
+import classes from "./css/NavBarNested.module.css";
 
 export default function Sidebar() {
   const { version } = usePage().props;
