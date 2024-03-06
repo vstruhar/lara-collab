@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('client_companies', function (Blueprint $table) {
-            $table->dropColumn('rate');
+            //$table->dropColumn('rate');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('client_companies', function (Blueprint $table) {
-            $table->unsignedInteger('rate')->nullable();
+            //$table->unsignedInteger('rate')->nullable();
         });
     }
 };
