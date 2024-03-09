@@ -26,17 +26,17 @@ class ProductionSeeder extends Seeder
         ])->assignRole(Role::firstWhere('name', 'admin'));
 
         OwnerCompany::create([
-            'name' => 'Crystal Desarrollo S.R.L.',
+            'name' => '',
             'logo' => null,
             'address' => '',
             'postal_code' => '',
-            'city' => 'San Salvador de Jujuy',
+            'city' => '',
             'country_id' => null,
             'currency_id' => 97,
             'phone' => '',
-            'web' => 'https://crystal-desarrollo.com',
+            'web' => '',
             'tax' => 0,
-            'email' => 'contacto@crystal-desarrollo.com',
+            'email' => '',
             'iban' => '',
             'swift' => '',
             'business_id' => '',
