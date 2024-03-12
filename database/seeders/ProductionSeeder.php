@@ -15,13 +15,13 @@ class ProductionSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'email' => 'admin@mail.com',
-            'name' => 'Admin',
+            'email' => config('auth.admin.email'),
+            'name' => config('auth.admin.name'),
             'phone' => '',
             'rate' => 0,
             'job_title' => 'Owner',
             'avatar' => null,
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => bcrypt(config('auth.admin.password')),
             'remember_token' => null,
         ])->assignRole(Role::firstWhere('name', 'admin'));
 
