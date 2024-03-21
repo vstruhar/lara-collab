@@ -18,4 +18,4 @@ yarn-error.log
 /.idea
 /.vscode
 /storage/clockwork
-.pnpm-lock.yaml
+pnpm-lock.yaml
