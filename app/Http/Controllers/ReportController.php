@@ -41,9 +41,9 @@ class ReportController extends Controller
                 ->where('billable', $request->get('billable', 'true') === 'true')
                 ->groupBy(['tasks.project_id'])
                 ->selectRaw('
-                    ANY_VALUE(projects.id) AS project_id, ANY_VALUE(projects.name) AS project_name,
-                    ANY_VALUE(projects.rate) AS project_rate, ANY_VALUE(projects.client_company_id) AS client_company_id,
-                    ANY_VALUE(users.id) AS user_id, ANY_VALUE(users.name) AS user_name, ANY_VALUE(users.rate) AS user_rate,
+                    MAX(projects.id) AS project_id, MAX(projects.name) AS project_name,
+                    MAX(projects.rate) AS project_rate, MAX(projects.client_company_id) AS client_company_id,
+                    MAX(users.id) AS user_id, MAX(users.name) AS user_name, MAX(users.rate) AS user_rate,
                     SUM(time_logs.minutes) / 60 AS total_hours
                 ')
                 ->orderBy('project_name')
@@ -82,9 +82,9 @@ class ReportController extends Controller
             ->where('billable', $request->get('billable', 'true') === 'true')
             ->groupBy(['time_logs.user_id', 'date'])
             ->selectRaw('
-                ANY_VALUE(projects.id) AS project_id, ANY_VALUE(projects.name) AS project_name,
-                ANY_VALUE(users.id) AS user_id, ANY_VALUE(users.name) AS user_name,
-                SUM(time_logs.minutes) / 60 AS total_hours, DATE_FORMAT(ANY_VALUE(time_logs.created_at), "%e. %b %Y") AS date
+                MAX(projects.id) AS project_id, MAX(projects.name) AS project_name,
+                MAX(users.id) AS user_id, MAX(users.name) AS user_name,
+                SUM(time_logs.minutes) / 60 AS total_hours, DATE_FORMAT(time_logs.created_at, "%e. %b %Y") AS date
             ')
             ->orderBy('date')
             ->get();
