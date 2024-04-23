@@ -6,7 +6,7 @@ use App\Models\Activity;
 use App\Models\Project;
 use Illuminate\Console\Command;
 
-class PruneNotifications extends Command
+class PruneActivities extends Command
 {
     /**
      * The name and signature of the console command.
