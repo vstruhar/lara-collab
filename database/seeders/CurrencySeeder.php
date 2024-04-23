@@ -72,6 +72,7 @@ class CurrencySeeder extends Seeder
             ['code' => 'LRD', 'name' => 'Liberian Dollar', 'symbol' => '$', 'decimals' => 2],
             ['code' => 'LTL', 'name' => 'Lithuanian Litas', 'symbol' => 'Lt', 'decimals' => 2],
             ['code' => 'LVL', 'name' => 'Latvian Lats', 'symbol' => 'Ls', 'decimals' => 2],
+            ['code' => 'MAD', 'name' => 'Moroccan Dirham', 'symbol' => 'Dhs', 'decimals' => 2],
             ['code' => 'MKD', 'name' => 'Denar', 'symbol' => 'ден', 'decimals' => 2],
             ['code' => 'MNT', 'name' => 'Tugrik', 'symbol' => '₮', 'decimals' => 2],
             ['code' => 'MUR', 'name' => 'Mauritius Rupee', 'symbol' => '₨', 'decimals' => 2],
