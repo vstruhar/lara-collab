@@ -27,6 +27,7 @@ class InvoiceResource extends JsonResource
             'due_date' => $this->due_date,
             'note' => $this->note,
             'filename' => $this->filename,
+            'created_at' => $this->created_at,
         ];
     }
 }
