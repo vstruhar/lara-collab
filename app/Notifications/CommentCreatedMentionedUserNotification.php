@@ -13,9 +13,7 @@ class CommentCreatedMentionedUserNotification extends Notification implements Sh
 {
     use Queueable;
 
-    public function __construct(public Comment $comment)
-    {
-    }
+    public function __construct(public Comment $comment) {}
 
     /**
      * Get the notification's delivery channels.
