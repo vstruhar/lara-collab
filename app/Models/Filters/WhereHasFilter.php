@@ -7,9 +7,7 @@ use Lacodix\LaravelModelFilter\Filters\Filter;
 
 class WhereHasFilter extends Filter
 {
-    public function __construct(protected string $relation)
-    {
-    }
+    public function __construct(protected string $relation) {}
 
     public function apply(Builder $query): Builder
     {

@@ -70,12 +70,12 @@ class PermissionService
         return self::$permissionsByRole['admin'];
     }
 
-    private static $usersWithAccessToProject = null;
+    private static $usersWithAccessToProject = [];
 
     public static function usersWithAccessToProject($project): Collection
     {
-        if (self::$usersWithAccessToProject !== null) {
-            return self::$usersWithAccessToProject;
+        if (isset(self::$usersWithAccessToProject[$project->id])) {
+            return self::$usersWithAccessToProject[$project->id];
         }
 
         $admins = User::role('admin')
@@ -94,7 +94,7 @@ class PermissionService
             ->load('roles:id,name')
             ->map(fn ($user) => [...$user->toArray(), 'reason' => 'given access']);
 
-        return self::$usersWithAccessToProject = collect([
+        return self::$usersWithAccessToProject[$project->id] = collect([
             ...$admins,
             ...$owners,
             ...$givenAccess,

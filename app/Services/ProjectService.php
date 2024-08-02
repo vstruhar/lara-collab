@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProjectService
 {
-    public function __construct(public Project $project)
-    {
-    }
+    public function __construct(public Project $project) {}
 
     public function updateUserAccess(array $userIds): bool
     {
