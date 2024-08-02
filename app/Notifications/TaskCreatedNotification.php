@@ -13,9 +13,7 @@ class TaskCreatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public Task $task)
-    {
-    }
+    public function __construct(public Task $task) {}
 
     /**
      * Get the notification's delivery channels.

@@ -7,9 +7,7 @@ use Lacodix\LaravelModelFilter\Filters\Filter;
 
 class WhereInFilter extends Filter
 {
-    public function __construct(protected string $field)
-    {
-    }
+    public function __construct(protected string $field) {}
 
     public function apply(Builder $query): Builder
     {
