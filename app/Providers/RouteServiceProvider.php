@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\ClientCompany;
+use App\Models\Project;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -26,6 +27,12 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Route::model('company', ClientCompany::class);
+
+        Route::model('project', Project::class, function ($value) {
+            return Project::where('id', $value)
+                ->when(auth()->user()->isAdmin(), fn ($query) => $query->withArchived())
+                ->firstOrFail();
+        });
 
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
