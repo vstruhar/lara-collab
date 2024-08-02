@@ -1,6 +1,7 @@
 import ArchivedFilterButton from "@/components/ArchivedFilterButton";
 import EmptyWithIcon from "@/components/EmptyWithIcon";
 import SearchInput from "@/components/SearchInput";
+import useAuthorization from "@/hooks/useAuthorization";
 import Layout from "@/layouts/MainLayout";
 import { redirectTo, reloadWithQuery } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
@@ -10,6 +11,7 @@ import ProjectCard from "./Index/ProjectCard";
 
 const ProjectsIndex = () => {
   const { items } = usePage().props;
+  const { isAdmin } = useAuthorization();
 
   const search = (search) => reloadWithQuery({ search });
 
@@ -19,7 +21,7 @@ const ProjectsIndex = () => {
         <Grid.Col span="content">
           <Group>
             <SearchInput placeholder="Search projects" search={search} />
-            <ArchivedFilterButton />
+            {isAdmin() && <ArchivedFilterButton />}
           </Group>
         </Grid.Col>
         <Grid.Col span="content">
