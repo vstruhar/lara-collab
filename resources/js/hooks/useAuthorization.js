@@ -7,5 +7,9 @@ export default function useAuthorization() {
     return auth.user.permissions.includes(permission);
   };
 
-  return {can};
+  const isAdmin = () => {
+    return auth.user.roles.includes('admin');
+  };
+
+  return {can, isAdmin};
 }
