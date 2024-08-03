@@ -96,7 +96,7 @@ class User extends Authenticatable implements AuditableContract, CanResetPasswor
         return $users->pluck('id')->contains($this->id);
     }
 
-    public static function userDropdownValues($exclude = ['admin', 'client']): array
+    public static function userDropdownValues($exclude = ['client']): array
     {
         return self::orderBy('name')
             ->withoutRole($exclude)
