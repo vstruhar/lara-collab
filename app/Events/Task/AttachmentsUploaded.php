@@ -20,8 +20,7 @@ class AttachmentsUploaded implements ShouldBroadcast
     public function __construct(
         private Task $task,
         public Collection $attachments,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.
