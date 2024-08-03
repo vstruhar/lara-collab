@@ -68,7 +68,7 @@ const TasksIndex = () => {
 
       <Grid columns={12} gutter={50} mt="xl" className={`${tasksView}-view`}>
         {!route().params.archived ? (
-          <Grid.Col span="auto">
+          <Grid.Col span={tasksView === "list" ? 9 : 12}>
             {groups.length ? (
               <>
                 <DragDropContext onDragEnd={onDragEnd}>
@@ -119,7 +119,7 @@ const TasksIndex = () => {
             )}
           </Grid.Col>
         ) : (
-          <Grid.Col span="auto">
+          <Grid.Col span={tasksView === "list" ? 9 : 12}>
             <ArchivedItems groups={groups} tasks={tasks} />
           </Grid.Col>
         )}

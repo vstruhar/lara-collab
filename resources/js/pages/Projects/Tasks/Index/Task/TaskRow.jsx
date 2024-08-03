@@ -25,7 +25,7 @@ export default function TaskRow({ task, index }) {
           }`}
           wrap="nowrap"
         >
-          <Group gap="sm" wrap="nowrap">
+          <Group gap="sm" wrap="nowrap" w="100%">
             <div {...provided.dragHandleProps}>
               <IconGripVertical
                 style={{
@@ -66,7 +66,7 @@ export default function TaskRow({ task, index }) {
               #{task.number + ": " + task.name}
             </Text>
 
-            <Group wrap="wrap" style={{ rowGap: rem(3), columnGap: rem(12) }}>
+            <Group wrap="nowrap" style={{ rowGap: rem(3), columnGap: rem(12) }}>
               {task.labels.map((label) => (
                 <Label key={label.id} name={label.name} color={label.color} />
               ))}
