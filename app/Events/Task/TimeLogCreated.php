@@ -24,7 +24,6 @@ class TimeLogCreated implements ShouldBroadcast
         TimeLog $timeLog,
     ) {
         $this->timeLog = $timeLog->load(['user:id,name']);
-        $this->dontBroadcastToCurrentUser();
     }
 
     /**

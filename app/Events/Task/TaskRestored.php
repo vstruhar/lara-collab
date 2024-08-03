@@ -24,8 +24,6 @@ class TaskRestored implements ShouldBroadcast
     {
         $this->task = $task->loadDefault();
         $this->groupId = $task->group_id;
-
-        $this->dontBroadcastToCurrentUser();
     }
 
     /**

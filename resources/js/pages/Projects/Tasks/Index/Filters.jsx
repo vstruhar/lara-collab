@@ -1,4 +1,4 @@
-import useGroupsStore from "@/hooks/store/useGroupsStore";
+import useTaskGroupsStore from "@/hooks/store/useTaskGroupsStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import { usePage } from "@inertiajs/react";
 import { ColorSwatch, Stack, Text } from "@mantine/core";
@@ -7,7 +7,7 @@ import FilterButton from "./Filters/FilterButton";
 export default function Filters() {
   const { usersWithAccessToProject, labels } = usePage().props;
 
-  const { groups } = useGroupsStore();
+  const { groups } = useTaskGroupsStore();
   const { filters, toggleArrayFilter, toggleObjectFilter, toggleValueFilter } =
     useTaskFiltersStore();
 

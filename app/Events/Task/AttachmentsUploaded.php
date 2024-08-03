@@ -21,7 +21,6 @@ class AttachmentsUploaded implements ShouldBroadcast
         private Task $task,
         public Collection $attachments,
     ) {
-        $this->dontBroadcastToCurrentUser();
     }
 
     /**

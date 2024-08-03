@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events\Task;
+namespace App\Events\TaskGroup;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -8,7 +8,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TaskGroupChanged implements ShouldBroadcast
+class TaskGroupOrderChanged implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -17,10 +17,7 @@ class TaskGroupChanged implements ShouldBroadcast
      */
     public function __construct(
         private int $projectId,
-        public int $fromGroupId,
-        public int $toGroupId,
-        public int $fromIndex,
-        public int $toIndex,
+        public array $taskGroupIds,
     ) {
     }
 

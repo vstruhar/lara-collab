@@ -1,6 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import { showNotification } from "@mantine/notifications";
 import useNotificationsStore from "./store/useNotificationsStore";
+import useTaskGroupsStore from "./store/useTaskGroupsStore";
 import useTasksStore from "./store/useTasksStore";
 
 export default function useWebSockets() {
@@ -10,6 +11,9 @@ export default function useWebSockets() {
     addTaskLocally, updateTaskLocally, removeTaskLocally, restoreTaskLocally, addCommentLocally, addAttachmentsLocally,
     removeAttachmentLocally, addTimeLogLocally, removeTimeLogLocally, reorderTaskLocally, moveTaskLocally,
   } = useTasksStore();
+  const {
+    addTaskGroupLocally, updateTaskGroupLocally, removeTaskGroupLocally, restoreTaskGroupLocally, reorderTaskGroupLocally,
+  } = useTaskGroupsStore();
 
   const initUserWebSocket = () => {
     window.Echo.private(`App.Models.User.${user.id}`).notification((notification) => {
@@ -35,7 +39,12 @@ export default function useWebSockets() {
       .listen('Task\\TimeLogCreated', (e) => addTimeLogLocally(e.timeLog))
       .listen('Task\\TimeLogDeleted', (e) => removeTimeLogLocally(e.taskId, e.timeLogId))
       .listen('Task\\TaskOrderChanged', (e) => reorderTaskLocally(e.groupId, e.fromIndex, e.toIndex))
-      .listen('Task\\TaskGroupChanged', (e) => moveTaskLocally(e.fromGroupId, e.toGroupId, e.fromIndex, e.toIndex));
+      .listen('Task\\TaskGroupChanged', (e) => moveTaskLocally(e.fromGroupId, e.toGroupId, e.fromIndex, e.toIndex))
+      .listen('TaskGroup\\TaskGroupCreated', (e) => addTaskGroupLocally(e.taskGroup))
+      .listen('TaskGroup\\TaskGroupUpdated', (e) => updateTaskGroupLocally(e.taskGroup))
+      .listen('TaskGroup\\TaskGroupDeleted', (e) => removeTaskGroupLocally(e.taskGroupId))
+      .listen('TaskGroup\\TaskGroupRestored', (e) => restoreTaskGroupLocally(e.taskGroup))
+      .listen('TaskGroup\\TaskGroupOrderChanged', (e) => reorderTaskGroupLocally(e.taskGroupIds))
 
     return () => window.Echo.leave(`App.Models.Project.${project.id}`);
   };

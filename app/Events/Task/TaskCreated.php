@@ -21,8 +21,6 @@ class TaskCreated implements ShouldBroadcast
     public function __construct(Task $task)
     {
         $this->task = $task->loadDefault();
-
-        $this->dontBroadcastToCurrentUser();
     }
 
     /**

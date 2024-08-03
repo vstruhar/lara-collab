@@ -1,10 +1,16 @@
+import createTaskGroupWebSocketUpdatesSlice from '@/hooks/store/taskGroups/TaskGroupWebSocketUpdatesSlice';
 import { reorder } from '@/utils/reorder';
 import axios from 'axios';
 import { create } from 'zustand';
 
-const useGroupsStore = create((set, get) => ({
+const useTaskGroupsStore = create((set, get) => ({
+  ...createTaskGroupWebSocketUpdatesSlice(set, get),
+
   groups: [],
   setGroups: (groups) => set(() => ({ groups: [...groups] })),
+  findTaskGroup: (id) => {
+    return get().groups.find((i) => i.id === id);
+  },
   reorderGroup: (fromIndex, toIndex) => {
     const result = reorder(get().groups, fromIndex, toIndex);
 
@@ -16,4 +22,4 @@ const useGroupsStore = create((set, get) => ({
   },
 }));
 
-export default useGroupsStore;
+export default useTaskGroupsStore;
