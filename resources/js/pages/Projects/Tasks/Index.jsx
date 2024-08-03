@@ -1,6 +1,6 @@
 import { EmptyResult } from "@/components/EmptyResult";
-import useGroupsStore from "@/hooks/store/useGroupsStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
+import useTaskGroupsStore from "@/hooks/store/useTaskGroupsStore";
 import useTasksStore from "@/hooks/store/useTasksStore";
 import usePreferences from "@/hooks/usePreferences";
 import useWebSockets from "@/hooks/useWebSockets";
@@ -26,7 +26,7 @@ const TasksIndex = () => {
   const { project, taskGroups, groupedTasks, openedTask } = usePage().props;
   currentProject = project;
 
-  const { groups, setGroups, reorderGroup } = useGroupsStore();
+  const { groups, setGroups, reorderGroup } = useTaskGroupsStore();
   const { tasks, setTasks, addTask, reorderTask, moveTask } = useTasksStore();
   const { hasUrlParams } = useTaskFiltersStore();
   const { initProjectWebSocket } = useWebSockets();

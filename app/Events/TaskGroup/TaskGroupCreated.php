@@ -1,27 +1,26 @@
 <?php
 
-namespace App\Events\Task;
+namespace App\Events\TaskGroup;
 
+use App\Models\TaskGroup;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TaskGroupChanged implements ShouldBroadcast
+class TaskGroupCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public TaskGroup $taskGroup;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        private int $projectId,
-        public int $fromGroupId,
-        public int $toGroupId,
-        public int $fromIndex,
-        public int $toIndex,
-    ) {
+    public function __construct(TaskGroup $taskGroup)
+    {
+        $this->taskGroup = $taskGroup;
     }
 
     /**
@@ -32,7 +31,7 @@ class TaskGroupChanged implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel("App.Models.Project.{$this->projectId}"),
+            new PrivateChannel("App.Models.Project.{$this->taskGroup->project_id}"),
         ];
     }
 }

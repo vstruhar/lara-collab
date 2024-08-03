@@ -19,7 +19,6 @@ class TaskDeleted implements ShouldBroadcast
         public int $taskId,
         public int $projectId,
     ) {
-        $this->dontBroadcastToCurrentUser();
     }
 
     /**

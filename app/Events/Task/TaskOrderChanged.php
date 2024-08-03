@@ -21,7 +21,6 @@ class TaskOrderChanged implements ShouldBroadcast
         public int $fromIndex,
         public int $toIndex,
     ) {
-        $this->dontBroadcastToCurrentUser();
     }
 
     /**

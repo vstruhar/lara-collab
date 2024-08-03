@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\Task;
 
+use App\Events\TaskGroup\TaskGroupCreated;
+use App\Events\TaskGroup\TaskGroupDeleted;
+use App\Events\TaskGroup\TaskGroupOrderChanged;
+use App\Events\TaskGroup\TaskGroupRestored;
+use App\Events\TaskGroup\TaskGroupUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskGroup\StoreTaskGroupRequest;
 use App\Http\Requests\TaskGroup\UpdateTaskGroupRequest;
@@ -15,7 +20,9 @@ class GroupController extends Controller
     {
         $this->authorize('create', [TaskGroup::class, $project]);
 
-        $project->taskGroups()->create($request->validated());
+        $taskGroup = $project->taskGroups()->create($request->validated());
+
+        TaskGroupCreated::dispatch($taskGroup);
 
         return redirect()->route('projects.tasks', $project)->success('Tasks group created', 'A new tasks group was successfully created.');
     }
@@ -25,6 +32,8 @@ class GroupController extends Controller
         $this->authorize('update', [$taskGroup, $project]);
 
         $taskGroup->update($request->validated());
+
+        TaskGroupUpdated::dispatch($taskGroup);
 
         return redirect()->route('projects.tasks', $project)->success('Tasks group updated', 'The tasks group was successfully updated.');
     }
@@ -39,6 +48,8 @@ class GroupController extends Controller
 
         $taskGroup->archive();
 
+        TaskGroupDeleted::dispatch($taskGroup->id, $project->id);
+
         return redirect()->route('projects.tasks', $project)->success('Tasks group archived', 'The tasks group was successfully archived.');
     }
 
@@ -50,6 +61,8 @@ class GroupController extends Controller
 
         $taskGroup->unArchive();
 
+        TaskGroupRestored::dispatch($taskGroup);
+
         return redirect()->back()->success('Tasks group restored', 'The restoring of the tasks group was completed successfully.');
     }
 
@@ -58,6 +71,8 @@ class GroupController extends Controller
         $this->authorize('reorder', [TaskGroup::class, $project]);
 
         TaskGroup::setNewOrder($request->ids);
+
+        TaskGroupOrderChanged::dispatch($project->id, $request->ids);
 
         return response()->json();
     }
