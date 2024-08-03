@@ -5,7 +5,8 @@ import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import usePreferences from "@/hooks/usePreferences";
 import { reloadWithQuery } from "@/utils/route";
-import { ActionIcon, Button, Grid, Group, Tooltip } from "@mantine/core";
+import { usePage } from "@inertiajs/react";
+import { ActionIcon, Button, Grid, Group, Text, Title, Tooltip } from "@mantine/core";
 import {
   IconFilter,
   IconFilterCog,
@@ -15,6 +16,8 @@ import {
 } from "@tabler/icons-react";
 
 export default function Header() {
+  const { project } = usePage().props;
+
   const { tasksView, setTasksView } = usePreferences();
   const { openDrawer } = useTaskFiltersStore();
   const search = (search) => reloadWithQuery({ search });
@@ -24,8 +27,14 @@ export default function Header() {
   const usingFilters = hasUrlParams(["archived"]);
 
   return (
-    <Grid justify="space-between" align="center">
+    <Grid justify="space-between" align="end">
       <Grid.Col span="content">
+        <Group mb="lg">
+          <Title order={1}>
+            {project.name}
+            {project.archived_at && <Text size="2rem" fw={500} c="red.8" ml="md" span>(archived)</Text>}
+          </Title>
+        </Group>
         <Group>
           <SearchInput placeholder="Search tasks" search={search} mr="md" />
 
