@@ -18,8 +18,7 @@ class TaskGroupOrderChanged implements ShouldBroadcast
     public function __construct(
         private int $projectId,
         public array $taskGroupIds,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.

@@ -18,8 +18,7 @@ class TaskGroupUpdated implements ShouldBroadcast
      */
     public function __construct(
         public TaskGroup $taskGroup,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.

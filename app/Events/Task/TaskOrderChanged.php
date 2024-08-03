@@ -20,8 +20,7 @@ class TaskOrderChanged implements ShouldBroadcast
         public int $groupId,
         public int $fromIndex,
         public int $toIndex,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.

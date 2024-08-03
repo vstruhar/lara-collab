@@ -21,8 +21,7 @@ class TaskGroupChanged implements ShouldBroadcast
         public int $toGroupId,
         public int $fromIndex,
         public int $toIndex,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.
