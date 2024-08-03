@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\ClientCompany;
 use App\Models\Project;
+use App\Models\Task;
+use App\Models\TaskGroup;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -30,6 +32,18 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::model('project', Project::class, function ($value) {
             return Project::where('id', $value)
+                ->when(auth()->user()->isAdmin(), fn ($query) => $query->withArchived())
+                ->firstOrFail();
+        });
+
+        Route::model('taskGroup', TaskGroup::class, function ($value) {
+            return TaskGroup::where('id', $value)
+                ->when(auth()->user()->isAdmin(), fn ($query) => $query->withArchived())
+                ->firstOrFail();
+        });
+
+        Route::model('task', Task::class, function ($value) {
+            return Task::where('id', $value)
                 ->when(auth()->user()->isAdmin(), fn ($query) => $query->withArchived())
                 ->firstOrFail();
         });

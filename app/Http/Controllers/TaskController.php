@@ -35,6 +35,7 @@ class TaskController extends Controller
 
         $groupedTasks = $project
             ->taskGroups()
+            ->with(['project' => fn ($query) => $query->withArchived()])
             ->get()
             ->mapWithKeys(function (TaskGroup $group) use ($request, $project) {
                 return [
@@ -46,6 +47,7 @@ class TaskController extends Controller
                         ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                         ->when(! $request->has('status'), fn ($query) => $query->whereNull('completed_at'))
                         ->withDefault()
+                        ->when($project->isArchived(), fn ($query) => $query->with(['project' => fn ($query) => $query->withArchived()]))
                         ->get(),
                 ];
             });
