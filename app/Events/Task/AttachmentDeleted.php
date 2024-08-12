@@ -23,6 +23,8 @@ class AttachmentDeleted implements ShouldBroadcast
         public int $attachmentId,
     ) {
         $this->taskId = $task->id;
+
+        $this->dontBroadcastToCurrentUser();
     }
 
     /**

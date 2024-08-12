@@ -21,6 +21,8 @@ class TaskGroupCreated implements ShouldBroadcast
     public function __construct(TaskGroup $taskGroup)
     {
         $this->taskGroup = $taskGroup;
+
+        $this->dontBroadcastToCurrentUser();
     }
 
     /**

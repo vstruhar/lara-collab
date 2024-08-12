@@ -18,7 +18,9 @@ class TaskGroupRestored implements ShouldBroadcast
      */
     public function __construct(
         public TaskGroup $taskGroup
-    ) {}
+    ) {
+        $this->dontBroadcastToCurrentUser();
+    }
 
     /**
      * Get the channels the event should broadcast on.

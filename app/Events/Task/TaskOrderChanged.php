@@ -20,7 +20,9 @@ class TaskOrderChanged implements ShouldBroadcast
         public int $groupId,
         public int $fromIndex,
         public int $toIndex,
-    ) {}
+    ) {
+        $this->dontBroadcastToCurrentUser();
+    }
 
     /**
      * Get the channels the event should broadcast on.

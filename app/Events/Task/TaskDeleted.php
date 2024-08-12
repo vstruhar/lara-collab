@@ -18,7 +18,9 @@ class TaskDeleted implements ShouldBroadcast
     public function __construct(
         public int $taskId,
         public int $projectId,
-    ) {}
+    ) {
+        $this->dontBroadcastToCurrentUser();
+    }
 
     /**
      * Get the channels the event should broadcast on.

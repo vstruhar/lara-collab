@@ -21,6 +21,8 @@ class CommentCreated implements ShouldBroadcast
     public function __construct(Comment $comment)
     {
         $this->comment = $comment->load('user:id,name,avatar,job_title');
+
+        $this->dontBroadcastToCurrentUser();
     }
 
     /**

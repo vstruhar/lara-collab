@@ -23,6 +23,8 @@ class TimeLogDeleted implements ShouldBroadcast
         public int $timeLogId,
     ) {
         $this->taskId = $task->id;
+
+        $this->dontBroadcastToCurrentUser();
     }
 
     /**
