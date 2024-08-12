@@ -9,6 +9,7 @@ import {
   Breadcrumbs,
   Grid,
   Group,
+  MultiSelect,
   NumberInput,
   Select,
   TextInput,
@@ -17,7 +18,7 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
-const ProjectCreate = ({ dropdowns: { companies, currencies } }) => {
+const ProjectCreate = ({ dropdowns: { companies, users, currencies } }) => {
   const [currencySymbol, setCurrencySymbol] = useState();
 
   const [form, submit, updateValue] = useForm('post', route('projects.store'), {
@@ -25,6 +26,7 @@ const ProjectCreate = ({ dropdowns: { companies, currencies } }) => {
     description: '',
     rate: 0,
     client_company_id: '',
+    users: [],
   });
 
   useEffect(() => {
@@ -97,6 +99,17 @@ const ProjectCreate = ({ dropdowns: { companies, currencies } }) => {
             onChange={value => updateValue('client_company_id', value)}
             data={companies}
             error={form.errors.client_company_id}
+          />
+
+          <MultiSelect
+            label="Grant access to users"
+            placeholder="Select users"
+            mt='md'
+            searchable
+            value={form.data.users}
+            onChange={(values) => updateValue("users", values)}
+            data={users}
+            error={form.errors.users}
           />
 
           <NumberInput
