@@ -27,7 +27,7 @@ class UpdateAuthUserRequest extends FormRequest
             'job_title' => 'required|string',
             'name' => 'required|string',
             'phone' => 'string|nullable',
-            'email' => ['required', 'email', Rule::unique('users')->ignore(auth()->id())],
+            'email' => ['required', 'email:rfc,dns', Rule::unique('users')->ignore(auth()->id())],
             'password' => 'nullable|min:8|confirmed',
             'avatar' => [File::image(), 'nullable'],
         ];

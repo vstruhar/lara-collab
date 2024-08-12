@@ -28,7 +28,7 @@ class UpdateUserRequest extends FormRequest
             'name' => 'required|string',
             'phone' => 'string|nullable',
             'rate' => 'numeric|min:0',
-            'email' => ['required', 'email', Rule::unique('users')->ignore($this->route('user')->id)],
+            'email' => ['required', 'email:rfc,dns', Rule::unique('users')->ignore($this->route('user')->id)],
             'password' => 'nullable|min:8|confirmed',
             'roles' => 'required|array|min:1',
             'avatar' => [File::image(), 'nullable'],

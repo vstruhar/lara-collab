@@ -26,7 +26,7 @@ class StoreClientRequest extends FormRequest
         return [
             'name' => 'required|string',
             'phone' => 'string|nullable',
-            'email' => ['required', 'email', Rule::unique('users')],
+            'email' => ['required', 'email:rfc,dns', Rule::unique('users')],
             'password' => 'required|min:8|confirmed',
             'avatar' => [File::image(), 'nullable'],
             'companies' => 'array',

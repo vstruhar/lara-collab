@@ -28,7 +28,7 @@ class UpdateClientCompanyRequest extends FormRequest
             'city' => 'string|nullable',
             'country_id' => 'integer|nullable',
             'currency_id' => 'integer|nullable',
-            'email' => 'email|nullable',
+            'email' => 'email:rfc,dns|nullable',
             'phone' => 'string|nullable',
             'web' => 'string|nullable',
             'iban' => 'string|nullable',
