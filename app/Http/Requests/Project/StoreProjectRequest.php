@@ -27,6 +27,7 @@ class StoreProjectRequest extends FormRequest
             'description' => 'string|nullable',
             'client_company_id' => 'required|integer|exists:client_companies,id',
             'rate' => 'numeric|min:0|nullable',
+            'users' => 'array',
         ];
     }
 }

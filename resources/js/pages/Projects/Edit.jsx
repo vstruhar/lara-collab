@@ -10,6 +10,7 @@ import {
   Breadcrumbs,
   Grid,
   Group,
+  MultiSelect,
   NumberInput,
   Select,
   TextInput,
@@ -18,7 +19,7 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
-const ProjectEdit = ({ dropdowns: { companies, currencies } }) => {
+const ProjectEdit = ({ dropdowns: { companies, users,currencies } }) => {
   const { item } = usePage().props;
   const [currencySymbol, setCurrencySymbol] = useState();
 
@@ -28,6 +29,7 @@ const ProjectEdit = ({ dropdowns: { companies, currencies } }) => {
     description: item.description || '',
     client_company_id: item.client_company_id || '',
     rate: item.rate / 100 || 0,
+    users: item.users.map(i => i.id.toString()),
   });
 
   useEffect(() => {
@@ -100,6 +102,17 @@ const ProjectEdit = ({ dropdowns: { companies, currencies } }) => {
             onChange={value => updateValue('client_company_id', value)}
             data={companies}
             error={form.errors.client_company_id}
+          />
+
+          <MultiSelect
+            label="Grant access to users"
+            placeholder="Select users"
+            mt='md'
+            searchable
+            value={form.data.users}
+            onChange={(values) => updateValue("users", values)}
+            data={users}
+            error={form.errors.users}
           />
 
           <NumberInput

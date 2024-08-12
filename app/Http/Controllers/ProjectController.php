@@ -8,6 +8,7 @@ use App\Http\Resources\Project\ProjectResource;
 use App\Models\ClientCompany;
 use App\Models\Currency;
 use App\Models\Project;
+use App\Models\User;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -52,6 +53,7 @@ class ProjectController extends Controller
         return Inertia::render('Projects/Create', [
             'dropdowns' => [
                 'companies' => ClientCompany::dropdownValues(),
+                'users' => User::userDropdownValues(),
                 'currencies' => Currency::dropdownValues(['with' => ['clientCompanies:id,currency_id']]),
             ],
         ]);
@@ -64,6 +66,8 @@ class ProjectController extends Controller
         $data['rate'] *= 100;
 
         $project = Project::create($data);
+
+        $project->users()->attach($data['users']);
 
         $project->taskGroups()->createMany([
             ['name' => 'Backlog'],
@@ -83,6 +87,7 @@ class ProjectController extends Controller
             'item' => $project,
             'dropdowns' => [
                 'companies' => ClientCompany::dropdownValues(),
+                'users' => User::userDropdownValues(),
                 'currencies' => Currency::dropdownValues(['with' => ['clientCompanies:id,currency_id']]),
             ],
         ]);
@@ -95,6 +100,8 @@ class ProjectController extends Controller
         $data['rate'] *= 100;
 
         $project->update($data);
+
+        $project->users()->sync($data['users']);
 
         return redirect()->route('projects.index')->success('Project updated', 'The project was successfully updated.');
     }
