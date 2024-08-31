@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Collection;
 use Lacodix\LaravelModelFilter\Traits\HasFilters;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use LaravelArchivable\Archivable;
@@ -73,16 +72,16 @@ class Task extends Model implements AuditableContract, Sortable
         'timeLogs.user:id,name',
     ];
 
-    public function filters(): Collection
+    public function filters(): array
     {
-        return collect([
+        return [
             (new WhereInFilter('group_id'))->setQueryName('groups'),
             (new WhereInFilter('assigned_to_user_id'))->setQueryName('assignees'),
             (new TaskOverdueFilter('due_on'))->setQueryName('overdue'),
             (new IsNullFilter('due_on'))->setQueryName('not_set'),
             (new TaskCompletedFilter('completed_at'))->setQueryName('status'),
             (new WhereHasFilter('labels'))->setQueryName('labels'),
-        ]);
+        ];
     }
 
     protected static function booted(): void

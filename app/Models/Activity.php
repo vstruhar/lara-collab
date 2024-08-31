@@ -6,7 +6,6 @@ use App\Models\Filters\WhereInFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Collection;
 use Lacodix\LaravelModelFilter\Traits\HasFilters;
 
 class Activity extends Model
@@ -23,11 +22,11 @@ class Activity extends Model
         'created_at',
     ];
 
-    public function filters(): Collection
+    public function filters(): array
     {
-        return collect([
+        return [
             (new WhereInFilter('project_id'))->setQueryName('project'),
-        ]);
+        ];
     }
 
     public function project(): BelongsTo
