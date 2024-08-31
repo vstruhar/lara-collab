@@ -17,7 +17,7 @@ export const currentUrl = () => {
 
 export const currentUrlParams = () => {
   return queryString.parse(location.search, {
-    arrayFormat: 'bracket',
+    arrayFormat: 'index',
     parseBooleans: true,
     parseNumbers: true,
   });
