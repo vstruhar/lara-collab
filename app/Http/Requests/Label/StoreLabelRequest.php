@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Label;
 
-use App\Rules\HexColor;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreLabelRequest extends FormRequest
@@ -24,7 +23,7 @@ class StoreLabelRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'color' => ['required', 'string', new HexColor],
+            'color' => 'required|string|hex_color',
         ];
     }
 }
