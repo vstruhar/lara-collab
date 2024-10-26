@@ -114,6 +114,7 @@ To use Pusher, sign up, then create a project and copy paste app keys to `.env` 
 - [x] Kanban view.
 - [x] Report that will calculate expense and profit per user.
 - [ ] Add project notes section.
+- [ ] Add history of changes to the task.
 - [ ] Change specific permission per user.
 - [ ] Make it responsive.
 - [ ] Add emojis to rich text editor.
