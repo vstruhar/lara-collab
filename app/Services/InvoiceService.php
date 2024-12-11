@@ -23,7 +23,7 @@ class InvoiceService
         $owner = new Party([
             'name' => $ownerCompany->name,
             'phone' => $ownerCompany->phone,
-            'address' => "$ownerCompany->address, $ownerCompany->postal_code $ownerCompany->city, {$ownerCompany->country->name}",
+            'address' => "$ownerCompany->address, $ownerCompany->postal_code $ownerCompany->city, {$ownerCompany->country?->name}",
             'custom_fields' => [
                 'business id' => $ownerCompany->business_id,
                 'tax id' => $ownerCompany->tax_id,
@@ -33,7 +33,7 @@ class InvoiceService
 
         $client = new Party([
             'name' => $clientCompany->name,
-            'address' => "$clientCompany->address, $clientCompany->postal_code $clientCompany->city, {$clientCompany->country->name}",
+            'address' => "$clientCompany->address, $clientCompany->postal_code $clientCompany->city, {$clientCompany->country?->name}",
             'custom_fields' => [
                 'business id' => $clientCompany->business_id,
                 'tax id' => $clientCompany->tax_id,
