@@ -19,7 +19,7 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
-const ProjectEdit = ({ dropdowns: { companies, users,currencies } }) => {
+const ProjectEdit = ({ dropdowns: { companies, users, currencies } }) => {
   const { item } = usePage().props;
   const [currencySymbol, setCurrencySymbol] = useState();
 
@@ -34,7 +34,7 @@ const ProjectEdit = ({ dropdowns: { companies, users,currencies } }) => {
 
   useEffect(() => {
     let symbol = currencies.find(i =>
-      i.client_companies.find(c => c.id.toString() === form.data.client_company_id)
+      i.client_companies.find(c => c.id.toString() === form.data.client_company_id.toString())
     )?.symbol;
 
     if (symbol) {
@@ -105,12 +105,12 @@ const ProjectEdit = ({ dropdowns: { companies, users,currencies } }) => {
           />
 
           <MultiSelect
-            label="Grant access to users"
-            placeholder="Select users"
+            label='Grant access to users'
+            placeholder='Select users'
             mt='md'
             searchable
             value={form.data.users}
-            onChange={(values) => updateValue("users", values)}
+            onChange={values => updateValue('users', values)}
             data={users}
             error={form.errors.users}
           />

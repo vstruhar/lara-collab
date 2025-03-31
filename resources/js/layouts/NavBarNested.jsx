@@ -1,7 +1,7 @@
-import Logo from "@/components/Logo";
-import useNavigationStore from "@/hooks/store/useNavigationStore";
-import { usePage } from "@inertiajs/react";
-import { Group, ScrollArea, Text, rem } from "@mantine/core";
+import Logo from '@/components/Logo';
+import useNavigationStore from '@/hooks/store/useNavigationStore';
+import { usePage } from '@inertiajs/react';
+import { Group, ScrollArea, Text, rem } from '@mantine/core';
 import {
   IconBuildingSkyscraper,
   IconFileDollar,
@@ -11,11 +11,11 @@ import {
   IconReportAnalytics,
   IconSettings,
   IconUsers,
-} from "@tabler/icons-react";
-import { useEffect } from "react";
-import NavbarLinksGroup from "./NavbarLinksGroup";
-import UserButton from "./UserButton";
-import classes from "./css/NavBarNested.module.css";
+} from '@tabler/icons-react';
+import { useEffect } from 'react';
+import NavbarLinksGroup from './NavbarLinksGroup';
+import UserButton from './UserButton';
+import classes from './css/NavBarNested.module.css';
 
 export default function Sidebar() {
   const { version } = usePage().props;
@@ -24,120 +24,130 @@ export default function Sidebar() {
   useEffect(() => {
     setItems([
       {
-        label: "Dashboard",
+        label: 'Dashboard',
         icon: IconGauge,
-        link: route("dashboard"),
-        active: route().current("dashboard"),
+        link: route('dashboard'),
+        active: route().current('dashboard'),
         visible: true,
       },
       {
-        label: "Projects",
+        label: 'Projects',
         icon: IconListDetails,
-        link: route("projects.index"),
-        active: route().current("projects.*"),
-        visible: can("view projects"),
+        link: route('projects.index'),
+        active: route().current('projects.*'),
+        visible: can('view projects'),
       },
       {
-        label: "My Work",
+        label: 'My Work',
         icon: IconLayoutList,
-        active: route().current("my-work.*"),
-        opened: route().current("my-work.*"),
-        visible: can("view tasks") || can("view activities"),
+        active: route().current('my-work.*'),
+        opened: route().current('my-work.*'),
+        visible: can('view tasks') || can('view activities'),
         links: [
           {
-            label: "Tasks",
-            link: route("my-work.tasks.index"),
-            active: route().current("my-work.tasks.*"),
-            visible: can("view tasks"),
+            label: 'Tasks',
+            link: route('my-work.tasks.index'),
+            active: route().current('my-work.tasks.*'),
+            visible: can('view tasks'),
           },
           {
-            label: "Activity",
-            link: route("my-work.activity.index"),
-            active: route().current("my-work.activity.*"),
-            visible: can("view activities"),
+            label: 'Activity',
+            link: route('my-work.activity.index'),
+            active: route().current('my-work.activity.*'),
+            visible: can('view activities'),
           },
         ],
       },
       {
-        label: "Clients",
+        label: 'Clients',
         icon: IconBuildingSkyscraper,
-        active: route().current("clients.*"),
-        opened: route().current("clients.*"),
-        visible: can("view client users") || can("view client companies"),
+        active: route().current('clients.*'),
+        opened: route().current('clients.*'),
+        visible: can('view client users') || can('view client companies'),
         links: [
           {
-            label: "Users",
-            link: route("clients.users.index"),
-            active: route().current("clients.users.*"),
-            visible: can("view client users"),
+            label: 'Users',
+            link: route('clients.users.index'),
+            active: route().current('clients.users.*'),
+            visible: can('view client users'),
           },
           {
-            label: "Companies",
-            link: route("clients.companies.index"),
-            active: route().current("clients.companies.*"),
-            visible: can("view client companies"),
+            label: 'Companies',
+            link: route('clients.companies.index'),
+            active: route().current('clients.companies.*'),
+            visible: can('view client companies'),
           },
         ],
       },
       {
-        label: "Users",
+        label: 'Users',
         icon: IconUsers,
-        link: route("users.index"),
-        active: route().current("users.*"),
-        visible: can("view users"),
+        link: route('users.index'),
+        active: route().current('users.*'),
+        visible: can('view users'),
       },
       {
-        label: "Invoices",
+        label: 'Invoices',
         icon: IconFileDollar,
-        link: route("invoices.index"),
-        active: route().current("invoices.*"),
-        visible: can("view invoices"),
+        link: route('invoices.index'),
+        active: route().current('invoices.*'),
+        visible: can('view invoices'),
       },
       {
-        label: "Reports",
+        label: 'Reports',
         icon: IconReportAnalytics,
-        active: route().current("reports.*"),
-        opened: route().current("reports.*"),
-        visible: can("view logged time sum report") || can("view daily logged time report"),
+        active: route().current('reports.*'),
+        opened: route().current('reports.*'),
+        visible: can('view logged time sum report') || can('view daily logged time report'),
         links: [
           {
-            label: "Logged time sum",
-            link: route("reports.logged-time.sum"),
-            active: route().current("reports.logged-time.sum"),
-            visible: can("view logged time sum report"),
+            label: 'Logged time sum',
+            link: route('reports.logged-time.sum'),
+            active: route().current('reports.logged-time.sum'),
+            visible: can('view logged time sum report'),
           },
           {
-            label: "Daily logged time",
-            link: route("reports.logged-time.daily"),
-            active: route().current("reports.logged-time.daily"),
-            visible: can("view daily logged time report"),
+            label: 'Daily logged time',
+            link: route('reports.logged-time.daily'),
+            active: route().current('reports.logged-time.daily'),
+            visible: can('view daily logged time report'),
           },
         ],
       },
       {
-        label: "Settings",
+        label: 'Settings',
         icon: IconSettings,
-        active: route().current("settings.*"),
-        opened: route().current("settings.*"),
-        visible: can("view owner company") || can("view roles") || can("view labels"),
+        active: route().current('settings.*'),
+        opened: route().current('settings.*'),
+        visible:
+          can('view owner company') ||
+          can('view roles') ||
+          can('view labels') ||
+          can('view currency rates'),
         links: [
           {
-            label: "Company",
-            link: route("settings.company.edit"),
-            active: route().current("settings.company.*"),
-            visible: can("view owner company"),
+            label: 'Company',
+            link: route('settings.company.edit'),
+            active: route().current('settings.company.*'),
+            visible: can('view owner company'),
           },
           {
-            label: "Roles",
-            link: route("settings.roles.index"),
-            active: route().current("settings.roles.*"),
-            visible: can("view roles"),
+            label: 'Roles',
+            link: route('settings.roles.index'),
+            active: route().current('settings.roles.*'),
+            visible: can('view roles'),
           },
           {
-            label: "Labels",
-            link: route("settings.labels.index"),
-            active: route().current("settings.labels.*"),
-            visible: can("view labels"),
+            label: 'Labels',
+            link: route('settings.labels.index'),
+            active: route().current('settings.labels.*'),
+            visible: can('view labels'),
+          },
+          {
+            label: 'Currency rates',
+            link: route('settings.currency-rates.index'),
+            active: route().current('settings.currency-rates.*'),
+            visible: can('view currency rates'),
           },
         ],
       },
@@ -147,9 +157,12 @@ export default function Sidebar() {
   return (
     <nav className={classes.navbar}>
       <div className={classes.header}>
-        <Group justify="space-between">
+        <Group justify='space-between'>
           <Logo style={{ width: rem(120) }} />
-          <Text size="xs" className={classes.version}>
+          <Text
+            size='xs'
+            className={classes.version}
+          >
             v{version}
           </Text>
         </Group>
@@ -158,9 +171,12 @@ export default function Sidebar() {
       <ScrollArea className={classes.links}>
         <div className={classes.linksInner}>
           {items
-            .filter((i) => i.visible)
-            .map((item) => (
-              <NavbarLinksGroup key={item.label} item={item} />
+            .filter(i => i.visible)
+            .map(item => (
+              <NavbarLinksGroup
+                key={item.label}
+                item={item}
+              />
             ))}
         </div>
       </ScrollArea>

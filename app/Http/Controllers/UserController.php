@@ -7,6 +7,8 @@ use App\Actions\User\UpdateUser;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\User\UserResource;
+use App\Models\Currency;
+use App\Models\OwnerCompany;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -26,7 +28,7 @@ class UserController extends Controller
                 User::searchByQueryString()
                     ->sortByQueryString()
                     ->withoutRole('client')
-                    ->with('roles:id,name')
+                    ->with(['roles:id,name', 'currency:id,code,decimals'])
                     ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                     ->paginate(12)
             ),
@@ -35,7 +37,12 @@ class UserController extends Controller
 
     public function create()
     {
-        return Inertia::render('Users/Create');
+        return Inertia::render('Users/Create', [
+            'defaultCurrencyId' => OwnerCompany::first()->currency_id,
+            'dropdowns' => [
+                'currencies' => Currency::dropdownValues(),
+            ],
+        ]);
     }
 
     public function store(StoreUserRequest $request)
@@ -47,7 +54,12 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return Inertia::render('Users/Edit', ['item' => new UserResource($user)]);
+        return Inertia::render('Users/Edit', [
+            'item' => new UserResource($user),
+            'dropdowns' => [
+                'currencies' => Currency::dropdownValues(),
+            ],
+        ]);
     }
 
     public function update(User $user, UpdateUserRequest $request)

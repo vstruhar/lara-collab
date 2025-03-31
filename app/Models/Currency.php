@@ -4,9 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Lacodix\LaravelModelFilter\Traits\IsSearchable;
+use Lacodix\LaravelModelFilter\Traits\IsSortable;
 
 class Currency extends Model
 {
+    use IsSearchable, IsSortable;
+
+    protected $searchable = [
+        'name',
+        'code',
+    ];
+
+    protected $sortable = [
+        'name' => 'asc',
+        'code' => 'asc',
+    ];
+
     public function clientCompanies(): HasMany
     {
         return $this->hasMany(ClientCompany::class);

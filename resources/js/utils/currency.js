@@ -7,3 +7,7 @@ export const money = (amount, currency = 'USD', minimumFractionDigits = 2) => {
 
   return formatter.format(amount / 100);
 };
+
+export const extractCurrencySymbolFromLabel = (label) => {
+  return label.match(/\(([^)]+)\)/)[1];
+}

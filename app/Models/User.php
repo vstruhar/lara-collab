@@ -6,6 +6,7 @@ use App\Services\PermissionService;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -30,6 +31,7 @@ class User extends Authenticatable implements AuditableContract, CanResetPasswor
         'job_title',
         'avatar',
         'phone',
+        'currency_id',
         'rate',
         'google_id',
     ];
@@ -74,6 +76,11 @@ class User extends Authenticatable implements AuditableContract, CanResetPasswor
     public function clientCompanies(): BelongsToMany
     {
         return $this->belongsToMany(ClientCompany::class, 'client_company', 'client_id', 'client_company_id');
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
     }
 
     /**

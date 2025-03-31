@@ -4,6 +4,7 @@ import useForm from "@/hooks/useForm";
 import useRoles from "@/hooks/useRoles";
 import ContainerBox from "@/layouts/ContainerBox";
 import Layout from "@/layouts/MainLayout";
+import { extractCurrencySymbolFromLabel } from "@/utils/currency";
 import { redirectTo } from "@/utils/route";
 import { getInitials } from "@/utils/user";
 import { usePage } from "@inertiajs/react";
@@ -18,13 +19,19 @@ import {
   MultiSelect,
   NumberInput,
   PasswordInput,
+  Select,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
+import { useEffect, useState } from "react";
 
 const UserEdit = () => {
-  const { item } = usePage().props;
+  const {
+    item,
+    dropdowns: { currencies },
+  } = usePage().props;
+  const [selectedCurrencySymbol, setSelectedCurrencySymbol] = useState('');
   const { getDropdownValues } = useRoles();
 
   const [form, submit, updateValue] = useForm("post", route("users.update", item.id), {
@@ -33,12 +40,23 @@ const UserEdit = () => {
     job_title: item.job_title,
     name: item.name,
     phone: item.phone || "",
+    currency_id: item.currency.id?.toString() || '',
     rate: item.rate / 100,
     email: item.email,
     password: "",
     password_confirmation: "",
     roles: item.roles,
   });
+
+  useEffect(() => {
+    if (form.data.currency_id) {
+      let label = currencies.find((i) => i.value === form.data.currency_id)?.label;
+
+      label = extractCurrencySymbolFromLabel(label);
+
+      setSelectedCurrencySymbol(label);
+    }
+  }, [form.data.currency_id]);
 
   return (
     <>
@@ -120,13 +138,24 @@ const UserEdit = () => {
             error={form.errors.roles}
           />
 
+          <TextInput
+            label="Phone"
+            placeholder="Users phone number"
+            value={form.data.phone}
+            onChange={(e) => updateValue("phone", e.target.value)}
+            error={form.errors.phone}
+          />
+
           <Group grow mt="md">
-            <TextInput
-              label="Phone"
-              placeholder="Users phone number"
-              value={form.data.phone}
-              onChange={(e) => updateValue("phone", e.target.value)}
-              error={form.errors.phone}
+            <Select
+              label='Default currency'
+              placeholder='Select currency'
+              required
+              searchable={true}
+              value={form.data.currency_id?.toString()}
+              onChange={value => updateValue('currency_id', value)}
+              data={currencies}
+              error={form.errors.currency_id}
             />
 
             <NumberInput
@@ -135,7 +164,7 @@ const UserEdit = () => {
               clampBehavior="strict"
               decimalScale={2}
               fixedDecimalScale={true}
-              prefix="$"
+              prefix={selectedCurrencySymbol}
               value={form.data.rate}
               onChange={(value) => updateValue("rate", value)}
               error={form.errors.rate}

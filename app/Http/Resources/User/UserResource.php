@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'avatar' => $this->avatar,
             'phone' => $this->phone,
             'rate' => $this->rate,
+            'currency' => $this->currency->only('id', 'code', 'decimals'),
             'roles' => $this->roles->map->only('name')->flatten()->toArray(),
         ];
     }

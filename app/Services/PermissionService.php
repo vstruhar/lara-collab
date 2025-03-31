@@ -26,6 +26,7 @@ class PermissionService
             'Invoices' => ['view invoices', 'create invoice', 'edit invoice', 'archive invoice', 'restore invoice', 'change invoice status', 'download invoice', 'print invoice'],
             'Reports' => ['view logged time sum report', 'view daily logged time report'],
             'Activities' => ['view activities'],
+            'CurrencyRate' => ['view currency rates', 'create currency rate'],
         ],
         'manager' => [
             'User' => ['view users'],

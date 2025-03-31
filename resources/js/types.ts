@@ -8,3 +8,5 @@ export type User = {
     rate: BigInteger;
     created_at: String;
 };
+
+export type PricingType = 'hourly' | 'fixed';

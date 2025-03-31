@@ -102,12 +102,12 @@ const ProjectCreate = ({ dropdowns: { companies, users, currencies } }) => {
           />
 
           <MultiSelect
-            label="Grant access to users"
-            placeholder="Select users"
+            label='Grant access to users'
+            placeholder='Select users'
             mt='md'
             searchable
             value={form.data.users}
-            onChange={(values) => updateValue("users", values)}
+            onChange={values => updateValue('users', values)}
             data={users}
             error={form.errors.users}
           />

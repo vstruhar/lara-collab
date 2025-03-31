@@ -27,6 +27,7 @@ class StoreUserRequest extends FormRequest
             'job_title' => 'required|string',
             'name' => 'required|string',
             'phone' => 'string|nullable',
+            'currency_id' => 'required|integer|nullable',
             'rate' => 'numeric|min:0',
             'email' => ['required', 'email:rfc,dns', Rule::unique('users')],
             'password' => 'required|min:8|confirmed',
