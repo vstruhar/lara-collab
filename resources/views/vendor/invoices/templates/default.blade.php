@@ -302,22 +302,41 @@
                 @if ($invoice->hasItemUnits)
                     <th scope="col" class="text-center border-0">Units</th>
                 @endif
-                <th scope="col" class="text-center border-0">Quantity</th>
-                <th scope="col" class="text-right border-0">Price</th>
+                <th scope="col" class="text-center border-0">{{ $invoice->isFixedAmount() || $invoice->items->every(fn ($item) => $item->isFixedPrice()) ? '' : 'Quantity' }}</th>
+                <th scope="col" class="text-right border-0">{{ $invoice->isFixedAmount() || $invoice->items->every(fn ($item) => $item->isFixedPrice()) ? '' : 'Price' }}</th>
                 @if ($invoice->hasItemDiscount)
                     <th scope="col" class="text-right border-0">Discount</th>
                 @endif
                 @if ($invoice->hasItemTax)
                     <th scope="col" class="text-right border-0">Tax</th>
                 @endif
-                <th scope="col" class="text-right border-0 pr-0">Sub total</th>
+                <th scope="col" class="text-right border-0 pr-0">{{ $invoice->isFixedAmount() ? '' : 'Sub total' }}</th>
             </tr>
         </thead>
         <tbody>
             {{-- Items --}}
             @foreach ($invoice->items as $item)
+                @if ($invoice->isFixedAmount())
                 <tr>
                     <td class="pl-0">
+                        {{ $item->title }}
+                    </td>
+                    @if ($invoice->hasItemUnits)
+                        <td></td>
+                    @endif
+                    <td></td>
+                    <td></td>
+                    @if ($invoice->hasItemDiscount)
+                        <td></td>
+                    @endif
+                    @if ($invoice->hasItemTax)
+                        <td></td>
+                    @endif
+                    <td></td>
+                </tr>
+                @else
+                    <tr>
+                        <td class="pl-0">
                         {{ $item->title }}
 
                         @if ($item->description)
@@ -325,20 +344,20 @@
                         @endif
                     </td>
                     @if ($invoice->hasItemUnits)
-                        <td class="text-center">{{ $item->units }}</td>
+                        <td class="text-center">{{ $item->isFixedPrice() ? '-' : $item->units }}</td>
                     @endif
-                    <td class="text-center">{{ $item->quantity }}</td>
+                    <td class="text-center">{{ $item->isFixedPrice() ? '-' : $item->quantity }}</td>
                     <td class="text-right">
-                        {{ $invoice->formatCurrency($item->price_per_unit) }}
+                        {{ $item->isFixedPrice() ? '-' : $invoice->formatCurrency($item->price_per_unit) }}
                     </td>
                     @if ($invoice->hasItemDiscount)
                         <td class="text-right">
-                            {{ $invoice->formatCurrency($item->discount) }}
+                            {{ $item->isFixedPrice() ? '-' : $invoice->formatCurrency($item->discount) }}
                         </td>
                     @endif
                     @if ($invoice->hasItemTax)
                         <td class="text-right">
-                            {{ $invoice->formatCurrency($item->tax) }}
+                            {{ $item->isFixedPrice() ? '-' : $invoice->formatCurrency($item->tax) }}
                         </td>
                     @endif
 
@@ -346,6 +365,7 @@
                         {{ $invoice->formatCurrency($item->sub_total_price) }}
                     </td>
                 </tr>
+                @endif
             @endforeach
             {{-- Summary --}}
             @if ($invoice->hasItemOrInvoiceDiscount())

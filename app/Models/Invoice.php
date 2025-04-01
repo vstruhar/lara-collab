@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Invoice as InvoiceEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,7 +10,6 @@ use Illuminate\Support\Str;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use Lacodix\LaravelModelFilter\Traits\IsSortable;
 use LaravelArchivable\Archivable;
-
 class Invoice extends Model
 {
     use Archivable, IsSearchable, IsSortable;
@@ -61,6 +61,11 @@ class Invoice extends Model
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function isFixedAmount(): bool
+    {
+        return $this->type === InvoiceEnum::TYPE_FIXED_AMOUNT->value;
     }
 
     public static function getNextNumber(): string

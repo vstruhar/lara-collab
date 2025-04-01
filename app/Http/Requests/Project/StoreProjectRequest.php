@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Project;
 
+use App\Enums\PricingType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,6 +26,7 @@ class StoreProjectRequest extends FormRequest
         return [
             'name' => ['required', 'string', Rule::unique('projects', 'name')],
             'description' => 'string|nullable',
+            'default_pricing_type' => ['required', 'string', Rule::enum(PricingType::class)],
             'client_company_id' => 'required|integer|exists:client_companies,id',
             'rate' => 'numeric|min:0|nullable',
             'users' => 'array',

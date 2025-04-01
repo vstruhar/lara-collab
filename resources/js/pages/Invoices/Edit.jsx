@@ -16,7 +16,7 @@ import {
   Group,
   MultiSelect,
   NumberInput,
-  Radio,
+  Checkbox,
   Select,
   Stack,
   Text,
@@ -29,6 +29,7 @@ import { IconSearch } from '@tabler/icons-react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Task from './Task';
+import { PricingType } from '@/utils/enums';
 
 const InvoiceEdit = () => {
   const { invoice, projects, clientCompanies, selectedProjects } = usePage().props;
@@ -88,11 +89,16 @@ const InvoiceEdit = () => {
   useEffect(() => {
     let total = 0;
 
-    if (form.data.type === 'hourly') {
+    if (form.data.type === 'default') {
       projectTasks.forEach(project => {
         project.tasks.forEach(task => {
-          if (form.data.tasks.includes(task.id))
-            total += (Number(task.total_minutes) / 60) * form.data.hourly_rate;
+          if (form.data.tasks.includes(task.id)) {
+            if (task.pricing_type === PricingType.HOURLY) {
+              total += (Number(task.total_minutes) / 60) * form.data.hourly_rate;
+            } else {
+              total += task.price;
+            }
+          }
         });
       });
     } else {
@@ -180,26 +186,16 @@ const InvoiceEdit = () => {
               error={form.errors.projects}
             />
 
-            <Radio.Group
-              label='Payment type'
+            <Checkbox
+              label='Fixed amount for whole invoice'
               mt='md'
-              withAsterisk
-              value={form.data.type}
-              onChange={value => updateValue('type', value)}
-            >
-              <Group mt='xs'>
-                <Radio
-                  value='hourly'
-                  label='Hourly'
-                />
-                <Radio
-                  value='fixed_amount'
-                  label='Fixed amount'
-                />
-              </Group>
-            </Radio.Group>
+              checked={form.data.type === 'fixed_amount'}
+              onChange={event =>
+                updateValue('type', event.currentTarget.checked ? 'fixed_amount' : 'default')
+              }
+            />
 
-            {form.data.type === 'hourly' && (
+            {form.data.type === 'default' && (
               <NumberInput
                 label='Hourly rate'
                 mt='md'

@@ -8,6 +8,6 @@ enum Invoice: string
     case STATUS_SENT = 'sent';
     case STATUS_PAID = 'paid';
 
-    case TYPE_HOURLY = 'hourly';
-    case TYPE_FIXED_AMOUNT = 'fixed_amount';
+    case TYPE_DEFAULT = 'default'; // this will used hourly or fixed amount from task
+    case TYPE_FIXED_AMOUNT = 'fixed_amount'; // this will used fixed amount for whole invoice
 }

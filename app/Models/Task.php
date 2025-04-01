@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PricingType;
 use App\Models\Filters\IsNullFilter;
 use App\Models\Filters\TaskCompletedFilter;
 use App\Models\Filters\TaskOverdueFilter;
@@ -37,6 +38,8 @@ class Task extends Model implements AuditableContract, Sortable
         'description',
         'due_on',
         'estimation',
+        'pricing_type',
+        'fixed_price',
         'hidden_from_clients',
         'billable',
         'order_column',
@@ -55,6 +58,12 @@ class Task extends Model implements AuditableContract, Sortable
         'hidden_from_clients' => 'boolean',
         'billable' => 'boolean',
         'estimation' => 'float',
+        'fixed_price' => 'integer',
+        'pricing_type' => PricingType::class,
+    ];
+
+    protected $appends = [
+        'price',
     ];
 
     protected $observables = [
@@ -154,5 +163,34 @@ class Task extends Model implements AuditableContract, Sortable
     public function activities(): MorphMany
     {
         return $this->morphMany(Activity::class, 'activity_capable');
+    }
+
+    public function isFixedPrice(): bool
+    {
+        return $this->pricing_type === PricingType::FIXED;
+    }
+
+    public function isHourly(): bool
+    {
+        return $this->pricing_type === PricingType::HOURLY;
+    }
+
+    public function getPriceAttribute(): ?int
+    {
+        if ($this->isFixedPrice()) {
+            return $this->fixed_price;
+        }
+
+        // For hourly pricing, calculate based on time logs if needed
+        if ($this->isHourly()) {
+            $this->loadMissing('timeLogs');
+
+            $totalMinutes = $this->timeLogs->sum('minutes');
+            $hourlyRate = $this->project->rate ?? 0;
+
+            return (int) ($totalMinutes / 60 * $hourlyRate);
+        }
+
+        return null;
     }
 }

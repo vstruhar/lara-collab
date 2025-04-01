@@ -28,8 +28,8 @@ class UpdateInvoiceRequest extends FormRequest
             'client_company_id' => ['required', 'integer', 'exists:client_companies,id'],
             'projects' => ['required', 'array', 'min:1'],
             'tasks' => ['required', 'array', 'min:1'],
-            'type' => ['required', 'string', Rule::in(['hourly', 'fixed_amount'])],
-            'hourly_rate' => $this->type === Invoice::TYPE_HOURLY->value ? ['required', 'integer', 'min:1'] : [],
+            'type' => ['required', 'string', Rule::in(['default', 'fixed_amount'])],
+            'hourly_rate' => $this->type !== Invoice::TYPE_FIXED_AMOUNT->value ? ['required', 'integer', 'min:1'] : [],
             'fixed_amount' => $this->type === Invoice::TYPE_FIXED_AMOUNT->value ? ['required', 'integer', 'min:1'] : [],
             'note' => ['string', 'nullable'],
         ];

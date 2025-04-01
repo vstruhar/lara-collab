@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Task;
 
+use App\Enums\PricingType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTaskRequest extends FormRequest
 {
@@ -27,6 +29,8 @@ class StoreTaskRequest extends FormRequest
             'assigned_to_user_id' => ['nullable', 'exists:users,id'],
             'description' => ['nullable'],
             'estimation' => ['nullable'],
+            'pricing_type' => ['required', 'string', Rule::enum(PricingType::class)],
+            'fixed_price' => ['nullable', 'numeric', 'min:0', Rule::requiredIf($this->pricing_type === PricingType::FIXED->value)],
             'due_on' => ['nullable'],
             'hidden_from_clients' => ['required', 'boolean'],
             'billable' => ['required', 'boolean'],

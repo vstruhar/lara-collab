@@ -18,8 +18,9 @@ import {
   Title,
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
+import { PricingType } from '@/utils/enums';
 
-const ProjectEdit = ({ dropdowns: { companies, users,currencies } }) => {
+const ProjectEdit = ({ dropdowns: { companies, users, currencies } }) => {
   const { item } = usePage().props;
   const [currencySymbol, setCurrencySymbol] = useState();
 
@@ -27,6 +28,7 @@ const ProjectEdit = ({ dropdowns: { companies, users,currencies } }) => {
     _method: 'put',
     name: item.name,
     description: item.description || '',
+    default_pricing_type: item.default_pricing_type || PricingType.HOURLY,
     client_company_id: item.client_company_id || '',
     rate: item.rate / 100 || 0,
     users: item.users.map(i => i.id.toString()),
@@ -34,13 +36,18 @@ const ProjectEdit = ({ dropdowns: { companies, users,currencies } }) => {
 
   useEffect(() => {
     let symbol = currencies.find(i =>
-      i.client_companies.find(c => c.id.toString() === form.data.client_company_id)
+      i.client_companies.find(c => c.id.toString() === form.data.client_company_id.toString())
     )?.symbol;
 
     if (symbol) {
       setCurrencySymbol(symbol);
     }
   }, [form.data.client_company_id]);
+
+  const pricingTypes = [
+    { value: PricingType.HOURLY, label: 'Hourly' },
+    { value: PricingType.FIXED, label: 'Fixed' },
+  ];
 
   return (
     <>
@@ -105,14 +112,25 @@ const ProjectEdit = ({ dropdowns: { companies, users,currencies } }) => {
           />
 
           <MultiSelect
-            label="Grant access to users"
-            placeholder="Select users"
+            label='Grant access to users'
+            placeholder='Select users'
             mt='md'
             searchable
             value={form.data.users}
-            onChange={(values) => updateValue("users", values)}
+            onChange={values => updateValue('users', values)}
             data={users}
             error={form.errors.users}
+          />
+
+          <Select
+            label='Default pricing type'
+            placeholder='Select pricing type'
+            required
+            mt='md'
+            value={form.data.default_pricing_type}
+            onChange={value => updateValue('default_pricing_type', value)}
+            data={pricingTypes}
+            error={form.errors.default_pricing_type}
           />
 
           <NumberInput

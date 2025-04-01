@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PricingType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -21,6 +22,7 @@ class Project extends Model implements AuditableContract
     protected $fillable = [
         'name',
         'description',
+        'default_pricing_type',
         'rate',
         'client_company_id',
     ];
@@ -32,6 +34,10 @@ class Project extends Model implements AuditableContract
     protected $observables = [
         'archived',
         'unArchived',
+    ];
+
+    protected $casts = [
+        'default_pricing_type' => PricingType::class,
     ];
 
     public function clientCompany(): BelongsTo
