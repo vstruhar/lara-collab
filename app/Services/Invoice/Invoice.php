@@ -12,6 +12,7 @@ class Invoice extends InvoiceBase
     public function type(string $type): self
     {
         $this->type = $type;
+
         return $this;
     }
 

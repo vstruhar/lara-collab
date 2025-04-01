@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use Lacodix\LaravelModelFilter\Traits\IsSortable;
 use LaravelArchivable\Archivable;
+
 class Invoice extends Model
 {
     use Archivable, IsSearchable, IsSortable;
