@@ -8,6 +8,7 @@ use LaravelDaily\Invoices\Classes\InvoiceItem as InvoiceItemBase;
 class InvoiceItem extends InvoiceItemBase
 {
     protected string $invoiceType;
+
     protected string $pricingType;
 
     public function __construct()
@@ -17,18 +18,20 @@ class InvoiceItem extends InvoiceItemBase
 
     public static function make($title)
     {
-        return (new self())->title($title);
+        return (new self)->title($title);
     }
 
     public function pricingType(string $pricingType)
     {
         $this->pricingType = $pricingType;
+
         return $this;
     }
 
     public function invoiceType(string $invoiceType)
     {
         $this->invoiceType = $invoiceType;
+
         return $this;
     }
 

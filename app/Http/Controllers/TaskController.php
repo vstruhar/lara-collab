@@ -62,7 +62,7 @@ class TaskController extends Controller
             'openedTask' => $task ? $task->loadDefault() : null,
             'currency' => [
                 'symbol' => OwnerCompany::with('currency')->first()->currency->symbol,
-            ]
+            ],
         ]);
     }
 
