@@ -86,7 +86,9 @@ export function EditTaskDrawer() {
         subscribed_users: (task?.subscribed_users || []).map(i => i.id.toString()),
         labels: (task?.labels || []).map(i => i.id),
       });
-      editorRef.current?.setContent(task?.description || '');
+      setTimeout(() => {
+        editorRef.current?.setContent(task?.description || '');
+      }, 300);
     }
   }, [edit.opened, task]);
 
