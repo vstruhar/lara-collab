@@ -33,7 +33,7 @@ export default function TaskCard({ task, index }) {
               #{task.number + ": " + task.name}
             </Text>
 
-            <Group wrap="nowrap" justify="space-between">
+            <Group wrap="nowrap"  style={{ justifyContent: "flex-end", gap: rem(5) }}>
               <Group wrap="wrap" style={{ rowGap: rem(3), columnGap: rem(12) }} mt={5}>
                 {task.labels.map((label) => (
                   <Label
@@ -46,24 +46,27 @@ export default function TaskCard({ task, index }) {
                 ))}
               </Group>
 
-              {task.assigned_to_user && (
-                <Tooltip label={task.assigned_to_user.name} openDelay={1000} withArrow>
-                  <Link
-                    href={route("users.edit", task.assigned_to_user.id)}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Avatar
-                      src={task.assigned_to_user.avatar}
-                      radius="xl"
-                      size={20}
-                      color={computedColorScheme === "light" ? "white" : "blue"}
+              {task.assigned_users?.length > 0 && (
+                <>
+                  {task.assigned_users.map((user) => (
+                    <Tooltip label={user.name} openDelay={1000} withArrow>
+                    <Link
+                      href={route("users.edit", user.id)}
+                      style={{ textDecoration: "none" }}
                     >
-                      {getInitials(task.assigned_to_user.name)}
-                    </Avatar>
-                  </Link>
-                </Tooltip>
+                      <Avatar
+                        src={user.avatar}
+                        radius="xl"
+                        size={20}
+                        color={computedColorScheme === "light" ? "white" : "blue"}
+                      >
+                        {getInitials(user.name)}
+                      </Avatar>
+                    </Link>
+                  </Tooltip>
+                  ))}
+                </>
               )}
-
               {(can("archive task") || can("restore task")) && (
                 <TaskActions task={task} className={classes.actions} />
               )}

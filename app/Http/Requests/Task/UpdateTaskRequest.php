@@ -26,7 +26,7 @@ class UpdateTaskRequest extends FormRequest
         return [
             'name' => ['string:255'],
             'group_id' => ['exists:task_groups,id'],
-            'assigned_to_user_id' => ['nullable', 'exists:users,id'],
+            'assigned_users' => ['array'],
             'description' => ['nullable'],
             'estimation' => ['nullable'],
             'pricing_type' => ['string', Rule::enum(PricingType::class)],

@@ -79,13 +79,14 @@ class Task extends Model implements AuditableContract, Sortable
         'labels:id,name,color',
         'attachments',
         'timeLogs.user:id,name',
+        'assignedUsers:id,name,avatar',
     ];
 
     public function filters(): array
     {
         return [
             (new WhereInFilter('group_id'))->setQueryName('groups'),
-            (new WhereInFilter('assigned_to_user_id'))->setQueryName('assignees'),
+            (new WhereHasFilter('assignedUsers'))->setQueryName('assignedUsers'),
             (new TaskOverdueFilter('due_on'))->setQueryName('overdue'),
             (new IsNullFilter('due_on'))->setQueryName('not_set'),
             (new TaskCompletedFilter('completed_at'))->setQueryName('status'),
@@ -138,6 +139,11 @@ class Task extends Model implements AuditableContract, Sortable
     public function subscribedUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'subscribe_task');
+    }
+
+    public function assignedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->using(TaskUser::class)->withTimestamps();
     }
 
     public function labels(): BelongsToMany

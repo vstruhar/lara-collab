@@ -50,7 +50,7 @@ export function EditTaskDrawer() {
 
   const [data, setData] = useState({
     group_id: '',
-    assigned_to_user_id: '',
+    assigned_users: [],
     name: '',
     description: '',
     pricing_type: PricingType.HOURLY,
@@ -73,7 +73,7 @@ export function EditTaskDrawer() {
     if (edit.opened) {
       setData({
         group_id: task?.group_id || '',
-        assigned_to_user_id: task?.assigned_to_user_id || '',
+        assigned_users: (task?.assigned_users || []).map((i) => i.id.toString()),
         name: task?.name || '',
         description: task?.description || '',
         pricing_type: task?.pricing_type || PricingType.HOURLY,
@@ -95,7 +95,7 @@ export function EditTaskDrawer() {
   const updateValue = (field, value) => {
     setData({ ...data, [field]: value });
 
-    const dropdowns = ['labels', 'subscribed_users'];
+    const dropdowns = ['labels', 'subscribed_users','assigned_users'];
     const onBlurInputs = ['name', 'description', 'fixed_price'];
 
     if (dropdowns.includes(field)) {
@@ -103,6 +103,9 @@ export function EditTaskDrawer() {
         labels: value.map(id => labels.find(i => i.id === id)),
         subscribed_users: value.map(id =>
           usersWithAccessToProject.find(i => i.id.toString() === id)
+        ),
+        assigned_users: value.map((id) =>
+          usersWithAccessToProject.find((i) => i.id.toString() === id),
         ),
       };
       updateTaskProperty(task, field, value, options[field]);
@@ -230,13 +233,12 @@ export function EditTaskDrawer() {
                 readOnly={!can('edit task')}
               />
 
-              <Select
-                label='Assignee'
-                placeholder='Select assignee'
-                searchable
-                mt='md'
-                value={data.assigned_to_user_id?.toString()}
-                onChange={value => updateValue('assigned_to_user_id', value)}
+              <MultiSelect
+                label="Assigned Users"
+                placeholder={!data.assigned_users.length ? "Select assigned users" : null}
+                mt="lg"
+                value={data.assigned_users}
+                onChange={(values) => updateValue("assigned_users", values)}
                 data={usersWithAccessToProject.map(i => ({
                   value: i.id.toString(),
                   label: i.name,
