@@ -23,6 +23,10 @@ class UpdateTask
             $data['fixed_price'] = (int) $data['fixed_price'];
         }
 
+        if ($updateField === 'assigned_users') {
+            $task->assignedUsers()->sync($data['assigned_users']);
+        }
+
         if (! in_array($updateField, ['subscribed_users', 'labels'])) {
             $task->update($data);
 

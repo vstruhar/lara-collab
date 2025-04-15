@@ -50,9 +50,9 @@ export default function RecentlyAssignedTasks({ tasks }) {
                       </Text>
                     </Group>
                   </Stack>
-                  <Tooltip label={date(task.assigned_at)} openDelay={500} withArrow>
+                  <Tooltip label={date(task.assigned_users[0].created_at)} openDelay={500} withArrow>
                     <Text fz={11} fw={700} className={classes.due}>
-                      {diffForHumans(task.assigned_at)}
+                      {diffForHumans(task.assigned_users[0].created_at)}
                     </Text>
                   </Tooltip>
                 </Group>

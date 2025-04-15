@@ -32,7 +32,9 @@ class DashboardController extends Controller
             'overdueTasks' => Task::whereIn('project_id', $projectIds)
                 ->whereNull('completed_at')
                 ->whereDate('due_on', '<', now())
-                ->where('assigned_to_user_id', auth()->id())
+                ->whereHas('assignedUsers', function ($query) {
+                    $query->where('user_id', auth()->id());
+                })
                 ->with('project:id,name')
                 ->with('taskGroup:id,name')
                 ->orderBy('due_on')
@@ -40,16 +42,26 @@ class DashboardController extends Controller
             'recentlyAssignedTasks' => Task::whereIn('project_id', $projectIds)
                 ->whereNull('completed_at')
                 ->whereNotNull('assigned_at')
-                ->where('assigned_to_user_id', auth()->id())
+                ->whereHas('assignedUsers', function ($query) {
+                    $query->where('user_id', auth()->id());
+                })
+                ->with([
+                    'assignedUsers' => function ($query) {
+                        $query->where('user_id', auth()->id());
+                    },
+                ])
                 ->with('project:id,name')
                 ->with('taskGroup:id,name')
                 ->orderBy('assigned_at')
                 ->limit(10)
-                ->get(['id', 'name', 'assigned_at', 'group_id', 'project_id']),
+                ->get(['id', 'name', 'assigned_at', 'group_id', 'project_id'])
+                ->sortByDesc('assignedUsers.*.created_at'),
             'recentComments' => Comment::query()
                 ->whereHas('task', function ($query) use ($projectIds) {
                     $query->whereIn('project_id', $projectIds)
-                        ->where('assigned_to_user_id', auth()->id());
+                        ->whereHas('assignedUsers', function ($query) {
+                            $query->where('user_id', auth()->id());
+                        });
                 })
                 ->with([
                     'task:id,name,project_id',
