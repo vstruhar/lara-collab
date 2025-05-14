@@ -72,7 +72,14 @@ const InvoiceCreate = () => {
           const taskIds = [];
 
           data.projectTasks.forEach(project => {
-            project.tasks.forEach(task => Number(task.total_minutes) > 0 && taskIds.push(task.id));
+            project.tasks.forEach(task => {
+              if (
+                (task.pricing_type === PricingType.HOURLY && Number(task.total_minutes) > 0) ||
+                (task.pricing_type === PricingType.FIXED && task.price > 0)
+              ) {
+                taskIds.push(task.id);
+              }
+            });
           });
           const project = projects.find(i => form.data.projects[0] === i.id.toString());
 
