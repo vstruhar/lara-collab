@@ -42,8 +42,6 @@ class CreateTask
                 'completed_at' => null,
             ]);
 
-            $task->moveToStart();
-
             $task->subscribedUsers()->attach($data['subscribed_users'] ?? []);
 
             $task->labels()->attach($data['labels'] ?? []);
