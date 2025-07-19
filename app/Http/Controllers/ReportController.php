@@ -105,4 +105,46 @@ class ReportController extends Controller
             ],
         ]);
     }
+
+    public function fixedPriceSum(Request $request): Response
+    {
+        Gate::allowIf(fn (User $user) => $user->can('view fixed price sum report'));
+
+        $completed = $request->get('completed', 'true') === 'true';
+
+        return Inertia::render('Reports/FixedPriceSum', [
+            'users' => DB::table('tasks')
+                ->join('projects', 'projects.id', '=', 'tasks.project_id')
+                ->join('users', 'tasks.assigned_to_user_id', '=', 'users.id')
+                ->when($request->projects, fn ($query) => $query->whereIn('projects.id', $request->projects))
+                ->when($request->users, fn ($query) => $query->whereIn('tasks.assigned_to_user_id', $request->users))
+                ->when($request->dateRange,
+                    function ($query) use ($request) {
+                        $query->whereBetween('tasks.created_at', [
+                            Carbon::parse($request->dateRange[0])->startOfDay(),
+                            Carbon::parse($request->dateRange[1])->endOfDay(),
+                        ]);
+                    },
+                    fn ($query) => $query->where('tasks.created_at', '>', now()->subWeek())
+                )
+                ->{$completed ? 'whereNotNull' : 'whereNull'}('tasks.completed_at')
+                ->where('tasks.pricing_type', 'fixed')
+                ->where('tasks.billable', $request->get('billable', 'true') === 'true')
+                ->whereNotNull('tasks.assigned_to_user_id')
+                ->groupBy(['tasks.assigned_to_user_id'])
+                ->selectRaw('
+                    MAX(users.id) AS user_id,
+                    MAX(users.name) AS user_name,
+                    SUM(tasks.fixed_price) AS total_fixed_price,
+                    COUNT(tasks.id) AS total_tasks
+                ')
+                ->orderBy('user_name')
+                ->get(),
+            'clientCompanies' => ClientCompany::with('currency')->get(['id', 'name', 'currency_id']),
+            'dropdowns' => [
+                'projects' => Project::dropdownValues(),
+                'users' => User::userDropdownValues(['client']),
+            ],
+        ]);
+    }
 }
