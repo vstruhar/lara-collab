@@ -30,7 +30,7 @@ class StoreTaskRequest extends FormRequest
             'description' => ['nullable'],
             'estimation' => ['nullable'],
             'pricing_type' => ['required', 'string', Rule::enum(PricingType::class)],
-            'fixed_price' => ['nullable', 'numeric', 'min:0', Rule::requiredIf($this->pricing_type === PricingType::FIXED->value)],
+            'fixed_price' => ['nullable', 'numeric', 'min:0', Rule::when($this->pricing_type === PricingType::FIXED->value, 'present')],
             'due_on' => ['nullable'],
             'hidden_from_clients' => ['required', 'boolean'],
             'billable' => ['required', 'boolean'],

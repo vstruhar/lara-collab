@@ -75,7 +75,7 @@ const InvoiceCreate = () => {
             project.tasks.forEach(task => {
               if (
                 (task.pricing_type === PricingType.HOURLY && Number(task.total_minutes) > 0) ||
-                (task.pricing_type === PricingType.FIXED && task.price > 0)
+                (task.pricing_type === PricingType.FIXED && task.price >= 0)
               ) {
                 taskIds.push(task.id);
               }
