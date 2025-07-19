@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PricingType;
 use App\Models\ClientCompany;
 use App\Models\Project;
 use App\Models\User;
@@ -128,7 +129,7 @@ class ReportController extends Controller
                     fn ($query) => $query->where('tasks.created_at', '>', now()->subWeek())
                 )
                 ->{$completed ? 'whereNotNull' : 'whereNull'}('tasks.completed_at')
-                ->where('tasks.pricing_type', 'fixed')
+                ->where('tasks.pricing_type', PricingType::FIXED->value)
                 ->where('tasks.billable', $request->get('billable', 'true') === 'true')
                 ->whereNotNull('tasks.assigned_to_user_id')
                 ->groupBy(['tasks.assigned_to_user_id'])
