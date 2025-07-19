@@ -140,9 +140,8 @@ class TaskController extends Controller
         return redirect()->back()->success('Task archived', 'The task was successfully archived.');
     }
 
-    public function restore(Project $project, int $taskId)
+    public function restore(Project $project, Task $task)
     {
-        $task = Task::withArchived()->findOrFail($taskId);
 
         $this->authorize('restore', [$task, $project]);
 
