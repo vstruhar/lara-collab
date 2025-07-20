@@ -120,13 +120,13 @@ class ReportController extends Controller
                 ->when($request->projects, fn ($query) => $query->whereIn('projects.id', $request->projects))
                 ->when($request->users, fn ($query) => $query->whereIn('tasks.assigned_to_user_id', $request->users))
                 ->when($request->dateRange,
-                    function ($query) use ($request) {
-                        $query->whereBetween('tasks.created_at', [
+                    function ($query) use ($request, $completed) {
+                        $query->whereBetween('tasks.'.($completed ? 'completed_at' : 'created_at'), [
                             Carbon::parse($request->dateRange[0])->startOfDay(),
                             Carbon::parse($request->dateRange[1])->endOfDay(),
                         ]);
                     },
-                    fn ($query) => $query->where('tasks.created_at', '>', now()->subWeek())
+                    fn ($query) => $query->where('tasks.'.($completed ? 'completed_at' : 'created_at'), '>', now()->subWeek())
                 )
                 ->{$completed ? 'whereNotNull' : 'whereNull'}('tasks.completed_at')
                 ->where('tasks.pricing_type', PricingType::FIXED->value)
