@@ -29,7 +29,7 @@ class CreateTask
             $task = $project->tasks()->create([
                 'group_id' => $data['group_id'],
                 'created_by_user_id' => auth()->id(),
-                'assigned_to_user_id' => $data['assigned_to_user_id'],
+                'assigned_users' => $data['assigned_users'],
                 'name' => $data['name'],
                 'number' => $project->tasks()->withArchived()->count() + 1,
                 'description' => $data['description'],
@@ -43,6 +43,8 @@ class CreateTask
             ]);
 
             $task->subscribedUsers()->attach($data['subscribed_users'] ?? []);
+
+            $task->assignedUsers()->sync($data['assigned_users'] ?? []);
 
             $task->labels()->attach($data['labels'] ?? []);
 

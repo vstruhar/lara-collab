@@ -83,6 +83,7 @@ class User extends Authenticatable implements AuditableContract, CanResetPasswor
     {
         return $this->belongsToMany(Project::class, 'project_user_access');
     }
+    
 
     public function subscribedToTasks(): BelongsToMany
     {
@@ -112,5 +113,10 @@ class User extends Authenticatable implements AuditableContract, CanResetPasswor
             ->get(['id', 'name'])
             ->map(fn ($i) => ['value' => (string) $i->id, 'label' => $i->name])
             ->toArray();
+    }
+
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class)->using(TaskUser::class)->withTimestamps();
     }
 }

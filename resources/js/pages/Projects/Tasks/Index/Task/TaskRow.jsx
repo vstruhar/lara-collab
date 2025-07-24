@@ -46,14 +46,18 @@ export default function TaskRow({ task, index }) {
               onChange={(e) => complete(task, e.currentTarget.checked)}
               className={can("complete task") ? classes.checkbox : classes.disabledCheckbox}
             />
-            {task.assigned_to_user && (
-              <Link href={route("users.edit", task.assigned_to_user.id)}>
-                <Tooltip label={task.assigned_to_user.name} openDelay={1000} withArrow>
-                  <Pill size="sm" className={classes.user}>
-                    {shortName(task.assigned_to_user.name)}
-                  </Pill>
-                </Tooltip>
-              </Link>
+            {task.assigned_users?.length > 0 && (
+              <>
+                {task.assigned_users.map((user) => (
+                  <Link key={user.id} href={route("users.edit", user.id)}>
+                    <Tooltip label={user.name} openDelay={1000} withArrow>
+                      <Pill size="sm" className={classes.user}>
+                        {shortName(user.name)}
+                      </Pill>
+                    </Tooltip>
+                  </Link>
+                ))}
+              </>
             )}
             <Text
               className={classes.name}
