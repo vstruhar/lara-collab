@@ -1,7 +1,7 @@
 import Logo from "@/components/Logo";
 import useNavigationStore from "@/hooks/store/useNavigationStore";
+import useSidebarCollapse from "@/hooks/useSidebarCollapse";
 import { usePage } from "@inertiajs/react";
-import { Group, ScrollArea, Text, rem } from "@mantine/core";
 import {
   IconBuildingSkyscraper,
   IconFileDollar,
@@ -11,13 +11,17 @@ import {
   IconReportAnalytics,
   IconSettings,
   IconUsers,
+  IconChevronLeft,
+  IconChevronRight
 } from "@tabler/icons-react";
 import { useEffect } from "react";
+
 import NavbarLinksGroup from "./NavbarLinksGroup";
 import UserButton from "./UserButton";
 import classes from "./css/NavBarNested.module.css";
+import { Group, ScrollArea, Text, rem, ActionIcon, Transition } from "@mantine/core";
 
-export default function Sidebar() {
+export default function Sidebar({ collapsed, toggle }) {
   const { version } = usePage().props;
   const { items, setItems } = useNavigationStore();
 
@@ -151,28 +155,38 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <nav className={classes.navbar}>
+    <nav
+      className={classes.navbar}
+        style={{ width: collapsed ? 60 : 260, transition: "width 0.2s cubic-bezier(0.4, 0.0, 0.2, 1)" }}
+    >
       <div className={classes.header}>
         <Group justify="space-between">
-          <Logo style={{ width: rem(120) }} />
-          <Text size="xs" className={classes.version}>
-            v{version}
-          </Text>
+          {!collapsed && <Logo style={{ width: rem(120) }} />}
+          {!collapsed && (
+            <Text size="xs" className={classes.version}>
+              v{version}
+            </Text>
+          )}
+          <ActionIcon variant="light" onClick={toggle} size={32} aria-label="Toggle sidebar">
+            {collapsed ? <IconChevronRight size={20} /> : <IconChevronLeft size={20} />}
+          </ActionIcon>
         </Group>
       </div>
 
-      <ScrollArea className={classes.links}>
-        <div className={classes.linksInner}>
-          {items
-            .filter((i) => i.visible)
-            .map((item) => (
-              <NavbarLinksGroup key={item.label} item={item} />
-            ))}
-        </div>
-      </ScrollArea>
+      {!collapsed && (
+        <ScrollArea className={classes.links}>
+          <div className={classes.linksInner}>
+            {items
+              .filter((i) => i.visible)
+              .map((item) => (
+                <NavbarLinksGroup key={item.label} item={item} />
+              ))}
+          </div>
+        </ScrollArea>
+      )}
 
       <div className={classes.footer}>
-        <UserButton />
+        {!collapsed && <UserButton />}
       </div>
     </nav>
   );
