@@ -1,16 +1,16 @@
 import FlashNotification from "@/components/FlashNotification";
 import useNotificationsStore from "@/hooks/store/useNotificationsStore";
+import useSidebarStore from "@/hooks/store/useSidebarStore";
 import useAuthorization from "@/hooks/useAuthorization";
 import useWebSockets from "@/hooks/useWebSockets";
 import NavBarNested from "@/layouts/NavBarNested";
-import useSidebarCollapse from "@/hooks/useSidebarCollapse";
 import Notifications from "@/layouts/Notifications";
 import { Head, usePage } from "@inertiajs/react";
 import { AppShell } from "@mantine/core";
 import { useEffect } from "react";
 
 export default function MainLayout({ children, title }) {
-  const { collapsed, toggle } = useSidebarCollapse(false);
+  const { collapsed } = useSidebarStore();
   window.can = useAuthorization().can;
 
   const { initUserWebSocket } = useWebSockets();
@@ -34,7 +34,7 @@ export default function MainLayout({ children, title }) {
       <Notifications />
 
       <AppShell.Navbar>
-        <NavBarNested collapsed={collapsed} toggle={toggle} />
+        <NavBarNested />
       </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>

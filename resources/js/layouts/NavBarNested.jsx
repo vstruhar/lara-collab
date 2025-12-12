@@ -1,6 +1,6 @@
 import Logo from "@/components/Logo";
 import useNavigationStore from "@/hooks/store/useNavigationStore";
-import useSidebarCollapse from "@/hooks/useSidebarCollapse";
+import useSidebarStore from "@/hooks/store/useSidebarStore";
 import { usePage } from "@inertiajs/react";
 import {
   IconBuildingSkyscraper,
@@ -21,9 +21,10 @@ import UserButton from "./UserButton";
 import classes from "./css/NavBarNested.module.css";
 import { Group, ScrollArea, Text, rem, ActionIcon, Transition } from "@mantine/core";
 
-export default function Sidebar({ collapsed, toggle }) {
+export default function Sidebar() {
   const { version } = usePage().props;
   const { items, setItems } = useNavigationStore();
+  const { collapsed, toggle } = useSidebarStore();
 
   useEffect(() => {
     setItems([
