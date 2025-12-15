@@ -1,5 +1,5 @@
 import useForm from "@/hooks/useForm";
-import { Button, Flex, Text, TextInput } from "@mantine/core";
+import { Button, Flex, Text, TextInput, ColorInput } from "@mantine/core";
 import { modals } from "@mantine/modals";
 
 function ModalForm({ item }) {
@@ -9,6 +9,7 @@ function ModalForm({ item }) {
     {
       _method: "put",
       name: item.name || "",
+      color: item.color || "",
     },
   );
 
@@ -29,6 +30,31 @@ function ModalForm({ item }) {
         value={form.data.name}
         onChange={(e) => updateValue("name", e.target.value)}
         error={form.errors.name}
+      />
+
+      <ColorInput
+        label="Color"
+        placeholder="Group color"
+        mt="md"
+        swatches={[
+          "#343A40",
+          "#E03231",
+          "#C2255C",
+          "#9C36B5",
+          "#6741D9",
+          "#3B5BDB",
+          "#2771C2",
+          "#2A8599",
+          "#2B9267",
+          "#309E44",
+          "#66A810",
+          "#F08C00",
+          "#E7590D",
+        ]}
+        swatchesPerRow={7}
+        value={form.data.color}
+        onChange={(color) => updateValue("color", color)}
+        error={form.errors.color}
       />
 
       <Flex justify="flex-end" mt="xl">

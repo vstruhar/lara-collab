@@ -17,7 +17,8 @@ export default function TaskGroup({ group, tasks, ...props }) {
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
-          <div className={classes.group}>
+          <div className={classes.group}
+           style={group.color ? { backgroundColor: group.color } : undefined}>
             <Group>
               <div {...provided.dragHandleProps} className={classes.dragHandle}>
                 <IconGripVertical
