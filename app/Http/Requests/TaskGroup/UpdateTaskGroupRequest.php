@@ -22,14 +22,19 @@ class UpdateTaskGroupRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => [
-                'required',
-                'string',
-                Rule::unique('task_groups', 'name')
-                    ->where('project_id', $this->route('project')->id)
-                    ->ignore($this->route('taskGroup')->id),
-            ],
-        ];
+         return [
+        'name' => [
+            'required',
+            'string',
+            Rule::unique('task_groups', 'name')
+                ->where('project_id', $this->route('project')->id)
+                ->ignore($this->route('taskGroup')->id),
+        ],
+        'color' => [
+            'nullable',
+            'string',
+            'max:16',
+        ],
+         ];
     }
 }
