@@ -1,5 +1,6 @@
 import FlashNotification from "@/components/FlashNotification";
 import useNotificationsStore from "@/hooks/store/useNotificationsStore";
+import useSidebarStore from "@/hooks/store/useSidebarStore";
 import useAuthorization from "@/hooks/useAuthorization";
 import useWebSockets from "@/hooks/useWebSockets";
 import NavBarNested from "@/layouts/NavBarNested";
@@ -9,6 +10,7 @@ import { AppShell } from "@mantine/core";
 import { useEffect } from "react";
 
 export default function MainLayout({ children, title }) {
+  const { collapsed } = useSidebarStore();
   window.can = useAuthorization().can;
 
   const { initUserWebSocket } = useWebSockets();
@@ -22,7 +24,7 @@ export default function MainLayout({ children, title }) {
 
   return (
     <AppShell
-      navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: false } }}
+      navbar={{ width: collapsed ? 60 : 260, breakpoint: "sm", collapsed: { mobile: false } }}
       padding="4rem"
     >
       <Head title={title} />
@@ -32,7 +34,7 @@ export default function MainLayout({ children, title }) {
       <Notifications />
 
       <AppShell.Navbar>
-        <NavBarNested></NavBarNested>
+        <NavBarNested />
       </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>
