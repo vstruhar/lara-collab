@@ -10,9 +10,11 @@ use App\Listeners\SendEmailWithCredentials;
 use App\Models\Comment;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\TaskUser;
 use App\Observers\CommentObserver;
 use App\Observers\ProjectObserver;
 use App\Observers\TaskObserver;
+use App\Observers\TaskUserObserver;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -43,6 +45,7 @@ class EventServiceProvider extends ServiceProvider
     protected $observers = [
         Project::class => [ProjectObserver::class],
         Task::class => [TaskObserver::class],
+        TaskUser::class => [TaskUserObserver::class],
         Comment::class => [CommentObserver::class],
     ];
 

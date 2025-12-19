@@ -198,18 +198,18 @@ export function CreateTaskDrawer() {
             error={form.errors.group_id}
           />
 
-          <Select
-            label='Assignee'
-            placeholder='Select assignee'
+          <MultiSelect
+            label="Assignees"
+            placeholder="Select assignees"
             searchable
-            mt='md'
-            value={form.data.assigned_to_user_id}
-            onChange={value => updateValue('assigned_to_user_id', value)}
-            data={usersWithAccessToProject.map(i => ({
+            mt="md"
+            value={form.data.assigned_users}
+            onChange={(values) => updateValue("assigned_users", values)}
+            data={usersWithAccessToProject.map((i) => ({
               value: i.id.toString(),
               label: i.name,
             }))}
-            error={form.errors.assigned_to_user_id}
+            error={form.errors.assigned_users}
           />
 
           <DateInput
