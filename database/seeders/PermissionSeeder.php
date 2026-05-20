@@ -7,6 +7,7 @@ use App\Services\PermissionService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\PermissionRegistrar;
 
 class PermissionSeeder extends Seeder
 {
@@ -15,7 +16,7 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $insertPermissions = fn ($role) => collect(PermissionService::$permissionsByRole[$role])
             ->flatten()

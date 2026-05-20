@@ -1,7 +1,16 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\AuthServiceProvider;
+use App\Providers\BroadcastServiceProvider;
+use App\Providers\EventServiceProvider;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\SocialiteServiceProvider;
+use OwenIt\Auditing\AuditingServiceProvider;
+use Spatie\Permission\PermissionServiceProvider;
 
 return [
 
@@ -161,18 +170,18 @@ return [
         /*
          * Package Service Providers...
          */
-        OwenIt\Auditing\AuditingServiceProvider::class,
+        AuditingServiceProvider::class,
 
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
-        Laravel\Socialite\SocialiteServiceProvider::class,
+        AppServiceProvider::class,
+        AuthServiceProvider::class,
+        BroadcastServiceProvider::class,
+        EventServiceProvider::class,
+        RouteServiceProvider::class,
+        PermissionServiceProvider::class,
+        SocialiteServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -187,7 +196,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Socialite' => Socialite::class,
     ])->toArray(),
 
 ];

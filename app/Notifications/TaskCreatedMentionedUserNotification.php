@@ -8,6 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Carbon;
 
 class TaskCreatedMentionedUserNotification extends Notification implements ShouldQueue
 {
@@ -28,7 +29,7 @@ class TaskCreatedMentionedUserNotification extends Notification implements Shoul
     /**
      * Determine the notification's delivery delay.
      *
-     * @return array<string, \Illuminate\Support\Carbon>
+     * @return array<string, Carbon>
      */
     public function withDelay(object $notifiable): array
     {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Activity\ActivityGroupedByDateCollection;
 use App\Models\Activity;
 use App\Models\Project;
+use App\Models\User;
 use App\Services\PermissionService;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
@@ -15,7 +16,7 @@ class ActivityController extends Controller
 {
     public function index(): Response
     {
-        /** @var \App\Models\User */
+        /** @var User */
         $user = auth()->user();
 
         $projects = PermissionService::projectsThatUserCanAccess($user);

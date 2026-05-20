@@ -2,22 +2,28 @@
 
 use App\Actions\Task\CreateTask;
 use App\Actions\Task\UpdateTask;
+use App\Models\ClientCompany;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskGroup;
 use App\Models\TaskPriority;
 use App\Models\User;
+use Database\Seeders\CountrySeeder;
+use Database\Seeders\CurrencySeeder;
+use Database\Seeders\PermissionSeeder;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\TaskPrioritySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Seed necessary data
-    $this->seed(\Database\Seeders\CountrySeeder::class);
-    $this->seed(\Database\Seeders\CurrencySeeder::class);
-    $this->seed(\Database\Seeders\TaskPrioritySeeder::class);
-    $this->seed(\Database\Seeders\RoleSeeder::class);
-    $this->seed(\Database\Seeders\PermissionSeeder::class);
+    $this->seed(CountrySeeder::class);
+    $this->seed(CurrencySeeder::class);
+    $this->seed(TaskPrioritySeeder::class);
+    $this->seed(RoleSeeder::class);
+    $this->seed(PermissionSeeder::class);
 
     // Create a user with necessary permissions
     $this->user = User::factory()->create();
@@ -27,7 +33,7 @@ beforeEach(function () {
     $this->user->assignRole('admin');
 
     // Create a client company and project
-    $clientCompany = \App\Models\ClientCompany::factory()->create();
+    $clientCompany = ClientCompany::factory()->create();
 
     $this->project = Project::create([
         'client_company_id' => $clientCompany->id,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\MyWork;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\User;
 use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,7 +14,7 @@ class MyWorkTaskController extends Controller
 {
     public function index(Request $request): Response
     {
-        /** @var \App\Models\User */
+        /** @var User */
         $user = auth()->user();
 
         $projects = PermissionService::projectsThatUserCanAccess($user);

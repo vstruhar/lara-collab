@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -32,11 +33,11 @@ class Handler extends ExceptionHandler
     /**
      * Prepare exception for rendering.
      *
-     * @return \Throwable
+     * @return Throwable
      */
     public function render($request, Throwable $e)
     {
-        /** @var \Symfony\Component\HttpFoundation\Response */
+        /** @var Response */
         $response = parent::render($request, $e);
 
         if ($request->wantsJson()) {
