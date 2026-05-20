@@ -126,7 +126,9 @@ class ProjectController extends Controller
 
     public function favoriteToggle(Project $project)
     {
-        request()->user()->toggleFavorite($project);
+        $this->authorize('view', $project);
+
+        auth()->user()->toggleFavorite($project);
 
         return redirect()->back();
     }

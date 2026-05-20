@@ -16,6 +16,8 @@ class AttachmentController extends Controller
 {
     public function store(Request $request, Project $project, Task $task): JsonResponse
     {
+        $this->authorize('viewAny', [Attachment::class, $project]);
+
         $files = (new CreateTask)->uploadAttachments($task, $request->attachments);
 
         return response()->json(['files' => $files]);
@@ -23,6 +25,8 @@ class AttachmentController extends Controller
 
     public function destroy(Project $project, Task $task, Attachment $attachment): JsonResponse
     {
+        $this->authorize('delete', [$attachment, $project]);
+
         File::delete(public_path($attachment->path));
         File::delete(public_path($attachment->thumb));
 

@@ -30,6 +30,10 @@ class TimeLogController extends Controller
     {
         $this->authorize('create', [TimeLog::class, $project]);
 
+        if ($timeLog->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $timeLog->update([
             'timer_stop' => now()->timestamp,
             'minutes' => round((now()->timestamp - $timeLog->timer_start) / 60),

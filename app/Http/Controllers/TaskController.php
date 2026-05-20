@@ -149,7 +149,7 @@ class TaskController extends Controller
 
     public function destroy(Project $project, Task $task): RedirectResponse
     {
-        $this->authorize('archive task', [$task, $project]);
+        $this->authorize('delete', [$task, $project]);
 
         $task->archive();
         TaskDeleted::dispatch($task->id, $task->project_id);

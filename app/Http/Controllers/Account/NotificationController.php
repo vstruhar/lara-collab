@@ -25,6 +25,11 @@ class NotificationController extends Controller
 
     public function read(DatabaseNotification $notification)
     {
+        if ($notification->notifiable_type !== auth()->user()->getMorphClass()
+            || $notification->notifiable_id !== auth()->id()) {
+            abort(403);
+        }
+
         $notification->markAsRead();
 
         return response()->json();
