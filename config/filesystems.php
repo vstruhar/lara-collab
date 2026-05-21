@@ -34,6 +34,8 @@ return [
             'driver' => 'local',
             'root' => storage_path('app'),
             'throw' => false,
+            'visibility' => 'public',
+            'directory_visibility' => 'public',
         ],
 
         'invoices' => [
@@ -41,6 +43,7 @@ return [
             'root' => storage_path('app/invoices'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'private',
+            'directory_visibility' => 'public',
         ],
 
         'public' => [
@@ -49,6 +52,7 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
+            'directory_visibility' => 'public',
         ],
 
         's3' => [
