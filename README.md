@@ -1,124 +1,217 @@
-<p align="center"><img src="/resources/docs/banner.jpg"></p>
+<p align="center">
+  <img src="/resources/docs/banner.jpg" alt="LaraCollab Banner">
+</p>
 
-LaraCollab, developed with Laravel and React, serves as a project management tool. The primary idea behind this initiative is to provide developers or development companies with a free platform to efficiently manage clients, projects, log time, and generate invoices. You may wonder, 'Why another tool when there are already feature-rich options available for free?' Yes, that's a valid point. However, my aim is to offer a project management tool specifically tailored for Laravel developers, giving them option to integrate and customize features according to their unique workflows.
+# LaraCollab
+
+LaraCollab is a project management tool built with Laravel and React, designed specifically for developers and development companies. It provides a comprehensive platform for managing clients, projects, time tracking, and invoice generation—all for free.
+
+## Why LaraCollab?
+
+While numerous feature-rich project management tools exist, LaraCollab stands out by being purpose-built for Laravel developers. It offers seamless integration and extensive customization options, enabling teams to tailor the platform to their unique workflows.
 
 ## Features
 
-- User roles (e.g., client, manager, developer, designer) with customizable permissions.
-- Management of client companies.
-- Manage client users that have access to company tasks.
-- Project management with user access control.
-- Task groups within projects (e.g., Todo, In progress, QA, Done, Deployed).
-- Task can have a assignee, due date, custom labels, time estimation (add manually or use timer), attachments, subscribers, and comments.
-- Task filters for efficient organization.
-- Real-time notifications and task updates via web sockets.
-- Mention functionality in task descriptions and comments.
-- Personalized "My Tasks" page for each user.
-- Activity page for projects or selected ones.
-- Invoice generation from billable tasks with logged time.
-- Print or download invoices directly from the platform.
-- Dashboard offering project progress, overdue tasks, recently assigned tasks, and recent comments.
-- Additional reports for daily logged time per user and total logged time.
-- Dark mode support for user preference.
+- **User Management**: Comprehensive role-based access control (client, manager, developer, designer) with customizable permissions
+- **Client Management**: Manage client companies and user access to company-specific tasks
+- **Project Management**: Full project lifecycle management with granular user access control
+- **Task Organization**: Group tasks by status (Todo, In Progress, QA, Done, Deployed)
+- **Rich Task Features**: Assign tasks, set due dates, add custom labels, estimate time (manual or timer), attach files, subscribe users, and comment
+- **Advanced Filtering**: Efficient task organization with powerful filtering options
+- **Real-time Updates**: Live notifications and task updates via web sockets
+- **Mentions**: Tag users in task descriptions and comments for better collaboration
+- **Personal Dashboard**: Dedicated "My Tasks" page for individual users
+- **Activity Tracking**: Monitor activity across all projects or specific ones
+- **Invoice Generation**: Create invoices from billable tasks with logged time
+- **Document Management**: Print or download invoices directly from the platform
+- **Analytics Dashboard**: Track project progress, overdue tasks, recent assignments, and recent comments
+- **Reporting**: Generate reports for daily logged time per user and total logged time
+- **Dark Mode**: Full dark mode support for user preference
 
 ## Screenshots
 
 <p align="center">
-<img src="/resources/docs/screenshots/Dashboard - light.jpeg" width="45%">
-<img src="/resources/docs/screenshots/Dashboard - dark.jpeg" width="45%">
+  <img src="/resources/docs/screenshots/Dashboard - light.jpeg" width="45%" alt="Dashboard Light">
+  <img src="/resources/docs/screenshots/Dashboard - dark.jpeg" width="45%" alt="Dashboard Dark">
 </p>
+
 <p align="center">
-<img src="/resources/docs/screenshots/Projects - light.jpeg" width="45%">
-<img src="/resources/docs/screenshots/Projects - dark.jpeg" width="45%">
+  <img src="/resources/docs/screenshots/Projects - light.jpeg" width="45%" alt="Projects Light">
+  <img src="/resources/docs/screenshots/Projects - dark.jpeg" width="45%" alt="Projects Dark">
 </p>
+
 <p align="center">
-<img src="/resources/docs/screenshots/Project tasks - light.jpeg" width="45%">
-<img src="/resources/docs/screenshots/Project tasks - dark.jpeg" width="45%">
+  <img src="/resources/docs/screenshots/Project tasks - light.jpeg" width="45%" alt="Project Tasks Light">
+  <img src="/resources/docs/screenshots/Project tasks - dark.jpeg" width="45%" alt="Project Tasks Dark">
 </p>
+
 <p align="center">
-<img src="/resources/docs/screenshots/Task - light.jpeg" width="45%">
-<img src="/resources/docs/screenshots/Task - dark.jpeg" width="45%">
+  <img src="/resources/docs/screenshots/Task - light.jpeg" width="45%" alt="Task Light">
+  <img src="/resources/docs/screenshots/Task - dark.jpeg" width="45%" alt="Task Dark">
 </p>
+
 <p align="center">
-<img src="/resources/docs/screenshots/My tasks - light.jpeg" width="45%">
-<img src="/resources/docs/screenshots/My tasks - dark.jpeg" width="45%">
+  <img src="/resources/docs/screenshots/My tasks - light.jpeg" width="45%" alt="My Tasks Light">
+  <img src="/resources/docs/screenshots/My tasks - dark.jpeg" width="45%" alt="My Tasks Dark">
 </p>
+
 <p align="center">
-<img src="/resources/docs/screenshots/Activity - light.jpeg" width="45%">
-<img src="/resources/docs/screenshots/Activity - dark.jpeg" width="45%">
+  <img src="/resources/docs/screenshots/Activity - light.jpeg" width="45%" alt="Activity Light">
+  <img src="/resources/docs/screenshots/Activity - dark.jpeg" width="45%" alt="Activity Dark">
 </p>
+
 <p align="center">
-<img src="/resources/docs/screenshots/Invoice - light.jpeg" width="45%">
-<img src="/resources/docs/screenshots/Invoice - dark.jpeg" width="45%">
+  <img src="/resources/docs/screenshots/Invoice - light.jpeg" width="45%" alt="Invoice Light">
+  <img src="/resources/docs/screenshots/Invoice - dark.jpeg" width="45%" alt="Invoice Dark">
 </p>
 
-## Tech stack
+## Tech Stack
 
-[Laravel](https://laravel.com) for backend, [React](https://react.dev) for frontend and [Inertia](https://inertiajs.com) for "glueing" them together. For the frontend React UI components, the awesome [Mantine](https://mantine.dev) library was used.
+- **Backend**: [Laravel](https://laravel.com) - A robust PHP framework
+- **Frontend**: [React](https://react.dev) - Modern JavaScript library for building user interfaces
+- **Integration**: [Inertia.js](https://inertiajs.com) - Seamless Laravel-React integration
+- **UI Components**: [Mantine](https://mantine.dev) - Comprehensive React component library
 
-## Setup
+## Installation
 
-### Project
+### Prerequisites
 
-1. Clone the repository using `git clone https://github.com/vstruhar/lara-collab.git`
-2. Cd into the project
-3. Install npm dependencies with `npm install`
-4. Copy the `.env` file with `cp .env.example .env`
-5. Generate an app encryption key with `php artisan key:generate`
-6. Create an empty database for the application
-7. In the `.env` file, add database credentials to allow Laravel to connect to the database (variables prefixed with `DB_`)
-8. Migrate the database with `php artisan migrate --seed`
+- PHP 8.1 or higher
+- Composer
+- Node.js and npm
+- Database (MySQL, PostgreSQL, SQLite, or SQL Server)
 
-#### Development
+### Setup
 
-9. You will be asked if you want to seed development data, for testing or development enter `yes`.
-10. Install composer dependencies with `composer install`
-11. Run `npm run dev`
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/vstruhar/lara-collab.git
+   cd lara-collab
+   ```
 
-> NOTE: [Laravel Sail](https://laravel.com/docs/10.x/sail#introduction) was used for development, so if you want you can use that.
+2. **Install dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-#### Production
+3. **Configure environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-9. You will be asked if you want to seed development data, for production enter `no`.
-10. Run `composer install --no-dev` to install project dependencies.
-11. Run `php artisan optimize` to optimize Laravel for production.
-12. Run `php artisan storage:link` to create symbolic link for storage in public directory.
-13. Setup [task scheduler](https://laravel.com/docs/10.x/scheduling#running-the-scheduler) by adding this to cron (to edit cron run `crontab -e`).
-    `* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1`
-14. Emails, notifications and events are queueable. If you want to enable queues then you will have to set `QUEUE_CONNECTION=database` in `.env`. And then run [queue worker](https://laravel.com/docs/10.x/queues#running-the-queue-worker) with [supervisor](https://laravel.com/docs/10.x/queues#supervisor-configuration) using this command `php artisan queue:work --queue=default,email`.
-15. Setup email by updating variables in `.env` that have `MAIL_` prefix.
-16. Finally build frontend with `npm run build`.
+4. **Set up database**
+   - Create an empty database for the application
+   - Update your `.env` file with the database credentials (variables prefixed with `DB_`)
 
-### Admin user
+5. **Run migrations**
+   ```bash
+   php artisan migrate --seed
+   ```
+   - You'll be prompted to seed development data
+   - Choose `yes` for development/testing
+   - Choose `no` for production
 
-New admin user will be created after running migrations with seed.
+6. **Create storage link**
+   ```bash
+   php artisan storage:link
+   ```
 
-email: `admin@mail.com`
+### Development
 
-password: `password`
+Start the development server:
+```bash
+npm run dev
+```
 
-### Web sockets
+> **Note**: [Laravel Sail](https://laravel.com/docs/10.x/sail) was used during development. You may use it as an alternative to the standard Laravel setup.
 
-You may use [Pusher](https://pusher.com) for web sockets, since number of free messages should be enough for the use case. Or you can use [open source alternatives](https://laravel.com/docs/10.x/broadcasting#open-source-alternatives).
+### Production Deployment
 
-To use Pusher, sign up, then create a project and copy paste app keys to `.env` (variables with `PUSHER_` prefix).
+1. **Install production dependencies**
+   ```bash
+   composer install --no-dev --optimize-autoloader
+   npm run build
+   ```
 
-### Social login (Google)
+2. **Optimize the application**
+   ```bash
+   php artisan optimize
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
 
-1. Setup "OAuth consent screen" on Google Console ([link](https://console.cloud.google.com/apis/credentials/consent)).
-2. Create "OAuth Client ID", select Web application when asked for type ([link](https://console.cloud.google.com/apis/credentials)).
-3. Use generated "Client ID" and "Client secret" in the `.env` (`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`).
+3. **Set up task scheduler**
+   Add the following entry to your crontab (edit with `crontab -e`):
+   ```bash
+   * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+   ```
+
+4. **Configure queue worker** (optional)
+   - Set `QUEUE_CONNECTION=database` in your `.env` file
+   - Configure [Supervisor](https://laravel.com/docs/10.x/queues#supervisor-configuration) to run the queue worker:
+     ```bash
+     php artisan queue:work --queue=default,email
+     ```
+
+5. **Configure email**
+   Update email settings in your `.env` file (variables with `MAIL_` prefix).
+
+## Default Credentials
+
+After running migrations with seed, a default admin user is created:
+
+- **Email**: admin@mail.com
+- **Password**: password
+
+> **Important**: Change the default password immediately after your first login.
+
+## Configuration
+
+### Web Sockets
+
+Configure real-time notifications using [Pusher](https://pusher.com) or an [open-source alternative](https://laravel.com/docs/10.x/broadcasting#open-source-alternatives).
+
+**To use Pusher:**
+
+1. Sign up for a Pusher account and create a project
+2. Copy your app keys to the `.env` file (variables with `PUSHER_` prefix)
+
+### Social Login (Google)
+
+1. Set up the [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent) on Google Cloud Console
+2. Create an [OAuth Client ID](https://console.cloud.google.com/apis/credentials) and select "Web application" as the type
+3. Add the generated "Client ID" and "Client secret" to your `.env` file:
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
 
 ## Roadmap
 
-- [x] Kanban view.
-- [x] Report that will calculate expense and profit per user.
-- [ ] Add project notes section.
-- [ ] Multiple users should be able to log time on a task
-- [ ] Add history of changes to the task.
-- [ ] Change specific permission per user.
-- [ ] Make it responsive.
-- [ ] Add emojis to rich text editor.
-- [ ] Write tests.
-- [ ] Optimize frontend and backend.
-- [ ] Consider moving to TypeScript.
+### Completed
+- [x] Kanban board view
+- [x] Expense and profit reporting per user
+
+### Planned
+- [ ] Project notes section
+- [ ] Multi-user time logging per task
+- [ ] Task change history
+- [ ] Granular per-user permissions
+- [ ] Responsive design improvements
+- [ ] Emoji support in rich text editor
+- [ ] Comprehensive test suite
+- [ ] Performance optimization (frontend and backend)
+- [ ] TypeScript migration
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is open-sourced software licensed under the MIT license.
+
+## Support
+
+For issues, questions, or contributions, please visit our [GitHub repository](https://github.com/vstruhar/lara-collab).
