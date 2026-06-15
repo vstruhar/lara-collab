@@ -52,7 +52,7 @@ class PermissionSeeder extends Seeder
                     ->where('permission_id', $id)
                     ->exists();
 
-                if (!$exists) {
+                if (! $exists) {
                     DB::table('role_has_permissions')->insert([
                         'role_id' => $role->id,
                         'permission_id' => $id,
