@@ -3,3 +3,7 @@
     font-size: rem(14);
     line-height: rem(18);
 }
+
+.content :global(.tiptap) {
+    flex: 1;
+}

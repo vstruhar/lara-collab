@@ -60,6 +60,11 @@ class Project extends Model implements AuditableContract
         return $this->hasMany(Task::class);
     }
 
+    public function notes(): HasMany
+    {
+        return $this->hasMany(Note::class);
+    }
+
     public function favoritedByAuthUser(): BelongsToMany
     {
         return $this->belongsToMany(

@@ -10,8 +10,19 @@ import { forwardRef, useImperativeHandle } from "react";
 import suggestion from "./RichTextEditor/Mention/suggestion.js";
 import classes from "./css/RichTextEditor.module.css";
 
+const fillStyles = {
+  root: { display: "flex", flexDirection: "column", height: "100%" },
+  typographyStylesProvider: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    minHeight: 0,
+  },
+  content: { flex: 1, minHeight: 0, display: "flex", flexDirection: "column" },
+};
+
 const RichTextEditor = forwardRef(function RichTextEditor(
-  { onChange, placeholder, content, height = 200, readOnly = false, ...props },
+  { onChange, placeholder, content, height = 200, readOnly = false, fill = false, ...props },
   ref,
 ) {
   const editor = useEditor({
@@ -44,7 +55,7 @@ const RichTextEditor = forwardRef(function RichTextEditor(
   const computedColorScheme = useComputedColorScheme();
 
   return (
-    <Editor editor={editor} {...props}>
+    <Editor editor={editor} styles={fill ? fillStyles : undefined} {...props}>
       <Editor.Toolbar sticky stickyOffset={60}>
         <Editor.ControlsGroup>
           <Editor.Bold />

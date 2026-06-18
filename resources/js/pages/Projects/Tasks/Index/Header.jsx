@@ -4,7 +4,7 @@ import SearchInput from "@/components/SearchInput";
 import useTaskDrawerStore from "@/hooks/store/useTaskDrawerStore";
 import useTaskFiltersStore from "@/hooks/store/useTaskFiltersStore";
 import usePreferences from "@/hooks/usePreferences";
-import { reloadWithQuery } from "@/utils/route";
+import { redirectTo, reloadWithQuery } from "@/utils/route";
 import { usePage } from "@inertiajs/react";
 import { ActionIcon, Button, Grid, Group, Text, Title, Tooltip } from "@mantine/core";
 import {
@@ -12,6 +12,7 @@ import {
   IconFilterCog,
   IconLayoutKanban,
   IconLayoutList,
+  IconNote,
   IconPlus,
 } from "@tabler/icons-react";
 
@@ -52,6 +53,18 @@ export default function Header() {
             )}
             {usingFilters && <ClearFiltersButton />}
           </ActionIcon.Group>
+
+          {can("view notes") && (
+            <Tooltip label="Notes" openDelay={500} withArrow>
+              <ActionIcon
+                variant="default"
+                size="lg"
+                onClick={() => redirectTo("projects.notes", project.id)}
+              >
+                <IconNote style={{ width: "60%", height: "60%" }} stroke={1.5} />
+              </ActionIcon>
+            </Tooltip>
+          )}
 
           <ArchivedFilterButton />
         </Group>

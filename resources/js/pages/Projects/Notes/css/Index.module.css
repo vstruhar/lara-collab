@@ -1,0 +1,74 @@
+.layout {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.listColumn {
+  width: 320px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.editorColumn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.noteItem {
+  width: 100%;
+  text-align: left;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 120ms ease;
+}
+
+.noteItem:hover {
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+}
+
+.noteItem.noteItemSelected,
+.noteItem.noteItemSelected:hover {
+  background-color: var(--mantine-primary-color-light);
+  border-color: var(--mantine-primary-color-filled);
+}
+
+.editorStack {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.titleInput {
+  flex: 1;
+}
+
+.editorWrapper {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.emptyState {
+  height: 100%;
+}
+
+.lockedView {
+  height: 100%;
+}
+
+.lockIcon {
+  color: var(--mantine-color-yellow-6);
+}

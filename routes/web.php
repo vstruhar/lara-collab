@@ -10,6 +10,7 @@ use App\Http\Controllers\Invoice\InvoiceTasksController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MyWork\ActivityController;
 use App\Http\Controllers\MyWork\MyWorkTaskController;
+use App\Http\Controllers\Note\NoteController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Settings\LabelController;
@@ -57,6 +58,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('{project}/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete')->scopeBindings();
         Route::post('{project}/tasks/reorder', [TaskController::class, 'reorder'])->name('tasks.reorder');
         Route::post('{project}/tasks/move', [TaskController::class, 'move'])->name('tasks.move');
+
+        // NOTES
+        Route::get('{project}/notes', [NoteController::class, 'index'])->name('notes');
+        Route::post('{project}/notes', [NoteController::class, 'store'])->name('notes.store');
+        Route::put('{project}/notes/{note}', [NoteController::class, 'update'])->name('notes.update')->scopeBindings();
+        Route::delete('{project}/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy')->scopeBindings();
+        Route::post('{project}/notes/{note}/lock', [NoteController::class, 'lock'])->name('notes.lock')->scopeBindings();
+        Route::post('{project}/notes/{note}/unlock', [NoteController::class, 'unlock'])->name('notes.unlock')->middleware(['throttle:10,1'])->scopeBindings();
+        Route::post('{project}/notes/{note}/remove-lock', [NoteController::class, 'removeLock'])->name('notes.remove-lock')->scopeBindings();
 
         // ATTACHMENTS
         Route::group(['prefix' => '{project}/tasks/{task}', 'as' => 'tasks.'], function () {
