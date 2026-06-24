@@ -3,6 +3,7 @@
 namespace App\Actions\Invoice;
 
 use App\Enums\Invoice as InvoiceEnum;
+use App\Enums\PricingType;
 use App\Models\ClientCompany;
 use App\Models\Invoice;
 use App\Models\OwnerCompany;
@@ -45,9 +46,18 @@ class CreateInvoice
 
     protected function getAmount(int $rate, array $tasks): int
     {
-        $minutesSum = (int) TimeLog::whereIn('task_id', $tasks)->sum('minutes');
+        $minutesSum = (int) TimeLog::whereIn('task_id', $tasks)
+            ->whereHas('task', function ($query) {
+                $query->where('pricing_type', PricingType::HOURLY->value);
+            })
+            ->sum('minutes');
+
         $hoursSum = round($minutesSum / 60, 2);
 
-        return ($hoursSum * ($rate / 100)) * 100;
+        $fixedTasksSum = Task::whereIn('id', $tasks)
+            ->where('pricing_type', PricingType::FIXED->value)
+            ->sum('fixed_price');
+
+        return ($hoursSum * ($rate / 100)) * 100 + $fixedTasksSum;
     }
 }
