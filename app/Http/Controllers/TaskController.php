@@ -126,7 +126,8 @@ class TaskController extends Controller
         $this->authorize('reorder', [Task::class, $project]);
 
         $taskIds = $this->taskIdsInProject($project, $request->input('ids', []));
-        $groupBelongsToProject = $project->taskGroups()->whereKey($request->input('to_group_id'))->exists();
+        $toGroupId = $request->integer('to_group_id');
+        $groupBelongsToProject = $project->taskGroups()->whereKey($toGroupId)->exists();
 
         if (! $groupBelongsToProject) {
             abort(404);
@@ -134,16 +135,13 @@ class TaskController extends Controller
 
         if ($taskIds !== []) {
             Task::setNewOrder($taskIds);
-            Task::query()
-                ->whereBelongsTo($project)
-                ->whereIn('id', $taskIds)
-                ->update(['group_id' => $request->input('to_group_id')]);
+            $this->moveTasksToGroup($project, $taskIds, $toGroupId);
         }
 
         TaskGroupChanged::dispatch(
             $project->id,
             $request->integer('from_group_id'),
-            $request->integer('to_group_id'),
+            $toGroupId,
             $taskIds,
             $this->movedTaskId($project, $request->input('task_id'), $taskIds),
         );
@@ -182,6 +180,37 @@ class TaskController extends Controller
         TaskRestored::dispatch($task);
 
         return redirect()->back()->success('Task restored', 'The restoring of the Task was completed successfully.');
+    }
+
+    /**
+     * @param  array<int, int>  $taskIds
+     */
+    private function moveTasksToGroup(Project $project, array $taskIds, int $toGroupId): void
+    {
+        $tasks = Task::query()
+            ->whereBelongsTo($project)
+            ->whereIn('id', $taskIds)
+            ->get();
+
+        $movedTasks = $tasks->filter(
+            fn (Task $task): bool => (int) $task->group_id !== $toGroupId,
+        );
+        $unchangedIds = $tasks
+            ->reject(fn (Task $task): bool => (int) $task->group_id !== $toGroupId)
+            ->modelKeys();
+
+        foreach ($movedTasks as $movedTask) {
+            $movedTask->update(['group_id' => $toGroupId]);
+        }
+
+        if ($unchangedIds === []) {
+            return;
+        }
+
+        Task::query()
+            ->whereBelongsTo($project)
+            ->whereIn('id', $unchangedIds)
+            ->update(['group_id' => $toGroupId]);
     }
 
     /**

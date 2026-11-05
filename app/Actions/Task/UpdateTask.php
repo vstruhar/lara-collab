@@ -33,11 +33,11 @@ class UpdateTask
         }
 
         if ($updateField === 'subscribed_users') {
-            $task->subscribedUsers()->sync($data['subscribed_users']);
+            $task->auditSync('subscribedUsers', $data['subscribed_users']);
         }
 
         if ($updateField === 'labels') {
-            $task->labels()->sync($data['labels']);
+            $task->auditSync('labels', $data['labels']);
         }
 
         TaskUpdated::dispatch($task, $updateField);
