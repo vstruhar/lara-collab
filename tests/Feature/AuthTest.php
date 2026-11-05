@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\User;
 
 uses(RefreshDatabase::class);
 
@@ -84,7 +85,7 @@ it('redirects to google and logs in a matching user', function () {
     $this->get(route('auth.login.social.google'))
         ->assertRedirect('https://accounts.google.com');
 
-    $socialUser = new Laravel\Socialite\Two\User;
+    $socialUser = new User;
     $socialUser->id = 'google-1';
     $socialUser->email = $this->admin->email;
 
