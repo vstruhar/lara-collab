@@ -82,11 +82,13 @@ class Project extends Model implements AuditableContract
         return $this->morphMany(Activity::class, 'activity_capable');
     }
 
-    public static function dropdownValues(): array
+    public static function dropdownValues(?array $onlyIds = null): array
     {
-        return self::orderBy('name')
+        return self::query()
+            ->when($onlyIds !== null, fn ($query) => $query->whereIn('id', $onlyIds))
+            ->orderBy('name')
             ->get(['id', 'name'])
-            ->map(fn ($i) => ['value' => (string) $i->id, 'label' => $i->name])
+            ->map(fn ($project) => ['value' => (string) $project->id, 'label' => $project->name])
             ->toArray();
     }
 }

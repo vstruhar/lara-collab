@@ -48,7 +48,7 @@ class TaskController extends Controller
                         ->where('group_id', $group->id)
                         ->searchByQueryString()
                         ->filterByQueryString()
-                        ->when($request->user()->hasRole('client'), fn ($query) => $query->where('hidden_from_clients', false))
+                        ->visibleTo($request->user())
                         ->when($request->has('archived'), fn ($query) => $query->onlyArchived())
                         ->when(! $request->has('status'), fn ($query) => $query->whereNull('completed_at'))
                         ->withDefault()
@@ -105,7 +105,7 @@ class TaskController extends Controller
     {
         $this->authorize('reorder', [Task::class, $project]);
 
-        Task::setNewOrder($request->ids);
+        Task::setNewOrder($this->taskIdsInProject($project, $request->input('ids', [])));
 
         TaskOrderChanged::dispatch(
             $project->id,
@@ -121,8 +121,20 @@ class TaskController extends Controller
     {
         $this->authorize('reorder', [Task::class, $project]);
 
-        Task::setNewOrder($request->ids);
-        Task::whereIn('id', $request->ids)->update(['group_id' => $request->to_group_id]);
+        $taskIds = $this->taskIdsInProject($project, $request->input('ids', []));
+        $groupBelongsToProject = $project->taskGroups()->whereKey($request->input('to_group_id'))->exists();
+
+        if (! $groupBelongsToProject) {
+            abort(404);
+        }
+
+        if ($taskIds !== []) {
+            Task::setNewOrder($taskIds);
+            Task::query()
+                ->whereBelongsTo($project)
+                ->whereIn('id', $taskIds)
+                ->update(['group_id' => $request->input('to_group_id')]);
+        }
 
         TaskGroupChanged::dispatch(
             $project->id,
@@ -166,5 +178,28 @@ class TaskController extends Controller
         TaskRestored::dispatch($task);
 
         return redirect()->back()->success('Task restored', 'The restoring of the Task was completed successfully.');
+    }
+
+    /**
+     * @param  array<int, mixed>  $ids
+     * @return array<int, int>
+     */
+    private function taskIdsInProject(Project $project, array $ids): array
+    {
+        $requestedIds = collect($ids)->map(fn ($id) => (int) $id)->filter()->values();
+
+        if ($requestedIds->isEmpty()) {
+            return [];
+        }
+
+        $projectTaskIds = Task::query()
+            ->whereBelongsTo($project)
+            ->whereIn('id', $requestedIds)
+            ->pluck('id');
+
+        return $requestedIds
+            ->filter(fn (int $id) => $projectTaskIds->contains($id))
+            ->values()
+            ->all();
     }
 }

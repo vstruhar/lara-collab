@@ -21,7 +21,8 @@ class InvoiceTasksController extends Controller
 
         return response()->json([
             'projectTasks' => $projects->load(['tasks' => function ($query) use ($request) {
-                $query->whereNotNull('completed_at')
+                $query->visibleTo($request->user())
+                    ->whereNotNull('completed_at')
                     ->where('billable', true)
                     ->where(function ($query) use ($request) {
                         $query->whereNull('invoice_id')

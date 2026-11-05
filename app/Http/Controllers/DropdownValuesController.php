@@ -24,10 +24,13 @@ class DropdownValuesController extends Controller
         });
 
         $dropdowns->when($request->has('mentionProjectUsers'), function (Collection $collection) use ($request) {
-            $project = Project::findOrFail($request->projectId);
-            $users = PermissionService::usersWithAccessToProject($project);
+            $project = Project::findOrFail($request->integer('projectId'));
+            $this->authorize('view', $project);
 
-            return $collection->put('mentionProjectUsers', $users->pluck('name'));
+            return $collection->put(
+                'mentionProjectUsers',
+                PermissionService::usersWithAccessToProject($project)->pluck('name'),
+            );
         });
 
         return response()->json($dropdowns);

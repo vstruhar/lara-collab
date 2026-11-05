@@ -21,5 +21,5 @@ export const shortName = (name) => {
 };
 
 export const hasRoles = (user, roles) => {
-  return user.roles.find((i) => roles.includes(i.name)) !== undefined;
+  return (user?.roles ?? []).some((role) => roles.includes(role?.name ?? role));
 };
