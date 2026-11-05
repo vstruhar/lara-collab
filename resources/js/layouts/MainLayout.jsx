@@ -16,8 +16,9 @@ export default function MainLayout({ children, title }) {
   const { setNotifications } = useNotificationsStore();
 
   useEffect(() => {
-    initUserWebSocket();
     setNotifications(notifications);
+
+    return initUserWebSocket();
   }, []);
 
   return (

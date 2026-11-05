@@ -1,14 +1,23 @@
 import { produce } from "immer";
 
-const createTaskWebSocketUpdatesSlice = (set, get) => ({
+const createTaskWebSocketUpdatesSlice = (set) => ({
   addTaskGroupLocally: (taskGroup) => {
     return set(produce(state => {
+      if (!taskGroup || state.groups.some((group) => group.id === taskGroup.id)) {
+        return;
+      }
+
       state.groups = [...state.groups, taskGroup];
     }));
   },
   updateTaskGroupLocally: (taskGroup) => {
     return set(produce(state => {
-      const index = get().groups.findIndex(i => i.id === taskGroup.id);
+      const index = state.groups.findIndex((group) => group.id === taskGroup?.id);
+
+      if (index === -1) {
+        return;
+      }
+
       state.groups[index] = taskGroup;
     }));
   },
@@ -19,9 +28,13 @@ const createTaskWebSocketUpdatesSlice = (set, get) => ({
   },
   restoreTaskGroupLocally: (taskGroup) => {
     return set(produce(state => {
+      if (!taskGroup) {
+        return;
+      }
+
       state.groups = [
         taskGroup,
-        ...state.groups.filter(i => i.id !== taskGroup.id)
+        ...state.groups.filter((group) => group.id !== taskGroup.id),
       ].sort((a, b) => (a.order_column > b.order_column ? 1 : -1));
     }));
   },

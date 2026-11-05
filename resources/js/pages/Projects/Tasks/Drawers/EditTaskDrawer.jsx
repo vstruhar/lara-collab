@@ -2,7 +2,6 @@ import Dropzone from '@/components/Dropzone';
 import RichTextEditor from '@/components/RichTextEditor';
 import useTaskDrawerStore from '@/hooks/store/useTaskDrawerStore';
 import useTasksStore from '@/hooks/store/useTasksStore';
-import useWebSockets from '@/hooks/useWebSockets';
 import { date } from '@/utils/datetime';
 import { hasRoles } from '@/utils/user';
 import { usePage } from '@inertiajs/react';
@@ -30,8 +29,10 @@ import { PricingType } from '@/utils/enums';
 
 export function EditTaskDrawer() {
   const editorRef = useRef(null);
+  const editingFieldRef = useRef(null);
+  const openedTaskIdRef = useRef(null);
+  const appliedDescriptionRef = useRef(null);
   const { edit, openEditTask, closeEditTask } = useTaskDrawerStore();
-  const { initTaskWebSocket } = useWebSockets();
   const { findTask, updateTaskProperty, complete, deleteAttachment, uploadAttachments } =
     useTasksStore();
   const {
@@ -67,31 +68,49 @@ export function EditTaskDrawer() {
   });
 
   useEffect(() => {
-    if (edit.opened) {
-      return initTaskWebSocket(task);
-    }
-  }, [edit.opened]);
+    if (!edit.opened || !task) {
+      if (!edit.opened) {
+        editingFieldRef.current = null;
+        openedTaskIdRef.current = null;
+        appliedDescriptionRef.current = null;
+      }
 
-  useEffect(() => {
-    if (edit.opened) {
-      setData({
-        group_id: task?.group_id || '',
-        assigned_to_user_id: task?.assigned_to_user_id || '',
-        name: task?.name || '',
-        description: task?.description || '',
-        pricing_type: task?.pricing_type || PricingType.HOURLY,
-        estimation: task?.estimation || 0,
-        priority_id: task?.priority_id || '',
-        fixed_price: task?.fixed_price ? task.fixed_price / 100 : 0,
-        due_on: task?.due_on ? dayjs(task?.due_on).toDate() : '',
-        hidden_from_clients:
-          task?.hidden_from_clients !== undefined ? task.hidden_from_clients : false,
-        billable: task?.billable !== undefined ? task.billable : true,
-        subscribed_users: (task?.subscribed_users || []).map(i => i.id.toString()),
-        labels: (task?.labels || []).map(i => i.id),
-      });
+      return;
+    }
+
+    const isDifferentTask = openedTaskIdRef.current !== task.id;
+
+    if (isDifferentTask) {
+      editingFieldRef.current = null;
+      openedTaskIdRef.current = task.id;
+      appliedDescriptionRef.current = null;
+    }
+
+    const editingField = editingFieldRef.current;
+    const fixedPrice = task.fixed_price ? task.fixed_price / 100 : 0;
+
+    setData((current) => ({
+      group_id: task.group_id || '',
+      assigned_to_user_id: task.assigned_to_user_id || '',
+      name: editingField === 'name' ? current.name : task.name || '',
+      description: editingField === 'description' ? current.description : task.description || '',
+      pricing_type: task.pricing_type || PricingType.HOURLY,
+      estimation: task.estimation || 0,
+      priority_id: task.priority_id || '',
+      fixed_price: editingField === 'fixed_price' ? current.fixed_price : fixedPrice,
+      due_on: task.due_on ? dayjs(task.due_on).toDate() : '',
+      hidden_from_clients: task.hidden_from_clients !== undefined ? task.hidden_from_clients : false,
+      billable: task.billable !== undefined ? task.billable : true,
+      subscribed_users: (task.subscribed_users || []).map((item) => item.id.toString()),
+      labels: (task.labels || []).map((item) => item.id),
+    }));
+
+    const description = task.description || '';
+
+    if (editingField !== 'description' && appliedDescriptionRef.current !== description) {
+      appliedDescriptionRef.current = description;
       setTimeout(() => {
-        editorRef.current?.setContent(task?.description || '');
+        editorRef.current?.setContent(description);
       }, 300);
     }
   }, [edit.opened, task]);
@@ -126,6 +145,15 @@ export function EditTaskDrawer() {
         updateTaskProperty(task, property, data[property]);
       }
     }
+  };
+
+  const handleFieldFocus = (field) => {
+    editingFieldRef.current = field;
+  };
+
+  const handleFieldBlur = (field) => {
+    editingFieldRef.current = null;
+    onBlurUpdate(field);
   };
 
   const pricingTypes = [
@@ -196,7 +224,8 @@ export function EditTaskDrawer() {
                 placeholder='Task name'
                 value={data.name}
                 onChange={e => updateValue('name', e.target.value)}
-                onBlur={() => onBlurUpdate('name')}
+                onFocus={() => handleFieldFocus('name')}
+                onBlur={() => handleFieldBlur('name')}
                 error={data.name.length === 0}
                 readOnly={!can('edit task')}
               />
@@ -208,7 +237,8 @@ export function EditTaskDrawer() {
                 content={data.description}
                 height={260}
                 onChange={content => updateValue('description', content)}
-                onBlur={() => onBlurUpdate('description')}
+                onFocus={() => handleFieldFocus('description')}
+                onBlur={() => handleFieldBlur('description')}
                 readOnly={!can('edit task')}
               />
 
@@ -312,7 +342,8 @@ export function EditTaskDrawer() {
                   min={0}
                   allowNegative={false}
                   onChange={value => updateValue('fixed_price', value)}
-                  onBlur={() => onBlurUpdate('fixed_price')}
+                  onFocus={() => handleFieldFocus('fixed_price')}
+                  onBlur={() => handleFieldBlur('fixed_price')}
                   prefix={currencySymbol}
                   readOnly={!can('edit task')}
                 />

@@ -2,6 +2,7 @@ import { hasRoles } from "@/utils/user";
 import { usePage } from "@inertiajs/react";
 import { showNotification } from "@mantine/notifications";
 import useNotificationsStore from "./store/useNotificationsStore";
+import useTaskDrawerStore from "./store/useTaskDrawerStore";
 import useTaskGroupsStore from "./store/useTaskGroupsStore";
 import useTasksStore from "./store/useTasksStore";
 
@@ -11,13 +12,16 @@ export default function useWebSockets() {
   const {
     addTaskLocally, updateTaskLocally, removeTaskLocally, restoreTaskLocally, addCommentLocally, addAttachmentsLocally,
     removeAttachmentLocally, addTimeLogLocally, removeTimeLogLocally, reorderTaskLocally, moveTaskLocally,
+    replaceGroupTasksLocally,
   } = useTasksStore();
   const {
     addTaskGroupLocally, updateTaskGroupLocally, removeTaskGroupLocally, restoreTaskGroupLocally, reorderTaskGroupLocally,
   } = useTaskGroupsStore();
 
   const initUserWebSocket = () => {
-    window.Echo.private(`App.Models.User.${user.id}`).notification((notification) => {
+    const channelName = `App.Models.User.${user.id}`;
+
+    window.Echo.private(channelName).notification((notification) => {
       addNotification(notification);
 
       showNotification({
@@ -26,17 +30,50 @@ export default function useWebSockets() {
         autoClose: 8000,
       });
     });
+
+    return () => window.Echo.leave(channelName);
+  };
+
+  const handleCommentCreated = (event) => {
+    const edit = useTaskDrawerStore.getState().edit;
+
+    if (!edit.opened || Number(event.comment?.task_id) !== Number(edit.task?.id)) {
+      return;
+    }
+
+    addCommentLocally(event.comment);
+  };
+
+  const handleTaskGroupRestored = (event) => {
+    if (route().params?.archived) {
+      removeTaskGroupLocally(event.taskGroup?.id);
+      return;
+    }
+
+    restoreTaskGroupLocally(event.taskGroup);
+    replaceGroupTasksLocally(event.taskGroup?.id, event.tasks);
+  };
+
+  const handleTaskHidden = (event) => {
+    removeTaskLocally(event.taskId);
+
+    const edit = useTaskDrawerStore.getState().edit;
+
+    if (edit.opened && Number(edit.task?.id) === Number(event.taskId)) {
+      useTaskDrawerStore.getState().closeEditTask();
+    }
   };
 
   const listenToTaskEvents = (channel) => {
     channel
-      .listen('Task\\TaskCreated', (e) => addTaskLocally(e.task))
-      .listen('Task\\TaskUpdated', (e) => updateTaskLocally(e.taskId, e.property, e.value, e.relatedData))
-      .listen('Task\\TaskRestored', (e) => restoreTaskLocally(e.groupId, e.task))
-      .listen('Task\\AttachmentsUploaded', (e) => addAttachmentsLocally(e.attachments))
-      .listen('Task\\AttachmentDeleted', (e) => removeAttachmentLocally(e.taskId, e.attachmentId))
-      .listen('Task\\TimeLogCreated', (e) => addTimeLogLocally(e.timeLog))
-      .listen('Task\\TimeLogDeleted', (e) => removeTimeLogLocally(e.taskId, e.timeLogId));
+      .listen('Task\\TaskCreated', (event) => addTaskLocally(event.task))
+      .listen('Task\\TaskUpdated', (event) => updateTaskLocally(event.taskId, event.property, event.value, event.relatedData))
+      .listen('Task\\TaskRestored', (event) => restoreTaskLocally(event.groupId, event.task))
+      .listen('Task\\AttachmentsUploaded', (event) => addAttachmentsLocally(event.attachments))
+      .listen('Task\\AttachmentDeleted', (event) => removeAttachmentLocally(event.taskId, event.attachmentId))
+      .listen('Task\\TimeLogCreated', (event) => addTimeLogLocally(event.timeLog))
+      .listen('Task\\TimeLogDeleted', (event) => removeTimeLogLocally(event.taskId, event.timeLogId))
+      .listen('Task\\CommentCreated', handleCommentCreated);
   };
 
   const initProjectWebSocket = (project) => {
@@ -46,27 +83,31 @@ export default function useWebSockets() {
     listenToTaskEvents(projectChannel);
 
     projectChannel
-      .listen('Task\\TaskDeleted', (e) => removeTaskLocally(e.taskId))
-      .listen('Task\\CommentCreated', (e) => addCommentLocally(e.comment))
-      .listen('Task\\TaskOrderChanged', (e) => reorderTaskLocally(e.groupId, e.fromIndex, e.toIndex))
-      .listen('Task\\TaskGroupChanged', (e) => moveTaskLocally(e.fromGroupId, e.toGroupId, e.fromIndex, e.toIndex))
-      .listen('TaskGroup\\TaskGroupCreated', (e) => addTaskGroupLocally(e.taskGroup))
-      .listen('TaskGroup\\TaskGroupUpdated', (e) => updateTaskGroupLocally(e.taskGroup))
-      .listen('TaskGroup\\TaskGroupDeleted', (e) => removeTaskGroupLocally(e.taskGroupId))
-      .listen('TaskGroup\\TaskGroupRestored', (e) => restoreTaskGroupLocally(e.taskGroup))
-      .listen('TaskGroup\\TaskGroupOrderChanged', (e) => reorderTaskGroupLocally(e.taskGroupIds));
+      .listen('Task\\TaskDeleted', (event) => removeTaskLocally(event.taskId))
+      .listen('Task\\TaskOrderChanged', (event) => reorderTaskLocally(event.groupId, event.taskIds))
+      .listen('Task\\TaskGroupChanged', (event) => moveTaskLocally(event.fromGroupId, event.toGroupId, event.taskIds, event.taskId))
+      .listen('TaskGroup\\TaskGroupCreated', (event) => addTaskGroupLocally(event.taskGroup))
+      .listen('TaskGroup\\TaskGroupUpdated', (event) => updateTaskGroupLocally(event.taskGroup))
+      .listen('TaskGroup\\TaskGroupDeleted', (event) => removeTaskGroupLocally(event.taskGroupId))
+      .listen('TaskGroup\\TaskGroupOrderChanged', (event) => reorderTaskGroupLocally(event.taskGroupIds));
 
     if (isClient) {
       projectChannel.listen('Task\\TaskVisibilityChanged', (event) => {
         if (event.hidden) {
-          removeTaskLocally(event.taskId);
+          handleTaskHidden(event);
           return;
         }
 
         addTaskLocally(event.task);
       });
+      projectChannel.listen('TaskGroup\\TaskGroupRestored', handleTaskGroupRestored);
     } else {
-      listenToTaskEvents(window.Echo.private(`App.Models.Project.${project.id}.internal`));
+      const internalChannel = window.Echo.private(`App.Models.Project.${project.id}.internal`);
+
+      listenToTaskEvents(internalChannel);
+      internalChannel
+        .listen('Task\\TaskDeleted', (event) => removeTaskLocally(event.taskId))
+        .listen('TaskGroup\\TaskGroupRestored', handleTaskGroupRestored);
     }
 
     return () => {
@@ -78,12 +119,5 @@ export default function useWebSockets() {
     };
   };
 
-  const initTaskWebSocket = (task) => {
-    window.Echo.private(`App.Models.Task.${task.id}`)
-      .listen('Task\\CommentCreated', (e) => addCommentLocally(e.comment));
-
-    return () => window.Echo.leave(`App.Models.Task.${task.id}`);
-  };
-
-  return { initUserWebSocket, initProjectWebSocket, initTaskWebSocket };
+  return { initUserWebSocket, initProjectWebSocket };
 }

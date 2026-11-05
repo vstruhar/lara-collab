@@ -2,23 +2,27 @@
 
 namespace App\Events\TaskGroup;
 
+use App\Models\Task;
 use App\Models\TaskGroup;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TaskGroupRestored implements ShouldBroadcast
+class TaskGroupRestored implements ShouldBroadcast, ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Create a new event instance.
+     * @param  array<int, Task>  $tasks
      */
     public function __construct(
-        public TaskGroup $taskGroup
+        public TaskGroup $taskGroup,
+        public array $tasks = [],
+        private bool $internal = false,
     ) {
         $this->dontBroadcastToCurrentUser();
     }
@@ -30,8 +34,14 @@ class TaskGroupRestored implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
+        $name = "App.Models.Project.{$this->taskGroup->project_id}";
+
+        if ($this->internal) {
+            $name .= '.internal';
+        }
+
         return [
-            new PrivateChannel("App.Models.Project.{$this->taskGroup->project_id}"),
+            new PrivateChannel($name),
         ];
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskGroup\StoreTaskGroupRequest;
 use App\Http\Requests\TaskGroup\UpdateTaskGroupRequest;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\TaskGroup;
 use Illuminate\Http\Request;
 
@@ -61,7 +62,21 @@ class GroupController extends Controller
 
         $taskGroup->unArchive();
 
-        TaskGroupRestored::dispatch($taskGroup);
+        $tasks = $taskGroup->tasks()
+            ->withDefault()
+            ->whereNull('completed_at')
+            ->get();
+
+        TaskGroupRestored::dispatch(
+            $taskGroup,
+            $tasks->reject(fn (Task $task) => $task->hidden_from_clients)->values()->all(),
+        );
+
+        TaskGroupRestored::dispatch(
+            $taskGroup,
+            $tasks->values()->all(),
+            true,
+        );
 
         return redirect()->back()->success('Tasks group restored', 'The restoring of the tasks group was completed successfully.');
     }

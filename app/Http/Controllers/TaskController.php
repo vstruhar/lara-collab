@@ -105,13 +105,17 @@ class TaskController extends Controller
     {
         $this->authorize('reorder', [Task::class, $project]);
 
-        Task::setNewOrder($this->taskIdsInProject($project, $request->input('ids', [])));
+        $taskIds = $this->taskIdsInProject($project, $request->input('ids', []));
+
+        if ($taskIds !== []) {
+            Task::setNewOrder($taskIds);
+        }
 
         TaskOrderChanged::dispatch(
             $project->id,
-            $request->group_id,
-            $request->from_index,
-            $request->to_index,
+            $request->integer('group_id'),
+            $taskIds,
+            $this->movedTaskId($project, $request->input('task_id'), $taskIds),
         );
 
         return response()->json();
@@ -138,10 +142,10 @@ class TaskController extends Controller
 
         TaskGroupChanged::dispatch(
             $project->id,
-            $request->from_group_id,
-            $request->to_group_id,
-            $request->from_index,
-            $request->to_index,
+            $request->integer('from_group_id'),
+            $request->integer('to_group_id'),
+            $taskIds,
+            $this->movedTaskId($project, $request->input('task_id'), $taskIds),
         );
 
         return response()->json();
@@ -164,7 +168,7 @@ class TaskController extends Controller
         $this->authorize('delete', [$task, $project]);
 
         $task->archive();
-        TaskDeleted::dispatch($task->id, $task->project_id);
+        TaskDeleted::dispatch($task);
 
         return redirect()->back()->success('Task archived', 'The task was successfully archived.');
     }
@@ -201,5 +205,24 @@ class TaskController extends Controller
             ->filter(fn (int $id) => $projectTaskIds->contains($id))
             ->values()
             ->all();
+    }
+
+    /**
+     * @param  array<int, int>  $taskIds
+     */
+    private function movedTaskId(Project $project, mixed $taskId, array $taskIds): int
+    {
+        $movedTaskId = (int) $taskId;
+
+        if (in_array($movedTaskId, $taskIds, true)) {
+            return $movedTaskId;
+        }
+
+        $taskBelongsToProject = Task::query()
+            ->whereBelongsTo($project)
+            ->whereKey($movedTaskId)
+            ->exists();
+
+        return $taskBelongsToProject ? $movedTaskId : 0;
     }
 }
