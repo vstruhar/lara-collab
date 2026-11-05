@@ -32,12 +32,15 @@ const fieldLabels = {
   hidden_from_clients: 'Hidden from clients',
 };
 
-const isEmpty = (value) => value === null || value === undefined || value === '';
+const isEmpty = value => value === null || value === undefined || value === '';
 
 function HistoryValue({ field, value, currencySymbol }) {
   if (isEmpty(value)) {
     return (
-      <Text span c='dimmed'>
+      <Text
+        span
+        c='dimmed'
+      >
         none
       </Text>
     );
@@ -73,7 +76,11 @@ function HistoryValue({ field, value, currencySymbol }) {
 
   if (field === 'priority_id') {
     return (
-      <Text span fw={600} c={value.color || undefined}>
+      <Text
+        span
+        fw={600}
+        c={value.color || undefined}
+      >
         {value.label}
       </Text>
     );
@@ -88,16 +95,23 @@ function HistoryValue({ field, value, currencySymbol }) {
 
 function LabelList({ labels }) {
   return (
-    <Group gap={8} wrap='wrap'>
-      {labels.map((label) => (
-        <Label key={label.id} name={label.name} color={label.color || 'gray'} />
+    <Group
+      gap={8}
+      wrap='wrap'
+    >
+      {labels.map(label => (
+        <Label
+          key={label.id}
+          name={label.name}
+          color={label.color || 'gray'}
+        />
       ))}
     </Group>
   );
 }
 
 function NameList({ people }) {
-  return <Text size='sm'>{people.map((person) => person.name).join(', ')}</Text>;
+  return <Text size='sm'>{people.map(person => person.name).join(', ')}</Text>;
 }
 
 function RelationChange({ entry, userName }) {
@@ -106,8 +120,15 @@ function RelationChange({ entry, userName }) {
   const isLabels = entry.field === 'labels';
 
   return (
-    <Group gap={6} align='center' wrap='wrap'>
-      <Text size='sm' fw={600}>
+    <Group
+      gap={6}
+      align='center'
+      wrap='wrap'
+    >
+      <Text
+        size='sm'
+        fw={600}
+      >
         {userName}
       </Text>
       {added.length > 0 && (
@@ -116,9 +137,7 @@ function RelationChange({ entry, userName }) {
           {isLabels ? <LabelList labels={added} /> : <NameList people={added} />}
         </>
       )}
-      {added.length > 0 && removed.length > 0 && (
-        <Text size='sm'>and</Text>
-      )}
+      {added.length > 0 && removed.length > 0 && <Text size='sm'>and</Text>}
       {removed.length > 0 && (
         <>
           <Text size='sm'>removed</Text>
@@ -141,10 +160,19 @@ function DescriptionChange({ entry, isExpanded, onToggle }) {
       >
         {isExpanded ? 'Hide changes' : 'Show changes'}
       </Button>
-      <Collapse in={isExpanded}>
-        <Stack gap='xs' mt='xs'>
-          <DescriptionBody title='Before' html={entry.old} />
-          <DescriptionBody title='After' html={entry.new} />
+      <Collapse expanded={isExpanded}>
+        <Stack
+          gap='xs'
+          mt='xs'
+        >
+          <DescriptionBody
+            title='Before'
+            html={entry.old}
+          />
+          <DescriptionBody
+            title='After'
+            html={entry.new}
+          />
         </Stack>
       </Collapse>
     </Box>
@@ -154,7 +182,11 @@ function DescriptionChange({ entry, isExpanded, onToggle }) {
 function DescriptionBody({ title, html }) {
   return (
     <Box>
-      <Text size='xs' c='dimmed' mb={4}>
+      <Text
+        size='xs'
+        c='dimmed'
+        mb={4}
+      >
         {title}
       </Text>
       {html ? (
@@ -169,7 +201,10 @@ function DescriptionBody({ title, html }) {
           dangerouslySetInnerHTML={{ __html: html }}
         />
       ) : (
-        <Text size='sm' c='dimmed'>
+        <Text
+          size='sm'
+          c='dimmed'
+        >
           Empty
         </Text>
       )}
@@ -181,7 +216,10 @@ function HistorySentence({ entry, userName, currencySymbol }) {
   if (entry.type === 'created') {
     return (
       <Text size='sm'>
-        <Text span fw={600}>
+        <Text
+          span
+          fw={600}
+        >
           {userName}
         </Text>{' '}
         created the task
@@ -192,7 +230,10 @@ function HistorySentence({ entry, userName, currencySymbol }) {
   if (entry.type === 'completed') {
     return (
       <Text size='sm'>
-        <Text span fw={600}>
+        <Text
+          span
+          fw={600}
+        >
           {userName}
         </Text>{' '}
         completed the task
@@ -203,7 +244,10 @@ function HistorySentence({ entry, userName, currencySymbol }) {
   if (entry.type === 'reopened') {
     return (
       <Text size='sm'>
-        <Text span fw={600}>
+        <Text
+          span
+          fw={600}
+        >
           {userName}
         </Text>{' '}
         reopened the task
@@ -214,7 +258,10 @@ function HistorySentence({ entry, userName, currencySymbol }) {
   if (entry.type === 'archived') {
     return (
       <Text size='sm'>
-        <Text span fw={600}>
+        <Text
+          span
+          fw={600}
+        >
           {userName}
         </Text>{' '}
         archived the task
@@ -225,7 +272,10 @@ function HistorySentence({ entry, userName, currencySymbol }) {
   if (entry.type === 'restored') {
     return (
       <Text size='sm'>
-        <Text span fw={600}>
+        <Text
+          span
+          fw={600}
+        >
           {userName}
         </Text>{' '}
         restored the task
@@ -236,7 +286,10 @@ function HistorySentence({ entry, userName, currencySymbol }) {
   if (entry.field === 'description') {
     return (
       <Text size='sm'>
-        <Text span fw={600}>
+        <Text
+          span
+          fw={600}
+        >
           {userName}
         </Text>{' '}
         changed the description
@@ -245,19 +298,36 @@ function HistorySentence({ entry, userName, currencySymbol }) {
   }
 
   if (entry.field === 'labels' || entry.field === 'subscribed_users') {
-    return <RelationChange entry={entry} userName={userName} />;
+    return (
+      <RelationChange
+        entry={entry}
+        userName={userName}
+      />
+    );
   }
 
   const fieldLabel = fieldLabels[entry.field] ?? 'a field';
 
   return (
     <Text size='sm'>
-      <Text span fw={600}>
+      <Text
+        span
+        fw={600}
+      >
         {userName}
       </Text>{' '}
       changed {fieldLabel} from{' '}
-      <HistoryValue field={entry.field} value={entry.old} currencySymbol={currencySymbol} /> to{' '}
-      <HistoryValue field={entry.field} value={entry.new} currencySymbol={currencySymbol} />
+      <HistoryValue
+        field={entry.field}
+        value={entry.old}
+        currencySymbol={currencySymbol}
+      />{' '}
+      to{' '}
+      <HistoryValue
+        field={entry.field}
+        value={entry.new}
+        currencySymbol={currencySymbol}
+      />
     </Text>
   );
 }
@@ -272,12 +342,22 @@ function HistoryEntry({ entry, currencySymbol, isExpanded, onToggleDescription }
   return (
     <Timeline.Item
       bullet={
-        <Avatar src={entry.user?.avatar || null} radius='xl' color='blue' size={32} alt=''>
+        <Avatar
+          src={entry.user?.avatar || null}
+          radius='xl'
+          color='blue'
+          size={32}
+          alt=''
+        >
           {entry.user?.name ? getInitials(entry.user.name) : '?'}
         </Avatar>
       }
     >
-      <HistorySentence entry={entry} userName={userName} currencySymbol={currencySymbol} />
+      <HistorySentence
+        entry={entry}
+        userName={userName}
+        currencySymbol={currencySymbol}
+      />
       {entry.field === 'description' && (
         <DescriptionChange
           entry={entry}
@@ -285,8 +365,17 @@ function HistoryEntry({ entry, currencySymbol, isExpanded, onToggleDescription }
           onToggle={handleToggleDescription}
         />
       )}
-      <Tooltip label={dateTime(entry.created_at)} openDelay={250} withArrow>
-        <Text size='xs' c='dimmed' mt={4} w='fit-content'>
+      <Tooltip
+        label={dateTime(entry.created_at)}
+        openDelay={250}
+        withArrow
+      >
+        <Text
+          size='xs'
+          c='dimmed'
+          mt={4}
+          w='fit-content'
+        >
           {diffForHumans(entry.created_at)}
         </Text>
       </Tooltip>
@@ -337,8 +426,8 @@ export default function TaskHistoryModal({ task, opened, onClose }) {
     };
   }, [opened, task?.id, fetchHistory]);
 
-  const handleToggleDescription = (entryId) => {
-    setExpandedId((current) => (current === entryId ? null : entryId));
+  const handleToggleDescription = entryId => {
+    setExpandedId(current => (current === entryId ? null : entryId));
   };
 
   const handleLoadMore = () => {
@@ -348,7 +437,7 @@ export default function TaskHistoryModal({ task, opened, onClose }) {
 
     const nextPage = page + 1;
     setIsLoadingMore(true);
-    fetchHistory(task, nextPage, (error) => {
+    fetchHistory(task, nextPage, error => {
       setIsLoadingMore(false);
 
       if (!error) {
@@ -358,7 +447,13 @@ export default function TaskHistoryModal({ task, opened, onClose }) {
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title='Task history' size='lg' zIndex={400}>
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title='Task history'
+      size='lg'
+      zIndex={400}
+    >
       {showLoading ? (
         <Center mih={160}>
           <Loader color='blue' />
@@ -367,13 +462,20 @@ export default function TaskHistoryModal({ task, opened, onClose }) {
         <>
           {history.length === 0 ? (
             <Center mih={160}>
-              <Text c='dimmed' size='sm'>
+              <Text
+                c='dimmed'
+                size='sm'
+              >
                 No history yet
               </Text>
             </Center>
           ) : (
-            <Timeline active={history.length} bulletSize={32} lineWidth={2}>
-              {history.map((entry) => (
+            <Timeline
+              active={history.length}
+              bulletSize={32}
+              lineWidth={2}
+            >
+              {history.map(entry => (
                 <HistoryEntry
                   key={entry.id}
                   entry={entry}
@@ -386,7 +488,11 @@ export default function TaskHistoryModal({ task, opened, onClose }) {
           )}
           {historyHasMore && (
             <Center mt='md'>
-              <Button variant='subtle' onClick={handleLoadMore} loading={isLoadingMore}>
+              <Button
+                variant='subtle'
+                onClick={handleLoadMore}
+                loading={isLoadingMore}
+              >
                 Load more
               </Button>
             </Center>

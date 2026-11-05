@@ -93,7 +93,7 @@ export function EditTaskDrawer() {
     const editingField = editingFieldRef.current;
     const fixedPrice = task.fixed_price ? task.fixed_price / 100 : 0;
 
-    setData((current) => ({
+    setData(current => ({
       group_id: task.group_id || '',
       assigned_to_user_id: task.assigned_to_user_id || '',
       name: editingField === 'name' ? current.name : task.name || '',
@@ -102,11 +102,12 @@ export function EditTaskDrawer() {
       estimation: task.estimation || 0,
       priority_id: task.priority_id || '',
       fixed_price: editingField === 'fixed_price' ? current.fixed_price : fixedPrice,
-      due_on: task.due_on ? dayjs(task.due_on).toDate() : '',
-      hidden_from_clients: task.hidden_from_clients !== undefined ? task.hidden_from_clients : false,
+      due_on: task.due_on ? String(task.due_on).slice(0, 10) : '',
+      hidden_from_clients:
+        task.hidden_from_clients !== undefined ? task.hidden_from_clients : false,
       billable: task.billable !== undefined ? task.billable : true,
-      subscribed_users: (task.subscribed_users || []).map((item) => item.id.toString()),
-      labels: (task.labels || []).map((item) => item.id),
+      subscribed_users: (task.subscribed_users || []).map(item => item.id.toString()),
+      labels: (task.labels || []).map(item => item.id),
     }));
 
     const description = task.description || '';
@@ -168,11 +169,11 @@ export function EditTaskDrawer() {
     }
   };
 
-  const handleFieldFocus = (field) => {
+  const handleFieldFocus = field => {
     editingFieldRef.current = field;
   };
 
-  const handleFieldBlur = (field) => {
+  const handleFieldBlur = field => {
     editingFieldRef.current = null;
     onBlurUpdate(field);
   };
@@ -224,7 +225,14 @@ export function EditTaskDrawer() {
     >
       {task ? (
         <>
-          <Group justify='space-between' align='center' wrap='nowrap' ml={24} mb='xs' mr={24}>
+          <Group
+            justify='space-between'
+            align='center'
+            wrap='nowrap'
+            ml={24}
+            mb='xs'
+            mr={24}
+          >
             <Breadcrumbs
               c='dark.3'
               separator='I'
@@ -248,7 +256,11 @@ export function EditTaskDrawer() {
               History
             </Button>
           </Group>
-          <TaskHistoryModal task={task} opened={isHistoryOpened} onClose={handleCloseHistory} />
+          <TaskHistoryModal
+            task={task}
+            opened={isHistoryOpened}
+            onClose={handleCloseHistory}
+          />
           <form className={classes.inner}>
             <div className={classes.content}>
               <TextInput
@@ -316,7 +328,7 @@ export function EditTaskDrawer() {
               <DateInput
                 clearable
                 valueFormat='DD MMM YYYY'
-                minDate={new Date()}
+                minDate={dayjs().format('YYYY-MM-DD')}
                 mt='md'
                 label='Due date'
                 placeholder='Pick task due date'

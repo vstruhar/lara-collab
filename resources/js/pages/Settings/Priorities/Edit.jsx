@@ -32,7 +32,10 @@ const PriorityEdit = () => {
 
   return (
     <>
-      <Breadcrumbs fz={14} mb={30}>
+      <Breadcrumbs
+        fz={14}
+        mb={30}
+      >
         <Anchor
           href='#'
           onClick={() => redirectTo('settings.task-priorities.index')}
@@ -43,7 +46,12 @@ const PriorityEdit = () => {
         <div>Edit</div>
       </Breadcrumbs>
 
-      <Grid justify='space-between' align='flex-end' gutter='xl' mb='lg'>
+      <Grid
+        justify='space-between'
+        align='flex-end'
+        gap='xl'
+        mb='lg'
+      >
         <Grid.Col span='auto'>
           <Title order={1}>Edit priority</Title>
         </Grid.Col>
@@ -96,7 +104,10 @@ const PriorityEdit = () => {
             error={form.errors.order}
           />
 
-          <Group justify='space-between' mt='xl'>
+          <Group
+            justify='space-between'
+            mt='xl'
+          >
             <BackButton route='settings.task-priorities.index' />
             <ActionButton loading={form.processing}>Update</ActionButton>
           </Group>

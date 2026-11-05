@@ -48,7 +48,7 @@ const CompanyEdit = () => {
       <Grid
         justify='space-between'
         align='flex-end'
-        gutter='xl'
+        gap='xl'
         mb={35}
       >
         <Grid.Col span='auto'>
@@ -62,7 +62,7 @@ const CompanyEdit = () => {
           <Grid
             justify='flex-start'
             align='center'
-            gutter='lg'
+            gap='lg'
           >
             <Grid.Col span='content'>
               {item.logo || form.data.logo ? (

@@ -11,16 +11,15 @@ use App\Services\PermissionService;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use OwenIt\Auditing\AuditableObserver;
 use OwenIt\Auditing\Models\Audit;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    // Task boots while the app starts, before this config change, so the
-    // auditing observer is not attached until we register it here.
+    // The Auditable trait registers its observer when the model boots.
+    // Console auditing is checked when the event fires, so this has to be
+    // set before the task is created.
     config(['audit.console' => true]);
-    Task::observe(AuditableObserver::class);
     resetTaskHistoryPermissionCache();
 
     $this->seed(RoleSeeder::class);

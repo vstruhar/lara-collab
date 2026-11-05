@@ -1,29 +1,38 @@
-import { useComputedColorScheme } from "@mantine/core";
-import { RichTextEditor as Editor, Link } from "@mantine/tiptap";
-import Highlight from "@tiptap/extension-highlight";
-import Mention from "@tiptap/extension-mention";
-import Placeholder from "@tiptap/extension-placeholder";
-import Underline from "@tiptap/extension-underline";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { forwardRef, useImperativeHandle, useRef } from "react";
-import suggestion from "./RichTextEditor/Mention/suggestion.js";
-import classes from "./css/RichTextEditor.module.css";
+import { useComputedColorScheme } from '@mantine/core';
+import { RichTextEditor as Editor, Link } from '@mantine/tiptap';
+import Highlight from '@tiptap/extension-highlight';
+import Mention from '@tiptap/extension-mention';
+import { Placeholder } from '@tiptap/extensions';
+import { useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
+import suggestion from './RichTextEditor/Mention/suggestion.js';
+import classes from './css/RichTextEditor.module.css';
 
 const fillStyles = {
-  root: { display: "flex", flexDirection: "column", height: "100%" },
+  root: { display: 'flex', flexDirection: 'column', height: '100%' },
   typographyStylesProvider: {
     flex: 1,
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     minHeight: 0,
   },
-  content: { flex: 1, minHeight: 0, display: "flex", flexDirection: "column" },
+  content: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' },
 };
 
 const RichTextEditor = forwardRef(function RichTextEditor(
-  { onChange, onFocus, onBlur, placeholder, content, height = 200, readOnly = false, fill = false, ...props },
-  ref,
+  {
+    onChange,
+    onFocus,
+    onBlur,
+    placeholder,
+    content,
+    height = 200,
+    readOnly = false,
+    fill = false,
+    ...props
+  },
+  ref
 ) {
   const onFocusRef = useRef(onFocus);
   const onBlurRef = useRef(onBlur);
@@ -32,17 +41,17 @@ const RichTextEditor = forwardRef(function RichTextEditor(
 
   const editor = useEditor({
     editable: !readOnly,
+    shouldRerenderOnTransaction: true,
     onFocus: () => onFocusRef.current?.(),
     onBlur: () => onBlurRef.current?.(),
     extensions: [
-      StarterKit,
-      Underline,
+      StarterKit.configure({ link: false }),
       Link,
       Highlight,
       Placeholder.configure({ placeholder }),
       Mention.configure({
         HTMLAttributes: {
-          class: "mention",
+          class: 'mention',
         },
         suggestion,
       }),
@@ -55,15 +64,22 @@ const RichTextEditor = forwardRef(function RichTextEditor(
 
   useImperativeHandle(ref, () => ({
     setContent(content) {
-      editor.commands.setContent(content);
+      editor.commands.setContent(content, { emitUpdate: false });
     },
   }));
 
   const computedColorScheme = useComputedColorScheme();
 
   return (
-    <Editor editor={editor} styles={fill ? fillStyles : undefined} {...props}>
-      <Editor.Toolbar sticky stickyOffset={60}>
+    <Editor
+      editor={editor}
+      styles={fill ? fillStyles : undefined}
+      {...props}
+    >
+      <Editor.Toolbar
+        sticky
+        stickyOffset={60}
+      >
         <Editor.ControlsGroup>
           <Editor.Bold />
           <Editor.Italic />
@@ -89,9 +105,9 @@ const RichTextEditor = forwardRef(function RichTextEditor(
       </Editor.Toolbar>
 
       <Editor.Content
-        bg={computedColorScheme === "dark" ? "dark.6" : "white"}
+        bg={computedColorScheme === 'dark' ? 'dark.6' : 'white'}
         className={classes.content}
-        style={{ "--rich-text-editor-height": `${height}px` }}
+        style={{ '--rich-text-editor-height': `${height}px` }}
       />
     </Editor>
   );

@@ -12,7 +12,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\ImageManager;
 use Throwable;
 
 class CreateTask
@@ -102,11 +103,15 @@ class CreateTask
             try {
                 $thumbFilepath = "tasks/{$task->id}/thumbs/{$filename}";
 
-                $image = Image::make($file->get())
-                    ->fit(100, 100)
-                    ->encode(null, 75);
+                $encoded = ImageManager::usingDriver(GdDriver::class)
+                    ->decodeBinary($file->get())
+                    ->cover(100, 100)
+                    ->encodeUsingFileExtension(
+                        $file->getClientOriginalExtension(),
+                        ...$this->thumbnailEncodeOptions($file->getClientOriginalExtension()),
+                    );
 
-                Storage::put("public/$thumbFilepath", $image);
+                Storage::put("public/$thumbFilepath", (string) $encoded);
 
                 return $thumbFilepath;
             } catch (Throwable $e) {
@@ -115,5 +120,16 @@ class CreateTask
         }
 
         return null;
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    protected function thumbnailEncodeOptions(string $extension): array
+    {
+        return match (strtolower($extension)) {
+            'jpg', 'jpeg', 'webp' => ['quality' => 75],
+            default => [],
+        };
     }
 }

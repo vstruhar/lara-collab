@@ -16,7 +16,7 @@ import {
   Table,
   Title,
 } from '@mantine/core';
-import { DatePickerInput, DatesProvider } from '@mantine/dates';
+import { DatePickerInput } from '@mantine/dates';
 import { IconCurrencyDollar } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 
@@ -30,8 +30,8 @@ const FixedPriceSum = () => {
     users: params.users?.map(String) || [],
     dateRange:
       params.dateRange && params.dateRange[0] && params.dateRange[1]
-        ? [dayjs(params.dateRange[0]).toDate(), dayjs(params.dateRange[1]).toDate()]
-        : [dayjs().subtract(1, 'week').toDate(), dayjs().toDate()],
+        ? [String(params.dateRange[0]).slice(0, 10), String(params.dateRange[1]).slice(0, 10)]
+        : [dayjs().subtract(1, 'week').format('YYYY-MM-DD'), dayjs().format('YYYY-MM-DD')],
     completed: params.completed !== undefined ? params.completed : true,
     billable: params.billable !== undefined ? params.billable : true,
   });
@@ -88,18 +88,16 @@ const FixedPriceSum = () => {
                 error={form.errors.users}
               />
 
-              <DatesProvider settings={{ timezone: 'utc' }}>
-                <DatePickerInput
-                  type='range'
-                  valueFormat='MMM D'
-                  placeholder='Pick dates range'
-                  clearable
-                  allowSingleDateInRange
-                  miw={200}
-                  value={form.data.dateRange}
-                  onChange={dates => updateValue('dateRange', dates)}
-                />
-              </DatesProvider>
+              <DatePickerInput
+                type='range'
+                valueFormat='MMM D'
+                placeholder='Pick dates range'
+                clearable
+                allowSingleDateInRange
+                miw={200}
+                value={form.data.dateRange}
+                onChange={dates => updateValue('dateRange', dates)}
+              />
 
               <Checkbox
                 label='Billable'

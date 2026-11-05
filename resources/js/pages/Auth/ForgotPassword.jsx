@@ -1,6 +1,6 @@
-import ContainerBox from "@/layouts/ContainerBox";
-import GuestLayout from "@/layouts/GuestLayout";
-import { redirectTo } from "@/utils/route";
+import ContainerBox from '@/layouts/ContainerBox';
+import GuestLayout from '@/layouts/GuestLayout';
+import { redirectTo } from '@/utils/route';
 import {
   Alert,
   Anchor,
@@ -12,17 +12,17 @@ import {
   TextInput,
   Title,
   rem,
-} from "@mantine/core";
-import { IconArrowLeft, IconInfoCircle } from "@tabler/icons-react";
-import { useForm } from "laravel-precognition-react-inertia";
-import classes from "./css/ForgotPassword.module.css";
+} from '@mantine/core';
+import { IconArrowLeft, IconInfoCircle } from '@tabler/icons-react';
+import { useForm } from '@inertiajs/react';
+import classes from './css/ForgotPassword.module.css';
 
 const ForgotPassword = ({ status }) => {
-  const form = useForm("post", route("auth.forgotPassword.sendLink"), {
-    email: "",
+  const form = useForm('post', route('auth.forgotPassword.sendLink'), {
+    email: '',
   });
 
-  const submit = (e) => {
+  const submit = e => {
     e.preventDefault();
     form.clearErrors();
 
@@ -31,47 +31,79 @@ const ForgotPassword = ({ status }) => {
 
   return (
     <>
-      <Title className={classes.title} ta="center">
+      <Title
+        className={classes.title}
+        ta='center'
+      >
         Forgot your password?
       </Title>
-      <Text c="dimmed" fz="sm" ta="center">
+      <Text
+        c='dimmed'
+        fz='sm'
+        ta='center'
+      >
         Enter your email to get a reset link
       </Text>
 
-      <ContainerBox shadow="md" p={30} mt="xl" radius="md">
-        <Text c="dimmed" fz="sm" mb={20}>
+      <ContainerBox
+        shadow='md'
+        p={30}
+        mt='xl'
+        radius='md'
+      >
+        <Text
+          c='dimmed'
+          fz='sm'
+          mb={20}
+        >
           Enter your email and we will email you a password reset link that will allow you to choose
           a new one.
         </Text>
 
         {status && (
-          <Alert radius="md" title={status} icon={<IconInfoCircle />} mb={10}>
+          <Alert
+            radius='md'
+            title={status}
+            icon={<IconInfoCircle />}
+            mb={10}
+          >
             Please read instruction in the email to set a new password for your account.
           </Alert>
         )}
 
         <form onSubmit={submit}>
           <TextInput
-            label="Email"
-            placeholder="Your email"
+            label='Email'
+            placeholder='Your email'
             required
-            onChange={(e) => form.setData("email", e.target.value)}
-            onBlur={() => form.validate("email")}
+            onChange={e => form.setData('email', e.target.value)}
+            onBlur={() => form.validate('email')}
             error={form.errors.email}
           />
-          <Group justify="space-between" mt="lg" className={classes.controls}>
+          <Group
+            justify='space-between'
+            mt='lg'
+            className={classes.controls}
+          >
             <Anchor
-              c="dimmed"
-              size="sm"
+              c='dimmed'
+              size='sm'
               className={classes.control}
-              onClick={() => redirectTo("auth.login.form")}
+              onClick={() => redirectTo('auth.login.form')}
             >
               <Center inline>
-                <IconArrowLeft style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+                <IconArrowLeft
+                  style={{ width: rem(12), height: rem(12) }}
+                  stroke={1.5}
+                />
                 <Box ml={5}>Back to the login</Box>
               </Center>
             </Anchor>
-            <Button type="submit" className={classes.control} disabled={form.processing}>
+            <Button
+              type='submit'
+              className={classes.control}
+              disabled={form.processing}
+            >
               Reset password
             </Button>
           </Group>
@@ -81,6 +113,6 @@ const ForgotPassword = ({ status }) => {
   );
 };
 
-ForgotPassword.layout = (page) => <GuestLayout title="Forgot Password">{page}</GuestLayout>;
+ForgotPassword.layout = page => <GuestLayout title='Forgot Password'>{page}</GuestLayout>;
 
 export default ForgotPassword;

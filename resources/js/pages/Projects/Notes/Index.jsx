@@ -6,7 +6,6 @@ import { diffForHumans } from '@/utils/datetime';
 import { router, usePage } from '@inertiajs/react';
 import {
   ActionIcon,
-  Badge,
   Button,
   Center,
   Group,
@@ -440,7 +439,11 @@ const NotesIndex = () => {
                       </Button>
                     )}
                     {canEdit && isUnlockedInSession && (
-                      <Tooltip label="Remove lock" openDelay={250} withArrow>
+                      <Tooltip
+                        label='Remove lock'
+                        openDelay={250}
+                        withArrow
+                      >
                         <Button
                           size='md'
                           variant='light'
@@ -517,7 +520,8 @@ const NotesIndex = () => {
             value={lockPass}
             onChange={e => setLockPass(e.target.value)}
             onKeyDown={e => {
-              if (e.key === 'Enter' && lockPass.length >= 4 && lockPass === lockConfirm) submitLock();
+              if (e.key === 'Enter' && lockPass.length >= 4 && lockPass === lockConfirm)
+                submitLock();
             }}
           />
           <PasswordInput
@@ -527,7 +531,8 @@ const NotesIndex = () => {
             onChange={e => setLockConfirm(e.target.value)}
             error={lockConfirm && lockPass !== lockConfirm ? 'Passcodes do not match' : null}
             onKeyDown={e => {
-              if (e.key === 'Enter' && lockPass.length >= 4 && lockPass === lockConfirm) submitLock();
+              if (e.key === 'Enter' && lockPass.length >= 4 && lockPass === lockConfirm)
+                submitLock();
             }}
           />
           <Group justify='flex-end'>

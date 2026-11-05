@@ -1,8 +1,8 @@
-import { redirectTo } from "@/utils/route";
-import { ActionIcon, Group, Menu, rem } from "@mantine/core";
-import { IconArchive, IconArchiveOff, IconDots, IconPencil } from "@tabler/icons-react";
-import { useForm } from "laravel-precognition-react-inertia";
-import { openConfirmModal } from "./ConfirmModal";
+import { redirectTo } from '@/utils/route';
+import { ActionIcon, Group, Menu, rem } from '@mantine/core';
+import { IconArchive, IconArchiveOff, IconDots, IconPencil } from '@tabler/icons-react';
+import { useForm } from '@inertiajs/react';
+import { openConfirmModal } from './ConfirmModal';
 
 export default function TableRowActions({
   item,
@@ -14,60 +14,80 @@ export default function TableRowActions({
   restore,
   children,
 }) {
-  const archiveForm = archive ? useForm("delete", route(archive.route, item.id)) : null;
-  const restoreForm = restore ? useForm("post", route(restore.route, item.id)) : null;
+  const archiveForm = useForm('delete', archive ? route(archive.route, item.id) : '', {});
+  const restoreForm = useForm('post', restore ? route(restore.route, item.id) : '', {});
 
   const openArchiveModal = () =>
     openConfirmModal({
-      type: "danger",
+      type: 'danger',
       title: archive.title,
       content: archive.content,
       confirmLabel: archive.confirmLabel,
-      confirmProps: { color: "red" },
+      confirmProps: { color: 'red' },
       onConfirm: () => archiveForm.submit(),
     });
 
   const openRestoreModal = () =>
     openConfirmModal({
-      type: "info",
+      type: 'info',
       title: restore.title,
       content: restore.content,
       confirmLabel: restore.confirmLabel,
-      confirmProps: { color: "blue" },
+      confirmProps: { color: 'blue' },
       onConfirm: () => restoreForm.submit(),
     });
 
   return (
-    <Group gap={0} justify="flex-end" wrap="nowrap">
+    <Group
+      gap={0}
+      justify='flex-end'
+      wrap='nowrap'
+    >
       {children}
       {can(editPermission) && !route().params.archived && (
-        <ActionIcon variant="subtle" color="blue" onClick={() => redirectTo(editRoute, item.id)}>
-          <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+        <ActionIcon
+          variant='subtle'
+          color='blue'
+          onClick={() => redirectTo(editRoute, item.id)}
+        >
+          <IconPencil
+            style={{ width: rem(16), height: rem(16) }}
+            stroke={1.5}
+          />
         </ActionIcon>
       )}
       {((can(archivePermission) && !route().params.archived) ||
         (can(restorePermission) && route().params.archived)) &&
-        item.name !== "client" && (
+        item.name !== 'client' && (
           <Menu
             withArrow
-            position="bottom-end"
+            position='bottom-end'
             withinPortal
-            shadow="md"
-            transitionProps={{ duration: 100, transition: "pop-top-right" }}
+            shadow='md'
+            transitionProps={{ duration: 100, transition: 'pop-top-right' }}
             offset={{ mainAxis: 3, alignmentAxis: 5 }}
           >
             <Menu.Target>
-              <ActionIcon variant="subtle" color="gray">
-                <IconDots style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              <ActionIcon
+                variant='subtle'
+                color='gray'
+              >
+                <IconDots
+                  style={{ width: rem(16), height: rem(16) }}
+                  stroke={1.5}
+                />
               </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
               {can(restorePermission) && route().params.archived && (
                 <Menu.Item
                   leftSection={
-                    <IconArchiveOff style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                    <IconArchiveOff
+                      style={{ width: rem(16), height: rem(16) }}
+                      stroke={1.5}
+                    />
                   }
-                  color="blue"
+                  color='blue'
                   onClick={openRestoreModal}
                 >
                   Restore
@@ -76,9 +96,12 @@ export default function TableRowActions({
               {can(archivePermission) && !route().params.archived && (
                 <Menu.Item
                   leftSection={
-                    <IconArchive style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                    <IconArchive
+                      style={{ width: rem(16), height: rem(16) }}
+                      stroke={1.5}
+                    />
                   }
-                  color="red"
+                  color='red'
                   onClick={openArchiveModal}
                 >
                   Archive
