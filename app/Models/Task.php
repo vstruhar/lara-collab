@@ -15,17 +15,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Event;
 use Lacodix\LaravelModelFilter\Traits\HasFilters;
 use Lacodix\LaravelModelFilter\Traits\IsSearchable;
 use LaravelArchivable\Archivable;
 use OwenIt\Auditing\Auditable;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Events\AuditCustom;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
 class Task extends Model implements AuditableContract, Sortable
 {
     use Archivable, Auditable, HasFactory, HasFilters, IsSearchable, SortableTrait;
+
+    protected $auditExclude = [
+        'order_column',
+        'assigned_at',
+        'number',
+    ];
 
     protected $fillable = [
         'project_id',
@@ -100,6 +108,25 @@ class Task extends Model implements AuditableContract, Sortable
     {
         static::addGlobalScope('ordered', function ($query) {
             $query->ordered();
+        });
+
+        static::archived(function (Task $task): void {
+            if (! static::isAuditingEnabled() || static::isAuditingDisabled()) {
+                return;
+            }
+
+            $task->auditEvent = 'archived';
+            $task->isCustomEvent = true;
+            $task->auditCustomOld = ['archived_at' => null];
+            $task->auditCustomNew = ['archived_at' => $task->archived_at];
+
+            try {
+                Event::dispatch(AuditCustom::class, [$task]);
+            } finally {
+                $task->isCustomEvent = false;
+                $task->auditCustomOld = [];
+                $task->auditCustomNew = [];
+            }
         });
     }
 

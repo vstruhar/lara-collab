@@ -7,6 +7,7 @@ import { hasRoles } from '@/utils/user';
 import { usePage } from '@inertiajs/react';
 import {
   Breadcrumbs,
+  Button,
   Checkbox,
   Drawer,
   Group,
@@ -17,12 +18,14 @@ import {
   TextInput,
   rem,
 } from '@mantine/core';
+import { IconClock } from '@tabler/icons-react';
 import { DateInput } from '@mantine/dates';
 import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
 import Comments from './Comments';
 import LabelsDropdown from './LabelsDropdown';
 import PriorityDropdown from './PriorityDropdown';
+import TaskHistoryModal from './TaskHistoryModal';
 import Timer from './Timer';
 import classes from './css/TaskDrawer.module.css';
 import { PricingType } from '@/utils/enums';
@@ -51,6 +54,7 @@ export function EditTaskDrawer() {
 
   const task = findTask(edit.task.id);
 
+  const [isHistoryOpened, setIsHistoryOpened] = useState(false);
   const [data, setData] = useState({
     group_id: '',
     assigned_to_user_id: '',
@@ -115,6 +119,23 @@ export function EditTaskDrawer() {
     }
   }, [edit.opened, task]);
 
+  useEffect(() => {
+    setIsHistoryOpened(false);
+  }, [task?.id]);
+
+  const handleOpenHistory = () => {
+    setIsHistoryOpened(true);
+  };
+
+  const handleCloseHistory = () => {
+    setIsHistoryOpened(false);
+  };
+
+  const handleCloseDrawer = () => {
+    setIsHistoryOpened(false);
+    closeEditTask();
+  };
+
   const updateValue = (field, value) => {
     setData({ ...data, [field]: value });
 
@@ -167,7 +188,7 @@ export function EditTaskDrawer() {
   return (
     <Drawer
       opened={edit.opened}
-      onClose={closeEditTask}
+      onClose={handleCloseDrawer}
       title={
         <Group
           ml={25}
@@ -203,20 +224,31 @@ export function EditTaskDrawer() {
     >
       {task ? (
         <>
-          <Breadcrumbs
-            c='dark.3'
-            ml={24}
-            mb='xs'
-            separator='I'
-            separatorMargin='sm'
-            styles={{ separator: { opacity: 0.3 } }}
-          >
-            <Text size='xs'>{task.project.name}</Text>
-            <Text size='xs'>Task #{task.number}</Text>
-            <Text size='xs'>
-              Created by {task.created_by_user.name} on {date(task.created_at)}
-            </Text>
-          </Breadcrumbs>
+          <Group justify='space-between' align='center' wrap='nowrap' ml={24} mb='xs' mr={24}>
+            <Breadcrumbs
+              c='dark.3'
+              separator='I'
+              separatorMargin='sm'
+              styles={{ separator: { opacity: 0.3 } }}
+            >
+              <Text size='xs'>{task.project.name}</Text>
+              <Text size='xs'>Task #{task.number}</Text>
+              <Text size='xs'>
+                Created by {task.created_by_user.name} on {date(task.created_at)}
+              </Text>
+            </Breadcrumbs>
+            <Button
+              variant='subtle'
+              size='compact-sm'
+              leftSection={<IconClock size={14} />}
+              onClick={handleOpenHistory}
+              aria-label='Task history'
+              style={{ flexShrink: 0 }}
+            >
+              History
+            </Button>
+          </Group>
+          <TaskHistoryModal task={task} opened={isHistoryOpened} onClose={handleCloseHistory} />
           <form className={classes.inner}>
             <div className={classes.content}>
               <TextInput
