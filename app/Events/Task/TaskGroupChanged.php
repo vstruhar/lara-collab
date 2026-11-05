@@ -6,22 +6,23 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TaskGroupChanged implements ShouldBroadcast
+class TaskGroupChanged implements ShouldBroadcast, ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Create a new event instance.
+     * @param  array<int, int>  $taskIds
      */
     public function __construct(
         private int $projectId,
         public int $fromGroupId,
         public int $toGroupId,
-        public int $fromIndex,
-        public int $toIndex,
+        public array $taskIds,
+        public int $taskId,
     ) {
         $this->dontBroadcastToCurrentUser();
     }

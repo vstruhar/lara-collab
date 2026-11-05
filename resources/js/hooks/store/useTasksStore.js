@@ -82,14 +82,19 @@ const useTasksStore = create((set, get) => ({
   },
   reorderTask: (source, destination) => {
     const sourceGroupId = +source.droppableId.split("-")[1];
+    const sourceTasks = get().tasks[sourceGroupId] ?? [];
+    const movedTask = sourceTasks[source.index];
 
-    const result = reorder(get().tasks[sourceGroupId], source.index, destination.index);
+    if (!movedTask) {
+      return;
+    }
+
+    const result = reorder(sourceTasks, source.index, destination.index);
 
     const data = {
-      ids: result.map((i) => i.id),
+      ids: result.map((item) => item.id),
       group_id: sourceGroupId,
-      from_index: source.index,
-      to_index: destination.index,
+      task_id: movedTask.id,
     };
 
     axios
@@ -101,15 +106,19 @@ const useTasksStore = create((set, get) => ({
   moveTask: (source, destination) => {
     const sourceGroupId = +source.droppableId.split("-")[1];
     const destinationGroupId = +destination.droppableId.split("-")[1];
+    const movedTask = get().tasks[sourceGroupId]?.[source.index];
+
+    if (!movedTask) {
+      return;
+    }
 
     const result = move(get().tasks, sourceGroupId, destinationGroupId, source.index, destination.index);
 
     const data = {
-      ids: result[destinationGroupId].map((i) => i.id),
+      ids: result[destinationGroupId].map((item) => item.id),
       from_group_id: sourceGroupId,
       to_group_id: destinationGroupId,
-      from_index: source.index,
-      to_index: destination.index,
+      task_id: movedTask.id,
     };
 
     axios

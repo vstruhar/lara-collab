@@ -6,7 +6,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import suggestion from "./RichTextEditor/Mention/suggestion.js";
 import classes from "./css/RichTextEditor.module.css";
 
@@ -22,11 +22,18 @@ const fillStyles = {
 };
 
 const RichTextEditor = forwardRef(function RichTextEditor(
-  { onChange, placeholder, content, height = 200, readOnly = false, fill = false, ...props },
+  { onChange, onFocus, onBlur, placeholder, content, height = 200, readOnly = false, fill = false, ...props },
   ref,
 ) {
+  const onFocusRef = useRef(onFocus);
+  const onBlurRef = useRef(onBlur);
+  onFocusRef.current = onFocus;
+  onBlurRef.current = onBlur;
+
   const editor = useEditor({
     editable: !readOnly,
+    onFocus: () => onFocusRef.current?.(),
+    onBlur: () => onBlurRef.current?.(),
     extensions: [
       StarterKit,
       Underline,

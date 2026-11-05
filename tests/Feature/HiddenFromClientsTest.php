@@ -1,9 +1,14 @@
 <?php
 
 use App\Actions\Task\UpdateTask;
+use App\Events\Task\CommentCreated;
 use App\Events\Task\TaskCreated;
+use App\Events\Task\TaskDeleted;
+use App\Events\Task\TaskGroupChanged;
+use App\Events\Task\TaskOrderChanged;
 use App\Events\Task\TaskUpdated;
 use App\Events\Task\TaskVisibilityChanged;
+use App\Events\TaskGroup\TaskGroupRestored;
 use App\Models\ClientCompany;
 use App\Models\Comment;
 use App\Models\OwnerCompany;
@@ -251,9 +256,7 @@ it('broadcasts hidden task details on the staff channel only', function () {
 
     $channels = Broadcast::connection()->getChannels();
 
-    expect($channels['App.Models.Task.{id}']($this->client, $this->hiddenTask->id))->toBeFalse()
-        ->and($channels['App.Models.Task.{id}']($this->client, $this->publicTask->id))->toBeTrue()
-        ->and($channels['App.Models.Task.{id}']($this->admin, $this->hiddenTask->id))->toBeTrue()
+    expect($channels)->not->toHaveKey('App.Models.Task.{id}')
         ->and($channels['App.Models.Project.{id}.internal']($this->client, $this->project->id))->toBeFalse()
         ->and($channels['App.Models.Project.{id}.internal']($this->admin, $this->project->id))->toBeTrue()
         ->and($channels['App.Models.Project.{id}']($this->client, $this->project->id))->toBeTrue()
@@ -286,6 +289,8 @@ it('does not list members of a project the user cannot access', function () {
 });
 
 it('does not reorder or move tasks from another project', function () {
+    Event::fake([TaskOrderChanged::class, TaskGroupChanged::class]);
+
     $foreignGroup = TaskGroup::create([
         'project_id' => $this->globex->id,
         'name' => 'Secret',
@@ -305,28 +310,40 @@ it('does not reorder or move tasks from another project', function () {
 
     $foreignOrder = $foreignTask->fresh()->order_column;
 
+    $groupId = $this->publicTask->group_id;
+
     $this->actingAs($this->admin)
         ->postJson(route('projects.tasks.reorder', $this->project), [
             'ids' => [$this->hiddenTask->id, $this->publicTask->id],
-            'group_id' => $this->publicTask->group_id,
-            'from_index' => 1,
-            'to_index' => 0,
+            'group_id' => $groupId,
+            'task_id' => $this->hiddenTask->id,
         ])
         ->assertOk();
 
     expect($this->hiddenTask->fresh()->order_column)->toBe(1)
         ->and($this->publicTask->fresh()->order_column)->toBe(2);
 
+    Event::assertDispatched(TaskOrderChanged::class, function (TaskOrderChanged $event) use ($groupId) {
+        return $event->groupId === $groupId
+            && $event->taskId === $this->hiddenTask->id
+            && $event->taskIds === [$this->hiddenTask->id, $this->publicTask->id];
+    });
+
     $this->actingAs($this->admin)
         ->postJson(route('projects.tasks.reorder', $this->project), [
             'ids' => [$foreignTask->id, $this->publicTask->id],
-            'group_id' => $this->publicTask->group_id,
-            'from_index' => 0,
-            'to_index' => 1,
+            'group_id' => $groupId,
+            'task_id' => $foreignTask->id,
         ])
         ->assertOk();
 
     expect($foreignTask->fresh()->order_column)->toBe($foreignOrder);
+
+    Event::assertDispatched(TaskOrderChanged::class, function (TaskOrderChanged $event) use ($foreignTask) {
+        return $event->taskIds === [$this->publicTask->id]
+            && ! in_array($foreignTask->id, $event->taskIds, true)
+            && $event->taskId === 0;
+    });
 
     $this->actingAs($this->admin)
         ->postJson(route('projects.tasks.move', $this->project), [
@@ -339,7 +356,78 @@ it('does not reorder or move tasks from another project', function () {
         ->assertNotFound();
 
     expect($foreignTask->fresh()->group_id)->toBe($foreignGroup->id)
-        ->and($this->publicTask->fresh()->group_id)->toBe($this->publicTask->group_id);
+        ->and($this->publicTask->fresh()->group_id)->toBe($groupId);
+
+    $destinationGroup = TaskGroup::create([
+        'project_id' => $this->project->id,
+        'name' => 'Doing',
+        'order_column' => 2,
+    ]);
+
+    $this->actingAs($this->admin)
+        ->postJson(route('projects.tasks.move', $this->project), [
+            'ids' => [$this->publicTask->id, $this->hiddenTask->id],
+            'from_group_id' => $groupId,
+            'to_group_id' => $destinationGroup->id,
+            'task_id' => $this->publicTask->id,
+        ])
+        ->assertOk();
+
+    Event::assertDispatched(TaskGroupChanged::class, function (TaskGroupChanged $event) use ($destinationGroup, $groupId) {
+        return $event->fromGroupId === $groupId
+            && $event->toGroupId === $destinationGroup->id
+            && $event->taskId === $this->publicTask->id
+            && $event->taskIds === [$this->publicTask->id, $this->hiddenTask->id];
+    });
+
+    expect($this->publicTask->fresh()->group_id)->toBe($destinationGroup->id);
+});
+
+it('broadcasts comments and deletes for hidden tasks on the staff channel only', function () {
+    $hiddenComment = new CommentCreated($this->hiddenTask->comments()->first());
+    $publicComment = new CommentCreated($this->publicTask->comments()->first());
+
+    expect($hiddenComment->broadcastOn()[0]->name)->toBe('private-App.Models.Project.'.$this->project->id.'.internal')
+        ->and($publicComment->broadcastOn()[0]->name)->toBe('private-App.Models.Project.'.$this->project->id)
+        ->and($hiddenComment->comment->relationLoaded('task'))->toBeFalse()
+        ->and($hiddenComment->comment->content)->toBe('HIDDEN-COMMENT staff only');
+
+    $this->hiddenTask->archive();
+    $hiddenDeleted = new TaskDeleted($this->hiddenTask);
+    $publicDeleted = new TaskDeleted($this->publicTask);
+
+    expect($hiddenDeleted->broadcastOn()[0]->name)->toBe('private-App.Models.Project.'.$this->project->id.'.internal')
+        ->and($hiddenDeleted->broadcastWith())->toBe(['taskId' => $this->hiddenTask->id])
+        ->and(json_encode($hiddenDeleted->broadcastWith()))->not->toContain('HIDDEN-DESC')
+        ->and($publicDeleted->broadcastOn()[0]->name)->toBe('private-App.Models.Project.'.$this->project->id);
+});
+
+it('sends restored group tasks to clients without hidden tasks', function () {
+    $group = TaskGroup::findOrFail($this->publicTask->group_id);
+    $group->archive();
+
+    Event::fake([TaskGroupRestored::class]);
+
+    $this->actingAs($this->admin)
+        ->post(route('projects.task-groups.restore', [$this->project, $group->id]))
+        ->assertRedirect();
+
+    $events = Event::dispatched(TaskGroupRestored::class)
+        ->map(fn (array $arguments) => $arguments[0]);
+
+    $publicEvent = $events->first(
+        fn (TaskGroupRestored $event) => $event->broadcastOn()[0]->name === 'private-App.Models.Project.'.$this->project->id
+    );
+    $internalEvent = $events->first(
+        fn (TaskGroupRestored $event) => $event->broadcastOn()[0]->name === 'private-App.Models.Project.'.$this->project->id.'.internal'
+    );
+
+    expect($publicEvent)->not->toBeNull()
+        ->and(collect($publicEvent->tasks)->pluck('id')->all())->toBe([$this->publicTask->id])
+        ->and(json_encode($publicEvent->tasks))->not->toContain('Hidden estimate')
+        ->and($internalEvent)->not->toBeNull()
+        ->and(collect($internalEvent->tasks)->pluck('id')->all())->toContain($this->hiddenTask->id)
+        ->and(collect($internalEvent->tasks)->pluck('id')->all())->toContain($this->publicTask->id);
 });
 
 it('tells connected clients when a task is hidden or shown without sending hidden details', function () {
