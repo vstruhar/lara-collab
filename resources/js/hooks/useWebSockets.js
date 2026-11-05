@@ -1,3 +1,4 @@
+import { hasRoles } from "@/utils/user";
 import { usePage } from "@inertiajs/react";
 import { showNotification } from "@mantine/notifications";
 import useNotificationsStore from "./store/useNotificationsStore";
@@ -27,26 +28,54 @@ export default function useWebSockets() {
     });
   };
 
-  const initProjectWebSocket = (project) => {
-    window.Echo.private(`App.Models.Project.${project.id}`)
+  const listenToTaskEvents = (channel) => {
+    channel
       .listen('Task\\TaskCreated', (e) => addTaskLocally(e.task))
       .listen('Task\\TaskUpdated', (e) => updateTaskLocally(e.taskId, e.property, e.value, e.relatedData))
-      .listen('Task\\TaskDeleted', (e) => removeTaskLocally(e.taskId))
       .listen('Task\\TaskRestored', (e) => restoreTaskLocally(e.groupId, e.task))
-      .listen('Task\\CommentCreated', (e) => addCommentLocally(e.comment))
       .listen('Task\\AttachmentsUploaded', (e) => addAttachmentsLocally(e.attachments))
       .listen('Task\\AttachmentDeleted', (e) => removeAttachmentLocally(e.taskId, e.attachmentId))
       .listen('Task\\TimeLogCreated', (e) => addTimeLogLocally(e.timeLog))
-      .listen('Task\\TimeLogDeleted', (e) => removeTimeLogLocally(e.taskId, e.timeLogId))
+      .listen('Task\\TimeLogDeleted', (e) => removeTimeLogLocally(e.taskId, e.timeLogId));
+  };
+
+  const initProjectWebSocket = (project) => {
+    const projectChannel = window.Echo.private(`App.Models.Project.${project.id}`);
+    const isClient = hasRoles(user, ['client']);
+
+    listenToTaskEvents(projectChannel);
+
+    projectChannel
+      .listen('Task\\TaskDeleted', (e) => removeTaskLocally(e.taskId))
+      .listen('Task\\CommentCreated', (e) => addCommentLocally(e.comment))
       .listen('Task\\TaskOrderChanged', (e) => reorderTaskLocally(e.groupId, e.fromIndex, e.toIndex))
       .listen('Task\\TaskGroupChanged', (e) => moveTaskLocally(e.fromGroupId, e.toGroupId, e.fromIndex, e.toIndex))
       .listen('TaskGroup\\TaskGroupCreated', (e) => addTaskGroupLocally(e.taskGroup))
       .listen('TaskGroup\\TaskGroupUpdated', (e) => updateTaskGroupLocally(e.taskGroup))
       .listen('TaskGroup\\TaskGroupDeleted', (e) => removeTaskGroupLocally(e.taskGroupId))
       .listen('TaskGroup\\TaskGroupRestored', (e) => restoreTaskGroupLocally(e.taskGroup))
-      .listen('TaskGroup\\TaskGroupOrderChanged', (e) => reorderTaskGroupLocally(e.taskGroupIds))
+      .listen('TaskGroup\\TaskGroupOrderChanged', (e) => reorderTaskGroupLocally(e.taskGroupIds));
 
-    return () => window.Echo.leave(`App.Models.Project.${project.id}`);
+    if (isClient) {
+      projectChannel.listen('Task\\TaskVisibilityChanged', (event) => {
+        if (event.hidden) {
+          removeTaskLocally(event.taskId);
+          return;
+        }
+
+        addTaskLocally(event.task);
+      });
+    } else {
+      listenToTaskEvents(window.Echo.private(`App.Models.Project.${project.id}.internal`));
+    }
+
+    return () => {
+      window.Echo.leave(`App.Models.Project.${project.id}`);
+
+      if (!isClient) {
+        window.Echo.leave(`App.Models.Project.${project.id}.internal`);
+      }
+    };
   };
 
   const initTaskWebSocket = (task) => {

@@ -32,7 +32,8 @@ class NotifyTaskSubscribers
 
         // First handle notification for mentioned users
         if (UserMentionService::hasMentions($task->description)) {
-            $mentionedUsers = UserMentionService::getUsersFromMentions($task->description, $task->project);
+            $mentionedUsers = UserMentionService::getUsersFromMentions($task->description, $task->project)
+                ->reject(fn (User $user) => $task->isHiddenFrom($user));
 
             $mentionedUsers->each(function (User $user) use ($task) {
                 $user->notify(new TaskCreatedMentionedUserNotification($task));
@@ -44,6 +45,7 @@ class NotifyTaskSubscribers
             ->subscribedUsers
             ->reject(fn (User $user) => $user->id === auth()->id())
             ->reject(fn (User $user) => $mentionedUsers->contains('id', $user->id))
+            ->reject(fn (User $user) => $task->isHiddenFrom($user))
             ->each(function (User $user) use ($event) {
                 $user->notify(new TaskCreatedNotification($event->task));
             });
@@ -56,7 +58,8 @@ class NotifyTaskSubscribers
 
         // First handle notification for mentioned users
         if (UserMentionService::hasMentions($comment->content)) {
-            $mentionedUsers = UserMentionService::getUsersFromMentions($comment->content, $comment->task->project);
+            $mentionedUsers = UserMentionService::getUsersFromMentions($comment->content, $comment->task->project)
+                ->reject(fn (User $user) => $comment->task->isHiddenFrom($user));
 
             $mentionedUsers->each(function (User $user) use ($comment) {
                 $user->notify(new CommentCreatedMentionedUserNotification($comment));
@@ -68,6 +71,7 @@ class NotifyTaskSubscribers
             ->subscribedUsers
             ->reject(fn (User $user) => $user->id === auth()->id())
             ->reject(fn (User $user) => $mentionedUsers->contains('id', $user->id))
+            ->reject(fn (User $user) => $comment->task->isHiddenFrom($user))
             ->each(function (User $user) use ($event) {
                 $user->notify(new CommentCreatedNotification($event->comment));
             });

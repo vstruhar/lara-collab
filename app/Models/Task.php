@@ -108,6 +108,20 @@ class Task extends Model implements AuditableContract, Sortable
         $query->with($this->defaultWith);
     }
 
+    public function scopeVisibleTo(Builder $query, User $user): void
+    {
+        if (! $user->hasRole('client')) {
+            return;
+        }
+
+        $query->where($query->qualifyColumn('hidden_from_clients'), false);
+    }
+
+    public function isHiddenFrom(User $user): bool
+    {
+        return $this->hidden_from_clients && $user->hasRole('client');
+    }
+
     public function loadDefault()
     {
         return $this->load($this->defaultWith);

@@ -50,12 +50,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // TASKS
         Route::get('{project}/tasks', [TaskController::class, 'index'])->name('tasks');
         Route::post('{project}/tasks', [TaskController::class, 'store'])->name('tasks.store');
-        Route::put('{project}/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update')->scopeBindings();
-        Route::get('{project}/tasks/{task}/open', [TaskController::class, 'index'])->name('tasks.open')->scopeBindings();
-        Route::delete('{project}/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy')->scopeBindings();
-        Route::post('{project}/tasks/{task}/restore', [TaskController::class, 'restore'])->name('tasks.restore')->scopeBindings();
+        Route::put('{project}/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update')->middleware('task.visible')->scopeBindings();
+        Route::get('{project}/tasks/{task}/open', [TaskController::class, 'index'])->name('tasks.open')->middleware('task.visible')->scopeBindings();
+        Route::delete('{project}/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy')->middleware('task.visible')->scopeBindings();
+        Route::post('{project}/tasks/{task}/restore', [TaskController::class, 'restore'])->name('tasks.restore')->middleware('task.visible')->scopeBindings();
 
-        Route::post('{project}/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete')->scopeBindings();
+        Route::post('{project}/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete')->middleware('task.visible')->scopeBindings();
         Route::post('{project}/tasks/reorder', [TaskController::class, 'reorder'])->name('tasks.reorder');
         Route::post('{project}/tasks/move', [TaskController::class, 'move'])->name('tasks.move');
 
@@ -69,13 +69,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('{project}/notes/{note}/remove-lock', [NoteController::class, 'removeLock'])->name('notes.remove-lock')->scopeBindings();
 
         // ATTACHMENTS
-        Route::group(['prefix' => '{project}/tasks/{task}', 'as' => 'tasks.'], function () {
+        Route::group(['prefix' => '{project}/tasks/{task}', 'as' => 'tasks.', 'middleware' => 'task.visible'], function () {
             Route::post('attachments/upload', [AttachmentController::class, 'store'])->name('attachments.upload');
             Route::delete('attachments/{attachment}', [AttachmentController::class, 'destroy'])->name('attachments.destroy');
         })->scopeBindings();
 
         // TIME LOGS
-        Route::group(['prefix' => '{project}/tasks/{task}', 'as' => 'tasks.'], function () {
+        Route::group(['prefix' => '{project}/tasks/{task}', 'as' => 'tasks.', 'middleware' => 'task.visible'], function () {
             Route::post('time-log', [TimeLogController::class, 'store'])->name('time-logs.store');
             Route::delete('time-log/{timeLog}', [TimeLogController::class, 'destroy'])->name('time-logs.destroy');
             Route::post('time-log/timer/start', [TimeLogController::class, 'startTimer'])->name('time-logs.timer.start');
@@ -83,7 +83,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         })->scopeBindings();
 
         // COMMENTS
-        Route::group(['prefix' => '{project}/tasks/{task}', 'as' => 'tasks.'], function () {
+        Route::group(['prefix' => '{project}/tasks/{task}', 'as' => 'tasks.', 'middleware' => 'task.visible'], function () {
             Route::get('comment', [CommentController::class, 'index'])->name('comments');
             Route::post('comment', [CommentController::class, 'store'])->name('comments.store');
         })->scopeBindings();

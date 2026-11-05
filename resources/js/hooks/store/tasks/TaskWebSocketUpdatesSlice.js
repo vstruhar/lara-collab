@@ -4,12 +4,23 @@ import { produce } from "immer";
 const createTaskWebSocketUpdatesSlice = (set, get) => ({
   addTaskLocally: (task) => {
     return set(produce(state => {
-      state.tasks[task.group_id] = [task, ...state.tasks[task.group_id]];
+      const groupTasks = state.tasks[task.group_id] ?? [];
+
+      if (groupTasks.some((item) => item.id === task.id)) {
+        return;
+      }
+
+      state.tasks[task.group_id] = [task, ...groupTasks];
     }));
   },
   updateTaskLocally: (taskId, property, value, relatedData = null) => {
     return set(produce(state => {
       const task = get().findTask(taskId);
+
+      if (!task) {
+        return;
+      }
+
       const index = state.tasks[task.group_id].findIndex((i) => i.id === task.id);
 
       if (property === 'group_id' && task.group_id !== value) {
@@ -34,6 +45,10 @@ const createTaskWebSocketUpdatesSlice = (set, get) => ({
   removeTaskLocally: (taskId) => {
     return set(produce(state => {
       const task = get().findTask(taskId);
+
+      if (!task) {
+        return;
+      }
 
       state.tasks[task.group_id] = state.tasks[task.group_id].filter(i => i.id !== task.id);
     }));

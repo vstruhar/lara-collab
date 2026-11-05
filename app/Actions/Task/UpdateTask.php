@@ -4,6 +4,7 @@ namespace App\Actions\Task;
 
 use App\Enums\PricingType;
 use App\Events\Task\TaskUpdated;
+use App\Events\Task\TaskVisibilityChanged;
 use App\Models\Task;
 
 class UpdateTask
@@ -40,5 +41,9 @@ class UpdateTask
         }
 
         TaskUpdated::dispatch($task, $updateField);
+
+        if ($updateField === 'hidden_from_clients') {
+            TaskVisibilityChanged::dispatch($task);
+        }
     }
 }

@@ -111,20 +111,22 @@ class PermissionService
             ->values();
     }
 
-    private static $projectsThatUserCanAccess = null;
+    private static array $projectsThatUserCanAccess = [];
 
     public static function projectsThatUserCanAccess(User $user): Collection
     {
-        if (self::$projectsThatUserCanAccess !== null) {
-            return self::$projectsThatUserCanAccess;
+        if (array_key_exists($user->id, self::$projectsThatUserCanAccess)) {
+            return self::$projectsThatUserCanAccess[$user->id];
         }
+
         if ($user->hasRole('admin')) {
-            return Project::all();
+            return self::$projectsThatUserCanAccess[$user->id] = Project::all();
         }
+
         $projects = collect($user->projects->toArray());
         $user->load('clientCompanies.projects');
 
-        return self::$projectsThatUserCanAccess = $projects
+        return self::$projectsThatUserCanAccess[$user->id] = $projects
             ->merge(
                 $user
                     ->clientCompanies

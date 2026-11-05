@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\User;
 use App\Services\PermissionService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,14 +17,18 @@ class ActivityController extends Controller
 {
     public function index(): Response
     {
-        /** @var User */
+        /** @var User $user */
         $user = auth()->user();
 
-        $projects = PermissionService::projectsThatUserCanAccess($user);
+        Gate::allowIf(fn (User $user) => $user->can('view activities'));
+
+        $projectIds = PermissionService::projectsThatUserCanAccess($user)->pluck('id');
 
         return Inertia::render('MyWork/Activity/Index', [
             'groupedActivities' => new ActivityGroupedByDateCollection(
-                Activity::whereIn('project_id', $projects->pluck('id'))
+                Activity::query()
+                    ->whereIn('project_id', $projectIds)
+                    ->visibleTo($user)
                     ->filterByQueryString()
                     ->with([
                         'activityCapable',
@@ -35,8 +40,8 @@ class ActivityController extends Controller
             ),
             'dropdowns' => [
                 'projects' => Arr::prepend(
-                    Project::dropdownValues(),
-                    ['value' => '0', 'label' => 'All projects']
+                    Project::dropdownValues($projectIds->all()),
+                    ['value' => '0', 'label' => 'All projects'],
                 ),
             ],
         ]);
