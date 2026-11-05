@@ -37,7 +37,7 @@ function ModalForm({ item }) {
         placeholder="Group color"
         mt="md"
         swatches={[
-          "#343A40",
+          "#868E96",
           "#E03231",
           "#C2255C",
           "#9C36B5",

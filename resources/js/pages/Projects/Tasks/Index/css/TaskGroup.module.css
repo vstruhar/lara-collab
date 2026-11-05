@@ -27,6 +27,28 @@
     }
 }
 
+.group[data-colored] {
+    @mixin light {
+        background-color: color-mix(in srgb, var(--group-color) 12%, var(--mantine-color-white));
+        border-color: color-mix(in srgb, var(--group-color) 30%, var(--mantine-color-white));
+    }
+
+    @mixin dark {
+        background-color: color-mix(in srgb, var(--group-color) 22%, var(--mantine-color-dark-6));
+        border-color: color-mix(in srgb, var(--group-color) 35%, var(--mantine-color-dark-6));
+    }
+
+    @mixin hover {
+        @mixin light {
+            border-color: color-mix(in srgb, var(--group-color) 45%, var(--mantine-color-white));
+        }
+
+        @mixin dark {
+            border-color: color-mix(in srgb, var(--group-color) 50%, var(--mantine-color-dark-6));
+        }
+    }
+}
+
 .actions {
     opacity: 0;
     transition: 0.3s ease opacity;
