@@ -9,17 +9,6 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 import suggestion from './RichTextEditor/Mention/suggestion.js';
 import classes from './css/RichTextEditor.module.css';
 
-const fillStyles = {
-  root: { display: 'flex', flexDirection: 'column', height: '100%' },
-  typographyStylesProvider: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: 0,
-  },
-  content: { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' },
-};
-
 const RichTextEditor = forwardRef(function RichTextEditor(
   {
     onChange,
@@ -73,8 +62,8 @@ const RichTextEditor = forwardRef(function RichTextEditor(
   return (
     <Editor
       editor={editor}
-      styles={fill ? fillStyles : undefined}
       {...props}
+      className={fill ? classes.fill : props.className}
     >
       <Editor.Toolbar
         sticky

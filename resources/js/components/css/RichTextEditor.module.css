@@ -7,3 +7,30 @@
 .content :global(.tiptap) {
     flex: 1;
 }
+
+.fill {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.fill :global(.mantine-RichTextEditor-Typography) {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.fill :global(.mantine-RichTextEditor-content) {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.fill :global(.tiptap) {
+    flex: 1 1 auto;
+    min-height: var(--rich-text-editor-height);
+    overflow-y: auto;
+}

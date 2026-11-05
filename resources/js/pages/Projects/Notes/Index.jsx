@@ -226,7 +226,7 @@ const NotesIndex = () => {
   const showLockedView = isLocked && !isUnlockedInSession;
 
   return (
-    <>
+    <div className={classes.page}>
       <Group
         justify='space-between'
         align='flex-end'
@@ -265,7 +265,6 @@ const NotesIndex = () => {
           radius='md'
           p='sm'
           className={classes.listColumn}
-          h='calc(100vh - 220px)'
         >
           <Group
             justify='space-between'
@@ -361,7 +360,6 @@ const NotesIndex = () => {
           radius='md'
           p='lg'
           className={classes.editorColumn}
-          h='calc(100vh - 220px)'
         >
           {selectedNote ? (
             showLockedView ? (
@@ -590,7 +588,7 @@ const NotesIndex = () => {
           </Group>
         </Stack>
       </Modal>
-    </>
+    </div>
   );
 };
 
