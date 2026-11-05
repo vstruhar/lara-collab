@@ -19,11 +19,11 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Seed necessary data
+    $this->seed(RoleSeeder::class);
+    $this->seed(PermissionSeeder::class);
     $this->seed(CountrySeeder::class);
     $this->seed(CurrencySeeder::class);
     $this->seed(TaskPrioritySeeder::class);
-    $this->seed(RoleSeeder::class);
-    $this->seed(PermissionSeeder::class);
 
     // Create a user with necessary permissions
     $this->user = User::factory()->create();

@@ -1,5 +1,15 @@
 <?php
 
+use App\Models\ClientCompany;
+use App\Models\OwnerCompany;
+use App\Models\Project;
+use App\Models\Task;
+use App\Models\TaskGroup;
+use App\Models\User;
+use App\Services\PermissionService;
+use Database\Seeders\PermissionSeeder;
+use Database\Seeders\RoleSeeder;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 /*
@@ -44,7 +54,67 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function resetPermissionServiceCache(): void
 {
-    // ..
+    (new ReflectionProperty(PermissionService::class, 'projectsThatUserCanAccess'))->setValue(null, []);
+    (new ReflectionProperty(PermissionService::class, 'usersWithAccessToProject'))->setValue(null, []);
+}
+
+function seedAccessControl(): void
+{
+    test()->seed(RoleSeeder::class);
+    test()->seed(PermissionSeeder::class);
+}
+
+function createOwnerCompany(): OwnerCompany
+{
+    $currencyId = DB::table('currencies')->insertGetId([
+        'name' => 'US Dollar',
+        'code' => 'USD',
+        'symbol' => '$',
+        'decimals' => 2,
+    ]);
+
+    return OwnerCompany::create([
+        'name' => 'Agency',
+        'currency_id' => $currencyId,
+    ]);
+}
+
+function createAdmin(): User
+{
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    return $admin;
+}
+
+/**
+ * @return array{company: ClientCompany, project: Project, group: TaskGroup, task: Task}
+ */
+function createProjectWithTask(?User $creator = null): array
+{
+    $company = ClientCompany::create(['name' => 'Acme Corp']);
+
+    $project = Project::create([
+        'client_company_id' => $company->id,
+        'name' => 'Acme Website',
+    ]);
+
+    $group = TaskGroup::create([
+        'project_id' => $project->id,
+        'name' => 'To Do',
+    ]);
+
+    $task = Task::create([
+        'project_id' => $project->id,
+        'group_id' => $group->id,
+        'created_by_user_id' => $creator?->id ?? auth()->id(),
+        'name' => 'Homepage',
+        'number' => 1,
+        'hidden_from_clients' => false,
+        'billable' => true,
+    ]);
+
+    return compact('company', 'project', 'group', 'task');
 }

@@ -194,13 +194,13 @@ Configure real-time notifications using [Pusher](https://pusher.com) or an [open
 - [x] Expense and profit reporting per user
 - [x] Project notes section
 - [x] Multi-user time logging per task
+- [x] Task change history
+- [x] Comprehensive test suite
 
 ### Planned
-- [ ] Task change history
 - [ ] Granular per-user permissions
 - [ ] Responsive design improvements
 - [ ] Emoji support in rich text editor
-- [ ] Comprehensive test suite
 - [ ] Performance optimization (frontend and backend)
 - [ ] TypeScript migration
 

@@ -15,7 +15,7 @@ class TaskPriorityController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(TaskPriority::class, 'task priority');
+        $this->authorizeResource(TaskPriority::class, 'task_priority');
     }
 
     public function index(Request $request): Response
@@ -57,8 +57,19 @@ class TaskPriorityController extends Controller
 
     public function destroy(TaskPriority $taskPriority)
     {
-        $taskPriority->delete();
+        $taskPriority->archive();
 
-        return redirect()->back()->success('Priority deleted', 'The priority was successfully deleted.');
+        return redirect()->back()->success('Priority archived', 'The priority was successfully archived.');
+    }
+
+    public function restore(int $priorityId)
+    {
+        $taskPriority = TaskPriority::withArchived()->findOrFail($priorityId);
+
+        $this->authorize('restore', $taskPriority);
+
+        $taskPriority->unArchive();
+
+        return redirect()->back()->success('Priority restored', 'The restoring of the priority was completed successfully.');
     }
 }

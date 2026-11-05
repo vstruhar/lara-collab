@@ -26,6 +26,8 @@ class CreateTask
                 $data['fixed_price'] = (int) ($data['fixed_price'] * 100);
             }
 
+            $priorityId = $data['priority_id'] ?? null;
+
             $task = $project->tasks()->create([
                 'group_id' => $data['group_id'],
                 'created_by_user_id' => auth()->id(),
@@ -35,7 +37,7 @@ class CreateTask
                 'description' => $data['description'],
                 'due_on' => $data['due_on'],
                 'estimation' => $data['estimation'],
-                'priority_id' => $data['priority_id'] ?? null,
+                'priority_id' => $priorityId === '' ? null : $priorityId,
                 'pricing_type' => $data['pricing_type'],
                 'fixed_price' => $data['fixed_price'],
                 'hidden_from_clients' => $data['hidden_from_clients'],

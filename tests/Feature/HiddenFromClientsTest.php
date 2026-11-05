@@ -458,9 +458,3 @@ it('tells connected clients when a task is hidden or shown without sending hidde
         ];
     });
 });
-
-function resetPermissionServiceCache(): void
-{
-    (new ReflectionProperty(PermissionService::class, 'projectsThatUserCanAccess'))->setValue(null, []);
-    (new ReflectionProperty(PermissionService::class, 'usersWithAccessToProject'))->setValue(null, []);
-}

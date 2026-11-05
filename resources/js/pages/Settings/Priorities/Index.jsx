@@ -1,3 +1,4 @@
+import ArchivedFilterButton from '@/components/ArchivedFilterButton';
 import Pagination from '@/components/Pagination';
 import SearchInput from '@/components/SearchInput';
 import TableHead from '@/components/TableHead';
@@ -39,6 +40,7 @@ const PrioritiesIndex = () => {
         <Grid.Col span='content'>
           <Group>
             <SearchInput placeholder='Search priorities' search={search} />
+            <ArchivedFilterButton />
           </Group>
         </Grid.Col>
         <Grid.Col span='content'>
