@@ -7,12 +7,12 @@
         "format": "prettier --write ./resources/js"
     },
     "devDependencies": {
-        "@eslint/js": "^10.0.1",
+        "@eslint/js": "^9.39.5",
         "@inertiajs/react": "^3.11.0",
         "@vitejs/plugin-react": "^6.2.1",
         "autoprefixer": "^10.6.2",
         "axios": "^1.21.0",
-        "eslint": "^10.14.0",
+        "eslint": "^9.39.5",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^7.1.1",
         "globals": "^16.4.0",
