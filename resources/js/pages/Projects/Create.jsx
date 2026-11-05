@@ -65,7 +65,7 @@ const ProjectCreate = ({ dropdowns: { companies, users, currencies } }) => {
       <Grid
         justify='space-between'
         align='flex-end'
-        gutter='xl'
+        gap='xl'
         mb='lg'
       >
         <Grid.Col span='auto'>

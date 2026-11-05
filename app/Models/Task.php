@@ -121,7 +121,7 @@ class Task extends Model implements AuditableContract, Sortable
             $task->auditCustomNew = ['archived_at' => $task->archived_at];
 
             try {
-                Event::dispatch(AuditCustom::class, [$task]);
+                Event::dispatch(new AuditCustom($task));
             } finally {
                 $task->isCustomEvent = false;
                 $task->auditCustomOld = [];

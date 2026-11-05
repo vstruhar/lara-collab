@@ -18,6 +18,7 @@ import {
   rem,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
+import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import LabelsDropdown from './LabelsDropdown';
 import PriorityDropdown from './PriorityDropdown';
@@ -217,7 +218,7 @@ export function CreateTaskDrawer() {
           <DateInput
             clearable
             valueFormat='DD MMM YYYY'
-            minDate={new Date()}
+            minDate={dayjs().format('YYYY-MM-DD')}
             mt='md'
             label='Due date'
             placeholder='Pick task due date'
@@ -250,7 +251,6 @@ export function CreateTaskDrawer() {
             onChange={value => updateValue('priority_id', value || null)}
             mt='md'
           />
-
 
           <Select
             label='Pricing type'

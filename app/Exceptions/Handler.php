@@ -40,6 +40,11 @@ class Handler extends ExceptionHandler
         /** @var Response */
         $response = parent::render($request, $e);
 
+        // Precognition clients need Laravel's validation payload and the 204 success header.
+        if ($request->isPrecognitive()) {
+            return $response;
+        }
+
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => $e->getMessage(),

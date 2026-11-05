@@ -76,7 +76,7 @@ While numerous feature-rich project management tools exist, LaraCollab stands ou
 
 ### Prerequisites
 
-- PHP 8.1 or higher
+- PHP 8.4 or higher
 - Composer
 - Node.js and npm
 - Database (MySQL, PostgreSQL, SQLite, or SQL Server)
@@ -125,8 +125,6 @@ Start the development server:
 npm run dev
 ```
 
-> **Note**: [Laravel Sail](https://laravel.com/docs/10.x/sail) was used during development. You may use it as an alternative to the standard Laravel setup.
-
 ### Production Deployment
 
 1. **Install production dependencies**
@@ -151,7 +149,7 @@ npm run dev
 
 4. **Configure queue worker** (optional)
    - Set `QUEUE_CONNECTION=database` in your `.env` file
-   - Configure [Supervisor](https://laravel.com/docs/10.x/queues#supervisor-configuration) to run the queue worker:
+   - Configure [Supervisor](https://laravel.com/docs/13.x/queues#supervisor-configuration) to run the queue worker:
      ```bash
      php artisan queue:work --queue=default,email
      ```
@@ -172,7 +170,7 @@ After running migrations with seed, a default admin user is created:
 
 ### Web Sockets
 
-Configure real-time notifications using [Pusher](https://pusher.com) or an [open-source alternative](https://laravel.com/docs/10.x/broadcasting#open-source-alternatives).
+Configure real-time notifications using [Pusher](https://pusher.com) or an [open-source alternative](https://laravel.com/docs/13.x/broadcasting#open-source-alternatives).
 
 **To use Pusher:**
 

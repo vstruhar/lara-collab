@@ -58,7 +58,7 @@ const ClientCompanyCreate = () => {
       <Grid
         justify='space-between'
         align='flex-end'
-        gutter='xl'
+        gap='xl'
         mb='lg'
       >
         <Grid.Col span='auto'>

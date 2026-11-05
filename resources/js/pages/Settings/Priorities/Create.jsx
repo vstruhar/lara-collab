@@ -24,14 +24,26 @@ const PriorityCreate = () => {
 
   return (
     <>
-      <Breadcrumbs fz={14} mb={30}>
-        <Anchor href='#' onClick={() => redirectTo('settings.task-priorities.index')} fz={14}>
+      <Breadcrumbs
+        fz={14}
+        mb={30}
+      >
+        <Anchor
+          href='#'
+          onClick={() => redirectTo('settings.task-priorities.index')}
+          fz={14}
+        >
           Priorities
         </Anchor>
         <div>Create</div>
       </Breadcrumbs>
 
-      <Grid justify='space-between' align='flex-end' gutter='xl' mb='lg'>
+      <Grid
+        justify='space-between'
+        align='flex-end'
+        gap='xl'
+        mb='lg'
+      >
         <Grid.Col span='auto'>
           <Title order={1}>Create priority</Title>
         </Grid.Col>
@@ -86,7 +98,10 @@ const PriorityCreate = () => {
             error={form.errors.order}
           />
 
-          <Group justify='space-between' mt='xl'>
+          <Group
+            justify='space-between'
+            mt='xl'
+          >
             <BackButton route='settings.task-priorities.index' />
             <ActionButton loading={form.processing}>Create</ActionButton>
           </Group>
