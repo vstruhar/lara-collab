@@ -2,6 +2,7 @@
 
 namespace App\Events\TaskGroup;
 
+use App\Models\Task;
 use App\Models\TaskGroup;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -16,7 +17,7 @@ class TaskGroupRestored implements ShouldBroadcast, ShouldDispatchAfterCommit
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * @param  array<int, \App\Models\Task>  $tasks
+     * @param  array<int, Task>  $tasks
      */
     public function __construct(
         public TaskGroup $taskGroup,
