@@ -9,6 +9,7 @@ use App\Models\TaskPriority;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use LaravelArchivable\Archivable;
 use OwenIt\Auditing\Models\Audit;
 
 class TaskHistoryService
@@ -359,7 +360,7 @@ class TaskHistoryService
 
         $query = $model::query()->whereIn('id', $ids);
 
-        if (in_array(\LaravelArchivable\Archivable::class, class_uses_recursive($model), true)) {
+        if (in_array(Archivable::class, class_uses_recursive($model), true)) {
             $query->withArchived();
         }
 
