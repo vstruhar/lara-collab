@@ -63,6 +63,8 @@ const InvoiceEdit = () => {
     updateValue('projects', []);
   }, [form.data.client_company_id]);
 
+  const selectedProjectIds = form.data.projects.join(',');
+
   useEffect(() => {
     if (form.data.projects.length) {
       axios
@@ -84,7 +86,7 @@ const InvoiceEdit = () => {
         })
         .catch(error => console.error('Failed to fetch tasks', error));
     }
-  }, [form.data.projects]);
+  }, [selectedProjectIds]);
 
   useEffect(() => {
     let total = 0;

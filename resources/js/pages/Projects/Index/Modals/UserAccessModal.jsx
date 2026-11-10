@@ -44,7 +44,7 @@ function ModalForm({ item }) {
         alert("Something went wrong, failed to load dropdown values"),
       )
       .finally(() => setRequestPending(false));
-  }, [form.data]);
+  }, []);
 
   return (
     <form onSubmit={submitModal}>

@@ -26,10 +26,16 @@ export default function useForm(method, url, data) {
     if (isObject(field)) {
       form.setData(field);
       form.clearErrors();
-    } else {
-      form.setData(field, value);
-      form.clearErrors(field);
+      return;
     }
+
+    // Inertia's setData(key, value) deep-clones the whole form. Unchanged arrays
+    // then look new, and effects that watch them run again and reset the form.
+    form.setData(current => ({
+      ...current,
+      [field]: value,
+    }));
+    form.clearErrors(field);
   };
 
   return [form, submit, updateValue];

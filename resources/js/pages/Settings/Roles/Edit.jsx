@@ -16,15 +16,6 @@ const RoleEdit = () => {
     permissions: item.permissions,
   });
 
-  const toggle = permission => {
-    form.data.permissions.includes(permission)
-      ? updateValue(
-          'permissions',
-          form.data.permissions.filter(p => p !== permission)
-        )
-      : updateValue('permissions', [...form.data.permissions, permission]);
-  };
-
   return (
     <>
       <Breadcrumbs
@@ -80,7 +71,11 @@ const RoleEdit = () => {
               tt='capitalize'
               mt='sm'
             >
-              <Chip.Group multiple>
+              <Chip.Group
+                multiple
+                value={form.data.permissions}
+                onChange={permissions => updateValue('permissions', permissions)}
+              >
                 <Group
                   justify='start'
                   gap='sm'
@@ -88,9 +83,8 @@ const RoleEdit = () => {
                   {allPermissionsGrouped[group].map(permission => (
                     <Chip
                       key={permission}
+                      value={permission}
                       radius='sm'
-                      checked={form.data.permissions.includes(permission)}
-                      onClick={() => toggle(permission)}
                     >
                       {permission}
                     </Chip>

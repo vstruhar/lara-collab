@@ -67,7 +67,9 @@ export const InvoiceCreate = () => {
     setCurrency(company.currency);
   }, [form.data.client_company_id]);
 
-  useDidUpdate(() => fetchTasks(), [form.data.projects]);
+  const selectedProjectIds = form.data.projects.join(',');
+
+  useDidUpdate(() => fetchTasks(), [selectedProjectIds]);
 
   useDidUpdate(() => {
     let total = 0;
