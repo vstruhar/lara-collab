@@ -69,6 +69,18 @@ it('creates a task', function () {
     Event::assertDispatched(TaskCreated::class);
 });
 
+it('strips unsafe html from a task description', function () {
+    $this->putJson(route('projects.tasks.update', [$this->project, $this->task]), [
+        'description' => '<p>Safe copy</p><img src=x onerror="alert(1)">',
+    ])->assertOk();
+
+    $description = $this->task->fresh()->getRawOriginal('description');
+
+    expect($description)->toContain('Safe copy')
+        ->and($description)->not->toContain('onerror')
+        ->and($description)->not->toContain('<img');
+});
+
 it('updates a task', function () {
     Event::fake([TaskUpdated::class]);
 

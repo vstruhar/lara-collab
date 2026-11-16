@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "ezyang/htmlpurifier": "^4.19",
         "guzzlehttp/guzzle": "^7.9|^8.0",
         "inertiajs/inertia-laravel": "^3.0",
         "intervention/image": "^4.4",

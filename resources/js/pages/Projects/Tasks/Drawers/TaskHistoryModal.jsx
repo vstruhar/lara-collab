@@ -1,6 +1,7 @@
 import { Label } from '@/components/Label';
 import useTasksStore from '@/hooks/store/useTasksStore';
 import { date, dateTime, diffForHumans } from '@/utils/datetime';
+import { sanitizeHtml } from '@/utils/sanitizeHtml';
 import { getInitials } from '@/utils/user';
 import { usePage } from '@inertiajs/react';
 import {
@@ -198,7 +199,7 @@ function DescriptionBody({ title, html }) {
             border: '1px solid var(--mantine-color-default-border)',
             borderRadius: 'var(--mantine-radius-sm)',
           }}
-          dangerouslySetInnerHTML={{ __html: html }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }}
         />
       ) : (
         <Text

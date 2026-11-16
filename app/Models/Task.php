@@ -8,7 +8,9 @@ use App\Models\Filters\TaskCompletedFilter;
 use App\Models\Filters\TaskOverdueFilter;
 use App\Models\Filters\WhereHasFilter;
 use App\Models\Filters\WhereInFilter;
+use App\Services\RichTextSanitizer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -75,6 +77,14 @@ class Task extends Model implements AuditableContract, Sortable
     protected $appends = [
         'price',
     ];
+
+    protected function description(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value): ?string => RichTextSanitizer::cleanStored($value),
+            set: fn (?string $value): ?string => RichTextSanitizer::cleanStored($value),
+        );
+    }
 
     protected $observables = [
         'archived',

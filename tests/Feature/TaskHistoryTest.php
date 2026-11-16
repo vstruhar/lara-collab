@@ -241,6 +241,30 @@ it('records archiving and restoring a task', function () {
         ->and($types)->toContain('restored');
 });
 
+it('cleans unsafe html already stored on a description audit', function () {
+    $createdAt = now()->subMinutes(11);
+
+    Audit::create([
+        'user_type' => User::class,
+        'user_id' => $this->admin->id,
+        'event' => 'updated',
+        'auditable_type' => Task::class,
+        'auditable_id' => $this->task->id,
+        'old_values' => ['description' => '<p onclick="alert(1)">Before</p>'],
+        'new_values' => ['description' => '<script>alert(1)</script><p>After</p>'],
+        'created_at' => $createdAt,
+        'updated_at' => $createdAt,
+    ]);
+
+    $entry = collect(taskHistory($this->project, $this->task)['data'])->firstWhere('field', 'description');
+
+    expect($entry)->not->toBeNull()
+        ->and($entry['old'])->toBe('<p>Before</p>')
+        ->and($entry['old'])->not->toContain('onclick')
+        ->and($entry['new'])->toBe('<p>After</p>')
+        ->and($entry['new'])->not->toContain('<script');
+});
+
 it('merges consecutive edits to the same field within ten minutes', function () {
     $this->task->update(['name' => 'First draft']);
     $this->task->update(['name' => 'Second draft']);

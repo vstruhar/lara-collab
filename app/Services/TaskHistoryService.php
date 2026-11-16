@@ -488,9 +488,21 @@ class TaskHistoryService
             'estimation' => $value === null || $value === '' ? null : (float) $value,
             'billable', 'hidden_from_clients' => $this->normalizeBoolean($value),
             'due_on' => $this->normalizeDueOn($value),
-            'name', 'description' => $value === null || $value === '' ? null : (string) $value,
+            'name' => $value === null || $value === '' ? null : (string) $value,
+            'description' => $this->normalizeDescription($value),
             default => $value === '' ? null : $value,
         };
+    }
+
+    private function normalizeDescription(mixed $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        $clean = RichTextSanitizer::cleanStored((string) $value);
+
+        return $clean === '' ? null : $clean;
     }
 
     private function normalizeId(mixed $value): ?int

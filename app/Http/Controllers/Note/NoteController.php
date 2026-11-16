@@ -11,6 +11,7 @@ use App\Http\Requests\Note\UpdateNoteRequest;
 use App\Models\Note;
 use App\Models\Project;
 use App\Services\NoteEncryption;
+use App\Services\RichTextSanitizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -27,9 +28,10 @@ class NoteController extends Controller
             ->latest('updated_at')
             ->get(['id', 'project_id', 'title', 'content', 'is_locked', 'created_at', 'updated_at'])
             ->each(function (Note $note) {
-                if ($note->is_locked) {
-                    $note->setAttribute('content', null);
-                }
+                $note->setAttribute(
+                    'content',
+                    $note->is_locked ? null : RichTextSanitizer::cleanStored($note->content),
+                );
             });
 
         return Inertia::render('Projects/Notes/Index', [
@@ -42,7 +44,10 @@ class NoteController extends Controller
     {
         $this->authorize('create', [Note::class, $project]);
 
-        $project->notes()->create($request->validated());
+        $validated = $request->validated();
+        $validated['content'] = $this->plainNoteContent($validated['content'] ?? null);
+
+        $project->notes()->create($validated);
 
         return redirect()->route('projects.notes', $project);
     }
@@ -60,12 +65,16 @@ class NoteController extends Controller
 
             $note->update([
                 'title' => $validated['title'],
-                'content' => NoteEncryption::encrypt($validated['passcode'], $note->passcode_salt, $validated['content'] ?? ''),
+                'content' => NoteEncryption::encrypt(
+                    $validated['passcode'],
+                    $note->passcode_salt,
+                    $this->plainNoteContent($validated['content'] ?? ''),
+                ),
             ]);
         } else {
             $note->update([
                 'title' => $validated['title'],
-                'content' => $validated['content'] ?? '',
+                'content' => $this->plainNoteContent($validated['content'] ?? null),
             ]);
         }
 
@@ -84,7 +93,11 @@ class NoteController extends Controller
         $salt = NoteEncryption::generateSalt();
 
         $note->update([
-            'content' => NoteEncryption::encrypt($validated['passcode'], $salt, $validated['content'] ?? ''),
+            'content' => NoteEncryption::encrypt(
+                $validated['passcode'],
+                $salt,
+                $this->plainNoteContent($validated['content'] ?? ''),
+            ),
             'is_locked' => true,
             'passcode_salt' => $salt,
         ]);
@@ -101,7 +114,9 @@ class NoteController extends Controller
         }
 
         return response()->json([
-            'content' => NoteEncryption::decrypt($request->validated('passcode'), $note->passcode_salt, $note->content),
+            'content' => RichTextSanitizer::cleanStored(
+                NoteEncryption::decrypt($request->validated('passcode'), $note->passcode_salt, $note->content),
+            ),
         ]);
     }
 
@@ -113,10 +128,12 @@ class NoteController extends Controller
             return redirect()->back()->error('Incorrect passcode', 'The passcode you entered is incorrect.');
         }
 
-        $decrypted = NoteEncryption::decrypt($request->validated('passcode'), $note->passcode_salt, $note->content);
+        $decrypted = RichTextSanitizer::cleanStored(
+            NoteEncryption::decrypt($request->validated('passcode'), $note->passcode_salt, $note->content),
+        );
 
         $note->update([
-            'content' => $request->validated('content') ?? $decrypted,
+            'content' => RichTextSanitizer::cleanStored($request->validated('content')) ?? $decrypted,
             'is_locked' => false,
             'passcode_salt' => null,
         ]);
@@ -131,5 +148,10 @@ class NoteController extends Controller
         $note->delete();
 
         return redirect()->route('projects.notes', $project)->success('Note deleted', 'The note was successfully deleted.');
+    }
+
+    private function plainNoteContent(?string $content): string
+    {
+        return RichTextSanitizer::cleanStored($content) ?? '';
     }
 }

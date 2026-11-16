@@ -3,18 +3,27 @@
 namespace App\Http\Requests\Task;
 
 use App\Enums\PricingType;
+use App\Http\Requests\Concerns\SanitizesRichText;
+use App\Services\RichTextSanitizer;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreTaskRequest extends FormRequest
 {
+    use SanitizesRichText;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->sanitizeRichText('description');
     }
 
     /**
@@ -28,7 +37,7 @@ class StoreTaskRequest extends FormRequest
             'name' => ['required', 'string:255'],
             'group_id' => ['required', 'exists:task_groups,id'],
             'assigned_to_user_id' => ['nullable', 'exists:users,id'],
-            'description' => ['nullable'],
+            'description' => ['nullable', 'string', 'max:'.RichTextSanitizer::MAX_LENGTH],
             'estimation' => ['nullable'],
             'priority_id' => ['nullable', 'exists:task_priorities,id'],
             'pricing_type' => ['required', 'string', Rule::enum(PricingType::class)],
