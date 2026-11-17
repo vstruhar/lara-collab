@@ -150,6 +150,16 @@ export function CreateTaskDrawer() {
             onChange={files => updateValue('attachments', files)}
             remove={index => removeAttachment(index)}
           />
+          {(form.errors.attachments || form.errors['attachments.0']) && (
+            <Text
+              c='red'
+              size='sm'
+              mt='xs'
+              data-error='true'
+            >
+              {form.errors.attachments || form.errors['attachments.0']}
+            </Text>
+          )}
 
           <MultiSelect
             label='Subscribers'

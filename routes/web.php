@@ -91,6 +91,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         })->scopeBindings();
     });
 
+    Route::get('task-attachments/{attachment}/download', [AttachmentController::class, 'download'])->name('task-attachments.download');
+    Route::get('task-attachments/{attachment}/thumb', [AttachmentController::class, 'thumb'])->name('task-attachments.thumb');
+
     // My Work
     Route::group(['prefix' => 'my-work', 'as' => 'my-work.'], function () {
         Route::get('tasks', [MyWorkTaskController::class, 'index'])->name('tasks.index');

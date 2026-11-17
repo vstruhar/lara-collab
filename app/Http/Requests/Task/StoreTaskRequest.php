@@ -5,6 +5,7 @@ namespace App\Http\Requests\Task;
 use App\Enums\PricingType;
 use App\Http\Requests\Concerns\SanitizesRichText;
 use App\Services\RichTextSanitizer;
+use App\Services\TaskAttachmentService;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -48,6 +49,7 @@ class StoreTaskRequest extends FormRequest
             'subscribed_users' => ['array'],
             'labels' => ['array'],
             'attachments' => ['array'],
+            'attachments.*' => [TaskAttachmentService::rule()],
         ];
     }
 }

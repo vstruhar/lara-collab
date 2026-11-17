@@ -21,7 +21,7 @@ const createTaskAttachmentsSlice = (set, get) => ({
       }));
     } catch (e) {
       console.error(e);
-      alert("Failed to upload attachments");
+      alert(e.response?.data?.message || "Failed to upload attachments");
     }
   },
   deleteAttachment: async (task, index) => {

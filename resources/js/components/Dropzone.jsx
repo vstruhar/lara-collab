@@ -1,4 +1,4 @@
-import { isImage, isViewable } from "@/utils/file";
+import { ACCEPTED_ATTACHMENT_TYPES, ATTACHMENT_MAX_BYTES, isImage } from "@/utils/file";
 import { Group, SimpleGrid, Text, rem } from "@mantine/core";
 import { Dropzone as MantineDropzone } from "@mantine/dropzone";
 import { useDisclosure } from "@mantine/hooks";
@@ -25,19 +25,22 @@ export default function Dropzone({ selected, onChange, remove, ...props }) {
   };
 
   const openFile = (file) => {
+    if (!file.url) {
+      return;
+    }
+
     if (isImage(file)) {
       setSelectedImage(file);
       open();
-    } else if (isViewable(file)) {
-      window.open(file.path, "_blank");
-    } else {
-      new JsFileDownloader({
-        url: file.path,
-        filename: file.name,
-        contentType: file.type,
-        nativeFallbackOnError: true,
-      }).catch((error) => console.error("Failed to download file", error));
+      return;
     }
+
+    new JsFileDownloader({
+      url: file.url,
+      filename: file.name,
+      contentType: file.type,
+      nativeFallbackOnError: true,
+    }).catch((error) => console.error("Failed to download file", error));
   };
 
   return (
@@ -48,6 +51,8 @@ export default function Dropzone({ selected, onChange, remove, ...props }) {
         onDrop={(files) => onChange([...selected, ...files])}
         onReject={(files) => console.log("rejected files", files)}
         {...props}
+        accept={ACCEPTED_ATTACHMENT_TYPES}
+        maxSize={ATTACHMENT_MAX_BYTES}
       >
         <Group justify="center" gap="md" mih={50} style={{ pointerEvents: "none" }}>
           <MantineDropzone.Accept>
@@ -86,7 +91,7 @@ export default function Dropzone({ selected, onChange, remove, ...props }) {
               Drag files here or click to select
             </Text>
             <Text size="xs" c="dimmed" inline mt={7}>
-              Files of any type will be accepted
+              Images, PDF, Office documents, text, zip, audio, and video. 20 MB max.
             </Text>
           </div>
         </Group>

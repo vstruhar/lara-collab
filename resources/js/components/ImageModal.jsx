@@ -6,7 +6,7 @@ export default function ImageModal({ image, opened, close }) {
   const { loadImage, loading } = useImageLoader();
 
   useEffect(() => {
-    image && loadImage(image.path);
+    image?.url && loadImage(image.url);
   }, [image]);
 
   return (
@@ -27,7 +27,7 @@ export default function ImageModal({ image, opened, close }) {
         </Center>
       ) : (
         <Image
-          src={image?.path}
+          src={image?.url}
           fit="contain"
           style={{
             maxHeight: "80vh",

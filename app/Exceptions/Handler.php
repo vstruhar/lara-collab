@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -46,6 +47,10 @@ class Handler extends ExceptionHandler
         }
 
         if ($request->wantsJson()) {
+            if ($e instanceof ValidationException) {
+                return $response;
+            }
+
             return response()->json([
                 'message' => $e->getMessage(),
                 'trace' => $e->getTrace(),
