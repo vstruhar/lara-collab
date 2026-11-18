@@ -1,5 +1,32 @@
+export const ATTACHMENT_MAX_BYTES = 20 * 1024 * 1024;
+
+export const ACCEPTED_ATTACHMENT_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "application/pdf",
+  "text/plain",
+  "text/csv",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "application/zip",
+  "application/x-zip-compressed",
+  "video/mp4",
+  "video/webm",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/wave",
+  "audio/ogg",
+];
+
 export const isImage = (file) => {
-  return ["image/jpeg", "image/gif", "image/png", "image/svg", "image/webp", ".jpeg", ".jpg", ".gif", ".png", ".svg", ".webp", ".bmp"].some(
+  return ["image/jpeg", "image/gif", "image/png", "image/webp", "image/bmp", ".jpeg", ".jpg", ".gif", ".png", ".webp", ".bmp"].some(
     (type) => file.type.includes(type) || file.name.includes(type),
   );
 };

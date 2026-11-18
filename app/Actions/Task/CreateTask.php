@@ -7,14 +7,10 @@ use App\Events\Task\AttachmentsUploaded;
 use App\Events\Task\TaskCreated;
 use App\Models\Project;
 use App\Models\Task;
+use App\Services\TaskAttachmentService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Intervention\Image\Drivers\Gd\Driver as GdDriver;
-use Intervention\Image\ImageManager;
-use Throwable;
 
 class CreateTask
 {
@@ -62,24 +58,10 @@ class CreateTask
 
     public function uploadAttachments(Task $task, array $items, $dispatchEvent = true): Collection
     {
+        $storage = new TaskAttachmentService;
+
         $rows = collect($items)
-            ->map(function (UploadedFile $item) use ($task) {
-                $filename = strtolower(Str::ulid()).'.'.$item->getClientOriginalExtension();
-                $filepath = "tasks/{$task->id}/{$filename}";
-
-                $item->storeAs('public', $filepath);
-
-                $thumbFilepath = $this->generateThumb($item, $task, $filename);
-
-                return [
-                    'user_id' => auth()->id(),
-                    'name' => $item->getClientOriginalName(),
-                    'path' => "/storage/$filepath",
-                    'thumb' => $thumbFilepath ? "/storage/$thumbFilepath" : null,
-                    'type' => $item->getClientMimeType(),
-                    'size' => $item->getSize(),
-                ];
-            });
+            ->map(fn (UploadedFile $item) => $storage->storeUploadedFile($task, $item));
 
         $attachments = $task->attachments()->createMany($rows);
 
@@ -95,41 +77,5 @@ class CreateTask
         }
 
         return $attachments;
-    }
-
-    protected function generateThumb(UploadedFile $file, Task $task, string $filename)
-    {
-        if (in_array($file->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'])) {
-            try {
-                $thumbFilepath = "tasks/{$task->id}/thumbs/{$filename}";
-
-                $encoded = ImageManager::usingDriver(GdDriver::class)
-                    ->decodeBinary($file->get())
-                    ->cover(100, 100)
-                    ->encodeUsingFileExtension(
-                        $file->getClientOriginalExtension(),
-                        ...$this->thumbnailEncodeOptions($file->getClientOriginalExtension()),
-                    );
-
-                Storage::put("public/$thumbFilepath", (string) $encoded);
-
-                return $thumbFilepath;
-            } catch (Throwable $e) {
-                return null;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @return array<string, int>
-     */
-    protected function thumbnailEncodeOptions(string $extension): array
-    {
-        return match (strtolower($extension)) {
-            'jpg', 'jpeg', 'webp' => ['quality' => 75],
-            default => [],
-        };
     }
 }

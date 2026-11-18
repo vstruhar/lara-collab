@@ -31,7 +31,7 @@ export default function FileThumbnail({ file, remove, open, ...props }) {
 
   if (isImage(file)) {
     const imageUrl = alreadyUploaded
-      ? file.thumb || file.path
+      ? file.thumb_url || file.url
       : URL.createObjectURL(file);
     icon = (
       <Image
